@@ -1,5 +1,5 @@
 # FestlEver
 
-## Ingeneure:
+## Ingenieure:
 Fabian Hainzinger\
 Matthias Schneglberger
