@@ -12,9 +12,11 @@ Matthias Schneglberger
 
 ## Tasks
 
-1. ...
-2. ...
-3. ...
+1. Design
+2. Server initialisieren
+3. Login/Registrieren
+4. Grundlegenes Design und Aufbau der Haupt-Klassen
+5. Grundlegende Funktionen (Events anlegen & anzeigen)
 999. Bugs entfernen
 
 ## Features
@@ -29,16 +31,19 @@ Matthias Schneglberger
 
 ## Prototyp
 
-[Hier gehts zum Prototyp](https://www.figma.com/proto/ABjHHfjzEUVkUXCl7B2lnN/FestlEver?node-id=3%3A32&scaling=scale-down)
+[Hier gehts zum Prototyp](https://www.figma.com/proto/ABjHHfjzEUVkUXCl7B2lnN/FestlEver?node-id=7%3A32&scaling=scale-down)
 
 ## Zeitplan
 
 | Zeitplan in Stunden | Matthias | Fabian |
 | :---         |     :---:      |          ---: |
-| Task1   | 6     | 5    |
-| Task2     | 6       | 7      |
-| Task99     | 0       | 0      |
-| Gesamt     | 12       | 13      |25|
+| Design   | 5     | 4    |
+| Server Init     | 5       | 5      |
+| Login/Register     | -1       | -1      |
+| Implement Design     | -1       | -1      |
+| Events anlegen/anzeigen     | -1       | -1      |
+| Bugs entfernen     | -99       | -99      |
+| Gesamt     | -1       | -1      |-1|
 
 
 
