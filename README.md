@@ -29,7 +29,7 @@ Matthias Schneglberger
 
 ## Prototyp
 
-[Hier gehts zum Prototyp](https://www.figma.com/proto/ABjHHfjzEUVkUXCl7B2lnN/FestlEver?node-id=7%3A32&scaling=scale-down)
+[Hier gehts zum Prototyp](https://www.figma.com/proto/ABjHHfjzEUVkUXCl7B2lnN/FestlEver?node-id=3%3A32&scaling=scale-down)
 
 ## Zeitplan
 
