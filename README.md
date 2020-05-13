@@ -2,7 +2,7 @@
 
 Eine einfache App zum Organisieren eines Events.\
 Es können private oder öffentliche Events hinzugefügt werden.\
-Auch ein einfacher Chat soll implementiert werden.
+Auch Freundschaften sollen implementiert werden.
 
 
 
@@ -13,7 +13,7 @@ Matthias Schneglberger
 ## Tasks
 
 1. Design
-2. Server initialisieren
+2. Server initialisieren -> Firebase & kennenlernen
 3. Login/Registrieren
 4. Grundlegenes Design und Aufbau der Haupt-Klassen
 5. Grundlegende Funktionen (Events anlegen & anzeigen)
@@ -37,9 +37,9 @@ Matthias Schneglberger
 
 | Zeitplan in Stunden | Matthias | Fabian |
 | :---         |     :---:      |          ---: |
-| Design   | 5     | 4    |
-| Server Init     | 5       | 5      |
-| Login/Register     | -1       | -1      |
+| Design   | 3     | 2    |
+| Firebase Init     | 4       | 3      |
+| Login/Register     | 5       | 3      |
 | Implement Design     | -1       | -1      |
 | Events anlegen/anzeigen     | -1       | -1      |
 | Bugs entfernen     | -99       | -99      |
