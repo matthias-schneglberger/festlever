@@ -3,118 +3,160 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="#ccc"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-<!--    <ImageView-->
-<!--        android:id="@+id/activity_login_background_image"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:scaleType="centerCrop"-->
-<!--        android:src="@drawable/login_register_background_image" />-->
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/login_register_background_image" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="429dp"
+            android:layout_weight="1">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/imageView4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginTop="100dp"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginRight="0dp"
+                    android:layout_marginBottom="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/logo" />
+            </FrameLayout>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="3">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
 
-<!--    <TableRow-->
-<!--        android:layout_weight="1"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent">-->
+                <EditText
+                    android:id="@+id/editText3"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
+                    android:background="@drawable/background_login_register_input_button"
+                    android:ems="10"
+                    android:hint="Benutzername"
+                    android:inputType="textPersonName"
+                    android:padding="10dip" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp" />
 
 
-<!--            <ImageView-->
-<!--                android:id="@+id/activity_login_logo"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:background="@drawable/logo"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent" />-->
+                <EditText
+                    android:id="@+id/editText4"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
+                    android:background="@drawable/background_login_register_input_button"
+                    android:ems="10"
+                    android:hint="Passwort"
+                    android:inputType="textPassword"
+                    android:padding="10dip" />
 
-<!--    </TableRow>-->
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="15dp" />
 
-<!--    <TableRow-->
-<!--        android:layout_weight="1"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent">-->
+                <CheckBox
+                    android:id="@+id/checkBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Angemeldet Bleiben"
+                    android:textColor="@color/colorTextViews"
+                    android:textColorHighlight="#373737"
+                    app:buttonTint="#373737"
 
-<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_marginStart="30dp"-->
-<!--            android:layout_marginTop="330dp"-->
-<!--            android:layout_marginEnd="30dp">-->
+                    />
 
-<!--            <EditText-->
-<!--                android:id="@+id/activity_login_username_email"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:ems="10"-->
-<!--                android:inputType="textPersonName"-->
-<!--                android:text="Benutzername / Email"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent" />-->
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="15dp" />
 
-<!--            <EditText-->
-<!--                android:id="@+id/activity_login_password"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="100dp"-->
-<!--                android:ems="10"-->
-<!--                android:inputType="textPersonName"-->
-<!--                android:text="Passwort"-->
-<!--                app:layout_constraintEnd_toStartOf="@+id/activity_login_username_email"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent" />-->
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
+                    android:background="@drawable/background_login_register_input_button"
+                    android:ems="10"
+                    android:padding="10dip"
+                    android:text="Login" />
 
-<!--            <Button-->
-<!--                android:id="@+id/activity_login_loginButton"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="100dp"-->
-<!--                android:layout_marginTop="180dp"-->
-<!--                android:layout_marginEnd="100dp"-->
-<!--                android:text="Login"-->
-<!--                app:layout_constraintEnd_toStartOf="@+id/activity_login_username_email"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent" />-->
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp" />
 
-<!--            <CheckedTextView-->
-<!--                android:id="@+id/activity_login_checkbox_login_data"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="240dp"-->
-<!--                android:gravity="center"-->
-<!--                android:text="Anmeldedaten merken"-->
-<!--                android:textColor="#000"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent" />-->
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Noch keinen Account? Hier klicken"
+                    android:textColor="@color/colorTextViews" />
 
-<!--            <TextView-->
-<!--                android:id="@+id/activity_login_register_text"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="270dp"-->
-<!--                android:gravity="center"-->
-<!--                android:text="Noch keinen Account? Hier registrieren"-->
-<!--                android:textColor="#000"-->
-<!--                app:layout_constraintEnd_toStartOf="@+id/activity_login_username_email"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent" />-->
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="15dp" />
 
-<!--            <TextView-->
-<!--                android:id="@+id/activity_login_password_forgotten"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="300dp"-->
-<!--                android:gravity="center"-->
-<!--                android:text="Passwort vergessen?"-->
-<!--                android:textColor="#000"-->
-<!--                app:layout_constraintEnd_toStartOf="@+id/activity_login_username_email"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent" />-->
-<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
-<!--    </TableRow>-->
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Passwort vergessen"
+                    android:textColor="@color/colorTextViews" />
+
+
+            </LinearLayout>
+        </TableRow>
+    </TableLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

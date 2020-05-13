@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="colorPrimary">#DA5144</color>
+    <color name="colorPrimaryDark">#E73626</color>
+    <color name="colorAccent">#A79897</color>
+
+    <!--  Login and Register  -->
+    <color name="backgroundInputs">#ffffff</color>
+    <color name="colorTextViews">#000000</color>
+    <color name="checkedCheckBox">#A79897</color>
 </resources>
