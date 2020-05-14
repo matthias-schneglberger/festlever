@@ -1,4 +1,4 @@
-package at.htlgkr.festlever;
+package at.htlgkr.festlever.activities;
 
 import android.os.Bundle;
 
@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import at.htlgkr.festlever.R;
 import at.htlgkr.festlever.ui.main.SectionsPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {

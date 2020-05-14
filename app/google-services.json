@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "942960569438",
+    "firebase_url": "https://festlever-ab8ab.firebaseio.com",
+    "project_id": "festlever-ab8ab",
+    "storage_bucket": "festlever-ab8ab.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:942960569438:android:dbe74293d4b60d1a0418cf",
+        "android_client_info": {
+          "package_name": "at.htlgkr.festlever"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "942960569438-fahtddfihpdpsoddirivnp2l98pkh7k0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXeGQ1F9L7vzmXKvaR_wTtjwQAiKLQgh4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "942960569438-fahtddfihpdpsoddirivnp2l98pkh7k0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
