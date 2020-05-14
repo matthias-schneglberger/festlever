@@ -1,6 +1,7 @@
 package at.htlgkr.festlever.objects;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class User implements Serializable {
@@ -8,11 +9,11 @@ public class User implements Serializable {
     private String email;
     private String password;
 
-    List<User> friends;
-    List<User> friendRequests;
+    List<User> friends = new ArrayList<>();
+    List<User> friendRequests = new ArrayList<>();
 
-    List<Event> provideEvents;
-    List<Event> joinedEvents;
+    List<Event> provideEvents = new ArrayList<>();
+    List<Event> joinedEvents = new ArrayList<>();
 
     public User() {}
 

@@ -17,8 +17,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
 
-        fireBaseCommunication.registerUser(new User("mschneglberger", "test123", "matthias.schneglberger@gmx.at"));
     }
 }
