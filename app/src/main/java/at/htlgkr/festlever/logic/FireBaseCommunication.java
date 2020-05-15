@@ -2,9 +2,23 @@ package at.htlgkr.festlever.logic;
 
 //import com.google.firebase.analytics.*;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
@@ -19,13 +33,13 @@ public class FireBaseCommunication {
         dbaseRef = FirebaseDatabase.getInstance().getReference();
     }
 
-    public void registerUser(User user){
-        dbaseRef.child("benutzer").child(user.getUsername()).setValue(user);
+    public boolean registerUser(User user){ //Working
+        return dbaseRef.child("benutzer").child(user.getUsername()).setValue(new GsonBuilder().create().toJson(user)).isComplete();
     }
 
-    public User getUser(String username){
+    public List<User> getAllUsers(){ //Working
         GetAllUsers getAllUsers = new GetAllUsers();
-        getAllUsers.execute(username);
+        getAllUsers.execute();
 
         try {
             return getAllUsers.get();
@@ -37,6 +51,7 @@ public class FireBaseCommunication {
 
         return null;
     }
+
 
 
 

@@ -9,15 +9,21 @@ public class User implements Serializable {
     private String email;
     private String password;
 
-    List<User> friends = new ArrayList<>();
-    List<User> friendRequests = new ArrayList<>();
+    List<String> friends = new ArrayList<>();
+    List<String> friendRequests = new ArrayList<>();
 
     List<Event> provideEvents = new ArrayList<>();
     List<Event> joinedEvents = new ArrayList<>();
 
     public User() {}
 
-    public User(String username, String email, String password, List<User> friends, List<User> friendRequests, List<Event> provideEvents, List<Event> joinedEvents) {
+    public User(String username, String password, String email) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
+
+    public User(String username, String email, String password, List<String> friends, List<String> friendRequests, List<Event> provideEvents, List<Event> joinedEvents) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -25,12 +31,6 @@ public class User implements Serializable {
         this.friendRequests = friendRequests;
         this.provideEvents = provideEvents;
         this.joinedEvents = joinedEvents;
-    }
-
-    public User(String username, String password, String email) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
     }
 
     public String getUsername() {
@@ -57,19 +57,19 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public List<User> getFriends() {
+    public List<String> getFriends() {
         return friends;
     }
 
-    public void setFriends(List<User> friends) {
+    public void setFriends(List<String> friends) {
         this.friends = friends;
     }
 
-    public List<User> getFriendRequests() {
+    public List<String> getFriendRequests() {
         return friendRequests;
     }
 
-    public void setFriendRequests(List<User> friendRequests) {
+    public void setFriendRequests(List<String> friendRequests) {
         this.friendRequests = friendRequests;
     }
 

@@ -17,11 +17,11 @@ public class Event implements Serializable {
     String date;
     double entrance;
     int accept;
-    List<User> acceptUser = new ArrayList<>();
+    List<String> acceptUser = new ArrayList<>();
 
     public Event() {}
 
-    public Event(Bitmap image, String title, double latitude, double longitude, String date, double entrance, int accept, List<User> acceptUser) {
+    public Event(Bitmap image, String title, double latitude, double longitude, String date, double entrance, int accept, List<String> acceptUser) {
         this.image = image;
         this.title = title;
         this.latitude = latitude;
@@ -88,11 +88,11 @@ public class Event implements Serializable {
         this.accept = accept;
     }
 
-    public List<User> getAcceptUser() {
+    public List<String> getAcceptUser() {
         return acceptUser;
     }
 
-    public void setAcceptUser(List<User> acceptUser) {
+    public void setAcceptUser(List<String> acceptUser) {
         this.acceptUser = acceptUser;
     }
 }
