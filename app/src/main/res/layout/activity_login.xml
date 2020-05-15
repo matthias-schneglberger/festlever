@@ -78,7 +78,8 @@
                     android:ems="10"
                     android:hint="Benutzername / Email"
                     android:inputType="textPersonName"
-                    android:padding="10dip" />
+                    android:padding="10dip"
+                    android:paddingStart="15dp" />
 
                 <Space
                     android:layout_width="match_parent"
@@ -96,7 +97,8 @@
                     android:ems="10"
                     android:hint="Passwort"
                     android:inputType="textPassword"
-                    android:padding="10dip" />
+                    android:padding="10dip"
+                    android:paddingStart="15dp" />
 
                 <Space
                     android:layout_width="match_parent"
@@ -118,29 +120,37 @@
                     android:layout_width="match_parent"
                     android:layout_height="15dp" />
 
-                <Button
-                    android:id="@+id/activity_login_login_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="25dp"
-                    android:layout_marginRight="25dp"
-                    android:background="@drawable/background_login_register_input_button"
-                    android:ems="10"
-                    android:padding="10dip"
-                    android:text="Login" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="25dp" />
-
-                <TextView
-                    android:id="@+id/activity_login_to_register_text"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Noch keinen Account? Hier klicken"
-                    android:textColor="@color/colorTextViews" />
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/activity_login_register_button"
+                        android:layout_width="0dp"
+                        android:layout_height="45dp"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/background_login_register_input_button"
+                        android:ems="10"
+                        android:padding="10dip"
+                        android:text="Noch kein Konto" />
+
+                    <Button
+                        android:id="@+id/activity_login_login_button2"
+                        android:layout_width="0dp"
+                        android:layout_height="45dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/background_login_register_input_button"
+                        android:ems="10"
+                        android:padding="10dip"
+                        android:text="Login" />
+                </LinearLayout>
 
                 <Space
                     android:layout_width="match_parent"
@@ -148,8 +158,9 @@
 
                 <TextView
                     android:id="@+id/activity_login_password_forgotten"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:gravity="center"
                     android:text="Passwort vergessen"
                     android:textColor="@color/colorTextViews" />

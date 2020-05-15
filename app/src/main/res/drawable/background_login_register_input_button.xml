@@ -5,7 +5,10 @@
         <solid android:color="@color/backgroundInputs"
             android:width="25dp"
             android:height="25dp"
+
             />
+
+
 
 
         <corners
