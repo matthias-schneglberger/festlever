@@ -119,11 +119,8 @@
 
                 <Space
                     android:layout_width="match_parent"
-                    android:layout_height="15dp" />
+                    android:layout_height="40dp" />
 
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="15dp" />
 
                 <Button
                     android:id="@+id/activity_register_register_button"
@@ -132,9 +129,10 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="25dp"
                     android:layout_marginRight="25dp"
-                    android:background="@drawable/background_login_register_input_white"
+                    android:background="@drawable/background_login_register_input_red"
                     android:ems="10"
                     android:padding="10dip"
+                    android:textColor="#fff"
                     android:text="Register" />
 
                 <Space
