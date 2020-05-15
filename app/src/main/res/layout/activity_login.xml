@@ -109,7 +109,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Angemeldet Bleiben"
+                    android:text="Angemeldet bleiben"
                     android:textColor="@color/colorTextViews"
                     android:textColorHighlight="#373737"
                     app:buttonTint="#373737"
