@@ -74,7 +74,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="25dp"
                     android:layout_marginRight="25dp"
-                    android:background="@drawable/background_login_register_input_button"
+                    android:background="@drawable/background_login_register_input_white"
                     android:ems="10"
                     android:hint="Benutzername / Email"
                     android:inputType="textPersonName"
@@ -93,7 +93,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="25dp"
                     android:layout_marginRight="25dp"
-                    android:background="@drawable/background_login_register_input_button"
+                    android:background="@drawable/background_login_register_input_white"
                     android:ems="10"
                     android:hint="Passwort"
                     android:inputType="textPassword"
@@ -134,10 +134,11 @@
                         android:layout_gravity="center"
                         android:layout_marginRight="10dp"
                         android:layout_weight="1"
-                        android:background="@drawable/background_login_register_input_button"
+                        android:background="@drawable/background_login_register_input_red"
                         android:ems="10"
                         android:padding="10dip"
-                        android:text="Noch kein Konto" />
+                        android:text="Noch kein Konto"
+                        android:textColor="#FFFFFF" />
 
                     <Button
                         android:id="@+id/activity_login_login_button2"
@@ -146,10 +147,11 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="10dp"
                         android:layout_weight="1"
-                        android:background="@drawable/background_login_register_input_button"
+                        android:background="@drawable/background_login_register_input_red"
                         android:ems="10"
                         android:padding="10dip"
-                        android:text="Login" />
+                        android:text="Login"
+                        android:textColor="#FFFFFF" />
                 </LinearLayout>
 
                 <Space
