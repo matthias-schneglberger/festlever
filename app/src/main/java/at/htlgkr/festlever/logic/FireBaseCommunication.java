@@ -3,9 +3,12 @@ package at.htlgkr.festlever.logic;
 //import com.google.firebase.analytics.*;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,8 +36,24 @@ public class FireBaseCommunication {
         dbaseRef = FirebaseDatabase.getInstance().getReference();
     }
 
-    public boolean registerUser(User user){ //Working
-        return dbaseRef.child("benutzer").child(user.getUsername()).setValue(new GsonBuilder().create().toJson(user)).isComplete();
+    public boolean registerUser(User user){ // Working
+        boolean exist = false;
+        List<User> userList = getAllUsers();
+        for(User u: userList){
+            if(u.getUsername().equals(user.getUsername())){
+                exist = true;
+            }
+        }
+        if(!exist){
+            OnFailureListener onFailureListener = new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e(TAG, e.getMessage());
+                }
+            };
+            dbaseRef.child("benutzer").child(user.getUsername()).setValue(new GsonBuilder().create().toJson(user)).addOnFailureListener(onFailureListener);
+        }
+        return !exist;
     }
 
     public List<User> getAllUsers(){ //Working

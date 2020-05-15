@@ -1,5 +1,7 @@
 package at.htlgkr.festlever.activities;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import at.htlgkr.festlever.R;
 import at.htlgkr.festlever.logic.FireBaseCommunication;
+import at.htlgkr.festlever.objects.User;
 
 public class RegisterActivity extends AppCompatActivity {
     private FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
@@ -69,11 +72,26 @@ public class RegisterActivity extends AppCompatActivity {
 
         registerButton.setEnabled(false);
 
-        String check_email = email.getText().toString();
-        String check_username = username.getText().toString();
-        String check_password = password.getText().toString();
+        final String check_email = email.getText().toString();
+        final String check_username = username.getText().toString();
+        final String check_password = password.getText().toString();
 
         //Register-Logic
+
+        final ProgressDialog progressDialog = new ProgressDialog(RegisterActivity.this,
+                R.style.Theme_AppCompat_DayNight_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Account wird erstellt...");
+        progressDialog.show();
+
+        User user = new User(check_username,check_password,check_email);
+        if(fireBaseCommunication.registerUser(user)){
+            onRegisterSuccess();
+        }
+        else{
+            onRegisterFailed();
+        }
+        progressDialog.dismiss();
     }
 
     public boolean validate() {
@@ -116,11 +134,12 @@ public class RegisterActivity extends AppCompatActivity {
     void onRegisterSuccess(){
         registerButton.setEnabled(true);
         setResult(RESULT_OK,null);
+        startActivity(new Intent(this, MainActivity.class));
         finish();
     }
 
     void onRegisterFailed(){
-        Toast.makeText(getBaseContext(), "Registrieren fehlgeschlagen", Toast.LENGTH_LONG).show();
+        Toast.makeText(getBaseContext(), "Registrieren fehlgeschlagen - Benutzername existiert bereits", Toast.LENGTH_LONG).show();
         registerButton.setEnabled(true);
     }
 }

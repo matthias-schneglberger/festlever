@@ -16,6 +16,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.List;
+
 import at.htlgkr.festlever.R;
 import at.htlgkr.festlever.logic.FireBaseCommunication;
 import at.htlgkr.festlever.objects.User;
@@ -45,8 +47,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Switch to Register");
-                Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
-                startActivityForResult(intent, REQUEST_SIGNUP);
+                startActivityForResult(new Intent(getApplicationContext(), RegisterActivity.class), REQUEST_SIGNUP);
             }
         });
 
@@ -87,10 +88,32 @@ public class LoginActivity extends AppCompatActivity {
 
         loginButton.setEnabled(false);
 
-        String check_username_email = username_email.getText().toString();
-        String check_password = password.getText().toString();
+        final String check_username_email = username_email.getText().toString();
+        final String check_password = password.getText().toString();
 
-        //Login Implementation + Checkbox
+        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
+                R.style.Theme_AppCompat_DayNight_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Einloggen...");
+        progressDialog.show();
+
+        List<User> userList = fireBaseCommunication.getAllUsers();
+        User user = new User();
+        for(User u: userList){
+            if((check_username_email.equals(u.getUsername()) && check_password.equals(check_password)) || (check_username_email.equals(u.getEmail()) && check_password.equals(check_password))){
+                user = u;
+            }
+        }
+        if(user.getUsername()!=null&&user.getEmail()!=null&&user.getPassword()!=null){
+            onLoginSuccess();
+            if(rememberMe.isChecked()){
+                writeToRememberMeFile(user);
+            }
+        }
+        else{
+            onLoginFailed();
+        }
+        progressDialog.dismiss();
     }
 
     public boolean validate() {
@@ -121,6 +144,7 @@ public class LoginActivity extends AppCompatActivity {
 
     void onLoginSuccess(){
         loginButton.setEnabled(true);
+        startActivity(new Intent(this, MainActivity.class));
         finish();
     }
 
@@ -136,6 +160,10 @@ public class LoginActivity extends AppCompatActivity {
 
     void checkIfUserIsInRememberFile(){
         //Skip Login Try
+    }
+
+    void writeToRememberMeFile(User user){
+        // Logic
     }
 
     @Override
