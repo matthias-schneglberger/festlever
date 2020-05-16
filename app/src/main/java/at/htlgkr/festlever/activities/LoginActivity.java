@@ -160,6 +160,9 @@ public class LoginActivity extends AppCompatActivity {
         if (check_username_email.isEmpty()) {
             username_email.setError("Dieses Feld muss ausgefüllt sein");
             valid = false;
+        } else if (check_username_email.trim().contains(" ")) {
+            username_email.setError("Dieses Feld darf kein Leerzeichen enthalten");
+            valid = false;
         } else {
             username_email.setError(null);
         }

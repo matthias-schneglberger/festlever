@@ -128,6 +128,9 @@ public class RegisterActivity extends AppCompatActivity {
         if (check_username.isEmpty()) {
             username.setError("Dieses Feld muss ausgefüllt sein");
             valid = false;
+        } else if (check_username.trim().contains(" ")) {
+            username.setError("Der Benutzername darf keine Leerzeichen enthalten");
+            valid = false;
         } else {
             username.setError(null);
         }
