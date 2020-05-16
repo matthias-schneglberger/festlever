@@ -14,12 +14,18 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import at.htlgkr.festlever.R;
 import at.htlgkr.festlever.logic.FireBaseCommunication;
+import at.htlgkr.festlever.logic.PasswordToHash;
 import at.htlgkr.festlever.objects.User;
 
 public class RegisterActivity extends AppCompatActivity {
     private FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
+    private PasswordToHash passwordToHash = new PasswordToHash();
+    private MessageDigest messageDigest;
     private final String TAG = "RegisterActivity";
 
     private EditText email;
@@ -51,6 +57,12 @@ public class RegisterActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        try {
+            messageDigest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
     }
 
     void initializeViews(){
@@ -74,7 +86,9 @@ public class RegisterActivity extends AppCompatActivity {
 
         final String check_email = email.getText().toString();
         final String check_username = username.getText().toString();
-        final String check_password = password.getText().toString();
+
+        //Hash-Password
+        final String check_password = passwordToHash.bytesToHex(messageDigest.digest(password.getText().toString().getBytes()));
 
         //Register-Logic
 
@@ -86,7 +100,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         User user = new User(check_username,check_password,check_email);
         if(fireBaseCommunication.registerUser(user)){
-            onRegisterSuccess();
+            onRegisterSuccess(user);
         }
         else{
             onRegisterFailed();
@@ -131,10 +145,10 @@ public class RegisterActivity extends AppCompatActivity {
         return valid;
     }
 
-    void onRegisterSuccess(){
+    void onRegisterSuccess(User user){
         registerButton.setEnabled(true);
         setResult(RESULT_OK,null);
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, MainActivity.class).putExtra("user",user));
         finish();
     }
 
@@ -142,4 +156,5 @@ public class RegisterActivity extends AppCompatActivity {
         Toast.makeText(getBaseContext(), "Registrieren fehlgeschlagen - Benutzername existiert bereits", Toast.LENGTH_LONG).show();
         registerButton.setEnabled(true);
     }
+
 }

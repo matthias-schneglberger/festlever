@@ -16,14 +16,32 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import at.htlgkr.festlever.R;
 import at.htlgkr.festlever.logic.FireBaseCommunication;
+import at.htlgkr.festlever.logic.PasswordToHash;
 import at.htlgkr.festlever.objects.User;
 
 public class LoginActivity extends AppCompatActivity {
     private FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
+    private PasswordToHash passwordToHash = new PasswordToHash();
+    private MessageDigest messageDigest;
     private final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
 
@@ -34,14 +52,31 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private TextView passwordForgotten;
 
+    File rememberMeFile;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        rememberMeFile = new File("rememberMe.txt");
+        if(!rememberMeFile.exists()){
+            try {
+                rememberMeFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            messageDigest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
         initializeViews();
 
-        checkIfUserIsInRememberFile();
+        checkIfUserIsInRememberFile(rememberMeFile);
         //Register-Button
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,7 +124,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setEnabled(false);
 
         final String check_username_email = username_email.getText().toString();
-        final String check_password = password.getText().toString();
+        final String check_password = passwordToHash.bytesToHex(messageDigest.digest(password.getText().toString().getBytes()));
 
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
                 R.style.Theme_AppCompat_DayNight_Dialog);
@@ -105,9 +140,9 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
         if(user.getUsername()!=null&&user.getEmail()!=null&&user.getPassword()!=null){
-            onLoginSuccess();
+            onLoginSuccess(user);
             if(rememberMe.isChecked()){
-                writeToRememberMeFile(user);
+                writeToRememberMeFile(user,rememberMeFile);
             }
         }
         else{
@@ -142,9 +177,9 @@ public class LoginActivity extends AppCompatActivity {
         return valid;
     }
 
-    void onLoginSuccess(){
+    void onLoginSuccess(User user){
         loginButton.setEnabled(true);
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, MainActivity.class).putExtra("user",user));
         finish();
     }
 
@@ -158,12 +193,31 @@ public class LoginActivity extends AppCompatActivity {
         //Change Password
     }
 
-    void checkIfUserIsInRememberFile(){
-        //Skip Login Try
+    void checkIfUserIsInRememberFile(File file){
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))){
+            String json = reader.readLine();
+            Gson gson = new Gson();
+            User user = gson.fromJson(json, User.class);
+            List<User> userList = fireBaseCommunication.getAllUsers();
+            for (User u: userList){
+                if(u.getUsername().equals(user.getUsername()) && u.getEmail().equals(user.getEmail()) && u.getPassword().equals(user.getPassword())){
+                    onLoginSuccess(user);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    void writeToRememberMeFile(User user){
-        // Logic
+    void writeToRememberMeFile(User user, File file){
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        try (PrintWriter writer = new PrintWriter(new FileWriter(file, false))){
+            writer.write(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
