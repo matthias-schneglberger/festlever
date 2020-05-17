@@ -8,10 +8,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import at.htlgkr.festlever.R;
 import at.htlgkr.festlever.logic.FireBaseCommunication;
+import at.htlgkr.festlever.objects.Event;
 import at.htlgkr.festlever.objects.User;
 
 /**
@@ -34,15 +36,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        List<User> usersList = fireBaseCommunication.getAllUsers();
-        if(position==1){
-            return PlaceholderFragment.newInstance(position + 1);
-        }
-        else if(position==2){
-            return PlaceholderFragment.newInstance(position + 1);
-        }else{
-            return PlaceholderFragment.newInstance(position + 1);
-        }
+        return MainFragment.newInstance(position,user);
     }
 
     @Nullable

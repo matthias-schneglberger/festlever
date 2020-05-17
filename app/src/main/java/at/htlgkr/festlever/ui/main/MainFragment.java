@@ -1,32 +1,37 @@
 package at.htlgkr.festlever.ui.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+
+import java.util.ArrayList;
 
 import at.htlgkr.festlever.R;
+import at.htlgkr.festlever.objects.Event;
+import at.htlgkr.festlever.objects.User;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class PlaceholderFragment extends Fragment {
+public class MainFragment extends Fragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
+    private static final String ARG_SECTION_USER = "section_user";
 
-    private PageViewModel pageViewModel;
+    private int index;
+    private User user;
+    private ArrayList<Event> eventsList;
 
-    public static PlaceholderFragment newInstance(int index) {
-        PlaceholderFragment fragment = new PlaceholderFragment();
+    public static MainFragment newInstance(int index, User user) {
+        MainFragment fragment = new MainFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(ARG_SECTION_NUMBER, index);
+        bundle.putSerializable(ARG_SECTION_USER,user);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -34,12 +39,12 @@ public class PlaceholderFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        pageViewModel = ViewModelProviders.of(this).get(PageViewModel.class);
-        int index = 1;
-        if (getArguments() != null) {
-            index = getArguments().getInt(ARG_SECTION_NUMBER);
-        }
-        pageViewModel.setIndex(index);
+
+        //Get User and Index from Bundle
+        Intent intent = getActivity().getIntent();
+        Bundle bundle = intent.getExtras();
+        index = bundle.getInt(ARG_SECTION_USER);
+        user = (User) bundle.getSerializable(ARG_SECTION_USER);
     }
 
     @Override
@@ -47,13 +52,9 @@ public class PlaceholderFragment extends Fragment {
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_main, container, false);
-        final TextView textView = root.findViewById(R.id.section_label);
-        pageViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+
+
+
         return root;
     }
 }

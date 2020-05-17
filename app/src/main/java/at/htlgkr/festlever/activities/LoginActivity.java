@@ -135,7 +135,7 @@ public class LoginActivity extends AppCompatActivity {
         List<User> userList = fireBaseCommunication.getAllUsers();
         User user = new User();
         for(User u: userList){
-            if((check_username_email.equals(u.getUsername()) && check_password.equals(check_password)) || (check_username_email.equals(u.getEmail()) && check_password.equals(check_password))){
+            if((check_username_email.equals(u.getUsername()) && check_password.equals(u.getPassword())) || (check_username_email.equals(u.getEmail()) && check_password.equals(u.getPassword()))){
                 user = u;
             }
         }
