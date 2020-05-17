@@ -147,11 +147,6 @@
                     android:gravity="center"
                     android:text="Zum Anmelden hier klicken"
                     android:textColor="@color/colorTextViews" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="15dp" />
-
             </LinearLayout>
         </TableRow>
     </TableLayout>

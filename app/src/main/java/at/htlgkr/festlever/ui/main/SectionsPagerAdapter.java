@@ -8,7 +8,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import java.util.List;
+
 import at.htlgkr.festlever.R;
+import at.htlgkr.festlever.logic.FireBaseCommunication;
+import at.htlgkr.festlever.objects.User;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
@@ -19,17 +23,26 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @StringRes
     private static final int[] TAB_TITLES = new int[]{R.string.tab_text_public, R.string.tab_text_private, R.string.tab_text_myEvents};
     private final Context mContext;
+    private final User user;
+    private FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
 
-    public SectionsPagerAdapter(Context context, FragmentManager fm) {
+    public SectionsPagerAdapter(Context context, FragmentManager fm, User user) {
         super(fm);
         mContext = context;
+        this.user = user;
     }
 
     @Override
     public Fragment getItem(int position) {
-        // getItem is called to instantiate the fragment for the given page.
-        // Return a PlaceholderFragment (defined as a static inner class below).
-        return PlaceholderFragment.newInstance(position + 1);
+        List<User> usersList = fireBaseCommunication.getAllUsers();
+        if(position==1){
+            return PlaceholderFragment.newInstance(position + 1);
+        }
+        else if(position==2){
+            return PlaceholderFragment.newInstance(position + 1);
+        }else{
+            return PlaceholderFragment.newInstance(position + 1);
+        }
     }
 
     @Nullable
