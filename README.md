@@ -12,12 +12,21 @@ Matthias Schneglberger
 
 ## Tasks
 
-1. Design
-2. Server initialisieren -> Firebase & kennenlernen
-3. Login/Registrieren
-4. Grundlegenes Design und Aufbau der Haupt-Klassen
-5. Grundlegende Funktionen (Events anlegen & anzeigen)
-999. Bugs entfernen
+
+| Task | Fertig bis|
+| :---         |     :---:      |
+| Design auf Figma| 19.05|
+| Firebase initialisieren & kennenlernen| 26.05|
+| Login & Registrieren + Design| 26.05|
+| MainPage - Design| 26.05|
+| Grundlegende Funktionen (Event erstellen+anzeigen)| 05.06|
+| Details eines Events| 05.06|
+| Settings + Profil Erinstellungen| 02.06|
+| "Meine Events"| 09.06|
+| Freundschaften| 09.06|
+| Was machen meine Freunde? (25 nehmen Teil)| 16.06|
+| Bugs entfernen| 23.06|
+
 
 ## Features
 
@@ -33,21 +42,19 @@ Matthias Schneglberger
 
 [Hier gehts zum Prototyp](https://www.figma.com/proto/ABjHHfjzEUVkUXCl7B2lnN/FestlEver?node-id=7%3A32&scaling=scale-down)
 
+
 ## Zeitplan
 
 | Zeitplan in Stunden | Matthias | Fabian |
 | :---         |     :---:      |          ---: |
 | Design   | 3     | 2    |
-| Firebase Init     | 4       | 3      |
-| Login/Register     | 5       | 3      |
-| Implement Design     | -1       | -1      |
+| Firebase Init     | 3       | 2      |
+| Design Login/Register     | 4       | 2      |
+| Implement Login/Register     | 1       | 5      |
+| Design MainPage     | -1       | -1      |
 | Events anlegen/anzeigen     | -1       | -1      |
 | Bugs entfernen     | -99       | -99      |
 | Gesamt     | -1       | -1      |-1|
 
 
 
-
-
-## Quellen
- [Hintergrund Bild](https://www.pikrepo.com/fcnxs/festival-hands-up-people-partying)
