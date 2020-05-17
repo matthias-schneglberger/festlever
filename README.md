@@ -26,6 +26,7 @@ Matthias Schneglberger
 | Freundschaften| 09.06|
 | Was machen meine Freunde? (25 nehmen Teil)| 16.06|
 | Bugs entfernen| 23.06|
+| Icon designen| 23.06|
 
 
 ## Features
