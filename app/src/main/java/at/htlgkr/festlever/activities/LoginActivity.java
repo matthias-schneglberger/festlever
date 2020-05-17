@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        rememberMeFile = new File("rememberMe.txt");
+        rememberMeFile = new File(getApplicationContext().getFilesDir().getPath().toString() + "/rememberMe.txt");
         if(!rememberMeFile.exists()){
             try {
                 rememberMeFile.createNewFile();
@@ -203,12 +203,18 @@ public class LoginActivity extends AppCompatActivity {
             User user = gson.fromJson(json, User.class);
             List<User> userList = fireBaseCommunication.getAllUsers();
             for (User u: userList){
+
+//                if(u == )
+
                 if(u.getUsername().equals(user.getUsername()) && u.getEmail().equals(user.getEmail()) && u.getPassword().equals(user.getPassword())){
                     onLoginSuccess(user);
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+        }
+        catch (NullPointerException e){
+            //
         }
     }
 
