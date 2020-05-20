@@ -10,6 +10,16 @@ Auch Freundschaften sollen implementiert werden.
 Fabian Hainzinger\
 Matthias Schneglberger
 
+## Programme
+
+- Android Studio - Coding
+- Discord - Communication
+- Figma - Design
+- Flaticon - Design
+- Gimp - Design
+- Photoshop - Design
+- GitHub - Version Control
+
 ## Tasks
 
 
