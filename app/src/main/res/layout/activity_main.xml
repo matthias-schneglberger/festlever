@@ -22,8 +22,7 @@
                 android:id="@+id/activity_main_searchview"
                 android:layout_width="wrap_content"
                 android:layout_height="?attr/actionBarSize"
-                android:layout_gravity="right"
-                />
+                android:layout_gravity="right" />
 
         </androidx.appcompat.widget.Toolbar>
 

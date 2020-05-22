@@ -5,13 +5,20 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#f2f2f2"
     tools:context=".ui.main.MainFragment">
 
     <ListView
-        android:id="@+id/fragment_main_event_listVie"
+        android:id="@+id/fragment_main_event_listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="25dp"
+        android:scrollbars="none"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="15sp"
+        android:paddingLeft="25dp"
+        android:paddingRight="16dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
