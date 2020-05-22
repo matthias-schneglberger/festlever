@@ -7,6 +7,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,17 +18,25 @@ import android.view.View;
 
 import at.htlgkr.festlever.R;
 import at.htlgkr.festlever.objects.User;
+import at.htlgkr.festlever.ui.main.MainFragment;
 import at.htlgkr.festlever.ui.main.SectionsPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
     private final String TAG = "MainActivity";
     private User user;
+    private MainFragment publicFragment;
+    private MainFragment privateFragment;
+    private MainFragment myEventsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -37,9 +46,14 @@ public class MainActivity extends AppCompatActivity {
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(),user);
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
+
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
         FloatingActionButton fab = findViewById(R.id.fab);
+
+        publicFragment = (MainFragment) sectionsPagerAdapter.getItem(0);
+        privateFragment = (MainFragment) sectionsPagerAdapter.getItem(1);
+        myEventsFragment = (MainFragment) sectionsPagerAdapter.getItem(2);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,5 +62,12 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_options_menue, menu);
+        return true;
     }
 }

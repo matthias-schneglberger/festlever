@@ -26,7 +26,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     private static final int[] TAB_TITLES = new int[]{R.string.tab_text_public, R.string.tab_text_private, R.string.tab_text_myEvents};
     private final Context mContext;
     private final User user;
-    private FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
 
     public SectionsPagerAdapter(Context context, FragmentManager fm, User user) {
         super(fm);
@@ -47,7 +46,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        // Show 2 total pages.
-        return 3;
+        return TAB_TITLES.length;
     }
 }
