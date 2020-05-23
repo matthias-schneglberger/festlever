@@ -65,7 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    void initializeViews(){
+    void initializeViews(){ // Working
         Log.d(TAG, "initializeViews");
         email = findViewById(R.id.activity_register_email);
         username = findViewById(R.id.activity_register_username);
@@ -74,7 +74,7 @@ public class RegisterActivity extends AppCompatActivity {
         loginText = findViewById(R.id.activity_register_to_login_text);
     }
 
-    void register(){
+    void register(){ // Working
         Log.d(TAG, "register");
 
         if(!validate()){
@@ -108,7 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
         progressDialog.dismiss();
     }
 
-    public boolean validate() {
+    boolean validate() { // Working
         boolean valid = true;
 
         String check_email = email.getText().toString();
@@ -148,14 +148,14 @@ public class RegisterActivity extends AppCompatActivity {
         return valid;
     }
 
-    void onRegisterSuccess(User user){
+    void onRegisterSuccess(User user){ // Working
         registerButton.setEnabled(true);
         setResult(RESULT_OK,null);
         startActivity(new Intent(this, MainActivity.class).putExtra("user",user));
         finish();
     }
 
-    void onRegisterFailed(){
+    void onRegisterFailed(){ // Working
         Toast.makeText(getBaseContext(), "Registrieren fehlgeschlagen - Benutzername existiert bereits", Toast.LENGTH_LONG).show();
         registerButton.setEnabled(true);
     }

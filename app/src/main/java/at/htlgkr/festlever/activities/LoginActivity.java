@@ -103,7 +103,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    void initializeViews(){
+    void initializeViews(){ // Working
         Log.d(TAG, "initializeViews");
         username_email = findViewById(R.id.activity_login_username_email);
         password = findViewById(R.id.activity_login_password);
@@ -113,7 +113,7 @@ public class LoginActivity extends AppCompatActivity {
         passwordForgotten = findViewById(R.id.activity_login_password_forgotten);
     }
 
-    void login(){
+    void login(){ // Working
         Log.d(TAG, "login");
 
         if(!validate()){
@@ -151,7 +151,7 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.dismiss();
     }
 
-    public boolean validate() {
+    boolean validate() { // Working
         boolean valid = true;
 
         String check_username_email = username_email.getText().toString();
@@ -180,13 +180,13 @@ public class LoginActivity extends AppCompatActivity {
         return valid;
     }
 
-    void onLoginSuccess(User user){
+    void onLoginSuccess(User user){ // Working
         loginButton.setEnabled(true);
         startActivity(new Intent(this, MainActivity.class).putExtra("user",user));
         finish();
     }
 
-    void onLoginFailed(){
+    void onLoginFailed(){ // Working
         Toast.makeText(getBaseContext(), "Login fehlgeschlagen", Toast.LENGTH_LONG).show();
         loginButton.setEnabled(true);
     }
@@ -196,29 +196,21 @@ public class LoginActivity extends AppCompatActivity {
         //Change Password
     }
 
-    void checkIfUserIsInRememberFile(File file){
+    void checkIfUserIsInRememberFile(File file){ // Working
         try (BufferedReader reader = new BufferedReader(new FileReader(file))){
             String json = reader.readLine();
             Gson gson = new Gson();
             User user = gson.fromJson(json, User.class);
             List<User> userList = fireBaseCommunication.getAllUsers();
             for (User u: userList){
-
-//                if(u == )
-
                 if(u.getUsername().equals(user.getUsername()) && u.getEmail().equals(user.getEmail()) && u.getPassword().equals(user.getPassword())){
                     onLoginSuccess(user);
                 }
             }
-        } catch (IOException e) {
-//            e.printStackTrace();
-        }
-        catch (NullPointerException e){
-            //
-        }
+        } catch (IOException | NullPointerException ignored) { }
     }
 
-    void writeToRememberMeFile(User user, File file){
+    void writeToRememberMeFile(User user, File file){ // Working
         Gson gson = new Gson();
         String json = gson.toJson(user);
 

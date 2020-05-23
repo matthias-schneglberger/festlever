@@ -27,7 +27,6 @@ public class Adapter_event extends BaseAdapter {
         this.events = events;
         this.layoutId = layoutId;
         this.editsEnabled = editsEnabled;
-
         this.inflater = (LayoutInflater) ctx.getSystemService(LAYOUT_INFLATER_SERVICE);
     }
 
@@ -60,16 +59,26 @@ public class Adapter_event extends BaseAdapter {
         TextView month = listItem.findViewById(R.id.fragment_main_listview_item_month);
         ImageButton editButton = listItem.findViewById(R.id.fragment_main_listview_item_editButton);
 
-
+        //My Event
         if(editsEnabled){
             editButton.setVisibility(View.VISIBLE);
+            editButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
         }
 
-
+        //Set all items
 //        imageView.setImageBitmap(event.getImage());
         eventName.setText(event.getTitle());
-//        eventAddress.setTe
-
+        //Event get Address ----------------
+        //Event get timeUntil Event --------
+//        accepts.setText(event.getAcceptUser().size()+"");
+//        entrance.setText(event.getEntrance()+"");
+//        day.setText(event.getDate().substring(0,2));
+        //Event get Month ------------------
 
         return listItem;
     }

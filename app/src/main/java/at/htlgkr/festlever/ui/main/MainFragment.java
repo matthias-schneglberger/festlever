@@ -32,7 +32,7 @@ public class MainFragment extends Fragment {
     private ArrayList<Event> eventsList;
     private View view;
 
-    public static MainFragment newInstance(int index, User user) {
+    static MainFragment newInstance(int index, User user) {
         MainFragment fragment = new MainFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(ARG_SECTION_NUMBER, index);
@@ -46,10 +46,8 @@ public class MainFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         //Get User and Index from Bundle
-        Intent intent = getActivity().getIntent();
-        Bundle bundle = intent.getExtras();
-        index = bundle.getInt(ARG_SECTION_USER);
-        user = (User) bundle.getSerializable(ARG_SECTION_USER);
+        index = getArguments().getInt(ARG_SECTION_NUMBER);
+        user = (User) getArguments().getSerializable(ARG_SECTION_USER);
     }
 
     @Override
@@ -79,9 +77,7 @@ public class MainFragment extends Fragment {
         }
         else{
             eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, events, false));
-
         }
-
 
         return view;
     }

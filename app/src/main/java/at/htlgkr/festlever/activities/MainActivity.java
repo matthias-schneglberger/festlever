@@ -42,9 +42,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Set Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //RememberMe-File
         rememberMeFile = new File(getApplicationContext().getFilesDir().getPath().toString() + "/rememberMe.txt");
         if(!rememberMeFile.exists()){
             try {
@@ -54,23 +56,28 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        //Get logged in User
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         user = (User) bundle.get("user");
         Log.d(TAG, "onCreate: Current User logged in: " + user.getUsername());
 
+        //Set up Fragments
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(),user);
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
 
-        TabLayout tabs = findViewById(R.id.tabs);
-        tabs.setupWithViewPager(viewPager);
-        FloatingActionButton fab = findViewById(R.id.fab);
-
+        //Get Fragments
         publicFragment = (MainFragment) sectionsPagerAdapter.getItem(0);
         privateFragment = (MainFragment) sectionsPagerAdapter.getItem(1);
         myEventsFragment = (MainFragment) sectionsPagerAdapter.getItem(2);
 
+        //Set up Tabs
+        TabLayout tabs = findViewById(R.id.tabs);
+        tabs.setupWithViewPager(viewPager);
+
+        //Fab Button
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,11 +89,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_options_menue, menu);
         return true;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -94,16 +99,16 @@ public class MainActivity extends AppCompatActivity {
 
         switch (id){
             case R.id.settings:
-
+                openSettings();
                 break;
             case R.id.findFriends:
-
+                findFriends();
                 break;
             case R.id.friendRequests:
-
+                showFriendRequests();
                 break;
             case R.id.eventRequests:
-
+                showEventRequests();
                 break;
             case R.id.logout:
                 logout();
@@ -115,7 +120,23 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    void logout(){
+    void openSettings(){
+
+    }
+
+    void findFriends(){
+
+    }
+
+    void showFriendRequests(){
+
+    }
+
+    void showEventRequests(){
+
+    }
+
+    void logout(){ // Working
         try (PrintWriter writer = new PrintWriter(new FileWriter(rememberMeFile, false))){
             writer.write("");
         } catch (IOException e) {
