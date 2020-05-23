@@ -5,31 +5,55 @@ import android.media.Image;
 import android.widget.ImageView;
 
 import java.io.Serializable;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
+import at.htlgkr.festlever.logic.PasswordToHash;
+
 public class Event implements Serializable {
+    private String id = "";
     private Bitmap image;
-    String title;
-    double latitude;
-    double longitude;
-    String date;
-    double entrance;
-    int accept;
-    List<String> acceptUser = new ArrayList<>();
+    private String title;
+    private double latitude;
+    private double longitude;
+    private String date;
+    private double entrance;
+    private List<String> acceptUser = new ArrayList<>();
 
     public Event() {}
 
-    public Event(Bitmap image, String title, double latitude, double longitude, String date, double entrance, int accept, List<String> acceptUser) {
+    public Event(Bitmap image, String title, double latitude, double longitude, String date, double entrance) {
         this.image = image;
         this.title = title;
         this.latitude = latitude;
         this.longitude = longitude;
         this.date = date;
         this.entrance = entrance;
-        this.accept = accept;
-        this.acceptUser = acceptUser;
+
+
+        generateID();
+    }
+
+    public void generateID(){
+        try {
+            PasswordToHash passwordToHash = new PasswordToHash();
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+
+            id = passwordToHash.bytesToHex(md.digest((title + System.currentTimeMillis()).getBytes()));
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Bitmap getImage() {
@@ -80,13 +104,6 @@ public class Event implements Serializable {
         this.entrance = entrance;
     }
 
-    public int getAccept() {
-        return accept;
-    }
-
-    public void setAccept(int accept) {
-        this.accept = accept;
-    }
 
     public List<String> getAcceptUser() {
         return acceptUser;

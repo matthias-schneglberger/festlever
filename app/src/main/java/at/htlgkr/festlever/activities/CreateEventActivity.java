@@ -8,19 +8,37 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+
+import com.google.firebase.database.FirebaseDatabase;
 
 import at.htlgkr.festlever.R;
+import at.htlgkr.festlever.logic.FireBaseCommunication;
+import at.htlgkr.festlever.objects.Event;
 import at.htlgkr.festlever.objects.User;
 
 public class CreateEventActivity extends AppCompatActivity {
     private final String TAG = "CreateEventActivity";
     private User user;
     private boolean eventIsPublic = true;
+    private FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
+
+        final ConstraintLayout publicLayout = findViewById(R.id.activity_create_event_publicLayout);
+        final ConstraintLayout privateLayout = findViewById(R.id.activity_create_event_privateLayout);
+        Button createButton = findViewById(R.id.activity_create_event_buttonCreate);
+        final EditText editText_title = findViewById(R.id.activity_create_event_title);
+        final EditText editText_address = findViewById(R.id.activity_create_event_address);
+        final EditText editText_entrance = findViewById(R.id.activity_create_event_entrance);
+        final EditText editText_date = findViewById(R.id.activity_create_event_date);
+
+
+
 
         try{
             Intent intent = getIntent();
@@ -30,8 +48,7 @@ public class CreateEventActivity extends AppCompatActivity {
         }catch (NullPointerException ignored){}
 
 
-        final ConstraintLayout publicLayout = findViewById(R.id.activity_create_event_publicLayout);
-        final ConstraintLayout privateLayout = findViewById(R.id.activity_create_event_privateLayout);
+
 
         publicLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,6 +67,23 @@ public class CreateEventActivity extends AppCompatActivity {
                 privateLayout.setBackgroundColor(getResources().getColor(R.color.addEventInputBackground));
 
                 eventIsPublic = false;
+            }
+        });
+
+
+        createButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Event tmpEvent = new Event();
+                tmpEvent.setTitle(editText_title.getText().toString());
+
+                //Implement some MAGIC here!//
+
+                tmpEvent.generateID();
+
+
+                fireBaseCommunication.createEvent(tmpEvent, eventIsPublic);
+
             }
         });
 

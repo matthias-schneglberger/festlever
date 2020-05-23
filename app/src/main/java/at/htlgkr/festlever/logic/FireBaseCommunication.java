@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
+import at.htlgkr.festlever.objects.Event;
 import at.htlgkr.festlever.objects.User;
 import at.htlgkr.festlever.logic.firebasetasks.*;
 
@@ -69,6 +70,66 @@ public class FireBaseCommunication {
         }
 
         return null;
+    }
+
+    public boolean createEvent(Event event, boolean publicEvent){
+
+        if(publicEvent){
+            List<Event> events = getAllPublicEvents();
+            if(events.contains(event))
+                return false;
+            dbaseRef.child("events-oeffentlich").child(event.getId()).setValue(new GsonBuilder().create().toJson(event));
+        }
+        else{
+            List<Event> events = getAllPrivateEvents();
+            if(events.contains(event))
+                return false;
+            dbaseRef.child("events-privat").child(event.getId()).setValue(new GsonBuilder().create().toJson(event));
+        }
+
+
+
+        return true;
+    }
+
+
+    public List<Event> getAllPublicEvents(){
+        GetAllPublicEvents getAllPublicEvents = new GetAllPublicEvents();
+        getAllPublicEvents.execute();
+
+        try {
+            return getAllPublicEvents.get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public List<Event> getAllPrivateEvents(){
+        GetAllPrivateEvents getAllPrivateEvents = new GetAllPrivateEvents();
+        getAllPrivateEvents.execute();
+
+        try {
+            return getAllPrivateEvents.get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public List<Event> getAllEvents(){
+        List<Event> events = new ArrayList<>();
+
+        events.addAll(getAllPublicEvents());
+        events.addAll(getAllPrivateEvents());
+
+        return events;
     }
 
 

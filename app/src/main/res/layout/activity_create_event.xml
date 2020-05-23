@@ -101,7 +101,7 @@
             android:layout_weight="1" />
 
         <EditText
-            android:id="@+id/editText3"
+            android:id="@+id/activity_create_event_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/background_add_event_input_white"
@@ -115,7 +115,7 @@
             android:layout_height="10dp" />
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/activity_create_event_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/background_add_event_input_white"
@@ -129,7 +129,7 @@
             android:layout_height="10dp" />
 
         <EditText
-            android:id="@+id/editText4"
+            android:id="@+id/activity_create_event_entrance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/background_add_event_input_white"
@@ -143,7 +143,7 @@
             android:layout_height="10dp" />
 
         <EditText
-            android:id="@+id/editText5"
+            android:id="@+id/activity_create_event_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/background_add_event_input_white"
@@ -151,6 +151,18 @@
             android:hint="Datum"
             android:inputType="textPersonName"
             android:padding="15dp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <Button
+            android:id="@+id/activity_create_event_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/addEventInputBackground"
+            android:text="Bild hochladen"
+            android:textColor="#FFFFFF" />
 
         <Space
             android:layout_width="match_parent"
@@ -164,6 +176,7 @@
             android:padding="15dp">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/activity_create_event_description"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#fff"
@@ -174,7 +187,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/activity_create_event_buttonCreate"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/colorPrimary"
