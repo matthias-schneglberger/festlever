@@ -182,7 +182,8 @@ public class LoginActivity extends AppCompatActivity {
 
     void onLoginSuccess(User user){ // Working
         loginButton.setEnabled(true);
-        startActivity(new Intent(this, MainActivity.class).putExtra("user",user));
+        startActivity(new Intent(this, MainActivity.class));
+        MainActivity.user = user;
         finish();
     }
 

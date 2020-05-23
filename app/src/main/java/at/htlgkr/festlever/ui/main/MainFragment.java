@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import at.htlgkr.festlever.R;
+import at.htlgkr.festlever.activities.CreateEventActivity;
+import at.htlgkr.festlever.activities.EventDetailsActivity;
 import at.htlgkr.festlever.adapter.Adapter_event;
 import at.htlgkr.festlever.objects.Event;
 import at.htlgkr.festlever.objects.User;
@@ -79,7 +82,18 @@ public class MainFragment extends Fragment {
             eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, events, false));
         }
 
+        eventsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Event event = (Event) parent.getItemAtPosition(position);
+                showDetailsOfEvent(event);
+            }
+        });
+
         return view;
     }
 
+    void showDetailsOfEvent(Event event){
+        startActivity(new Intent(getActivity(), EventDetailsActivity.class).putExtra("user",user).putExtra("event",event));
+    }
 }

@@ -30,7 +30,7 @@ import at.htlgkr.festlever.ui.main.SectionsPagerAdapter;
 public class MainActivity extends AppCompatActivity {
 
     private final String TAG = "MainActivity";
-    private User user;
+    public static User user;
     private MainFragment publicFragment;
     private MainFragment privateFragment;
     private MainFragment myEventsFragment;
@@ -56,12 +56,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        //Get logged in User
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        user = (User) bundle.get("user");
-        Log.d(TAG, "onCreate: Current User logged in: " + user.getUsername());
-
         //Set up Fragments
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(),user);
         ViewPager viewPager = findViewById(R.id.view_pager);
@@ -81,10 +75,13 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                createEvent();
             }
         });
+    }
+
+    void createEvent(){
+        startActivity(new Intent(this,CreateEventActivity.class).putExtra("user",user));
     }
 
     @Override
@@ -125,15 +122,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void findFriends(){
-
+        startActivity(new Intent(this,FindFriendsActivity.class).putExtra("user",user));
     }
 
     void showFriendRequests(){
-
+        startActivity(new Intent(this,FriendRequestsActivity.class).putExtra("user",user));
     }
 
     void showEventRequests(){
-
+        startActivity(new Intent(this,EventRequestsActivity.class).putExtra("user",user));
     }
 
     void logout(){ // Working
