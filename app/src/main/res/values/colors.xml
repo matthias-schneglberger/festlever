@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="white">#fff</color>
     <color name="colorPrimary">#e73626</color>
     <color name="colorPrimaryDark">#DA5144</color>
     <color name="colorAccent">#A79897</color>
@@ -8,4 +9,7 @@
     <color name="backgroundInputs">#ffffff</color>
     <color name="colorTextViews">#000000</color>
     <color name="checkedCheckBox">#A79897</color>
+
+    <!--  Add Event  -->
+    <color name="addEventInputBackground">#828282</color>
 </resources>
