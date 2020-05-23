@@ -71,7 +71,9 @@ public class Adapter_event extends BaseAdapter {
         }
 
         //Set all items
-//        imageView.setImageBitmap(event.getImage());
+        if(event.getImage()!=null){
+//            imageView.setImageBitmap(event.getImage());
+        }
         eventName.setText(event.getTitle());
         //Event get Address ----------------
         //Event get timeUntil Event --------

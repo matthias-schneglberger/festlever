@@ -96,16 +96,16 @@ public class MainActivity extends AppCompatActivity {
 
         switch (id){
             case R.id.settings:
-                openSettings();
+
                 break;
             case R.id.findFriends:
-                findFriends();
+                startActivity(new Intent(this,FindFriendsActivity.class).putExtra("user",user));
                 break;
             case R.id.friendRequests:
-                showFriendRequests();
+                startActivity(new Intent(this,FriendRequestsActivity.class).putExtra("user",user));
                 break;
             case R.id.eventRequests:
-                showEventRequests();
+                startActivity(new Intent(this,EventRequestsActivity.class).putExtra("user",user));
                 break;
             case R.id.logout:
                 logout();
@@ -115,22 +115,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    void openSettings(){
-
-    }
-
-    void findFriends(){
-        startActivity(new Intent(this,FindFriendsActivity.class).putExtra("user",user));
-    }
-
-    void showFriendRequests(){
-        startActivity(new Intent(this,FriendRequestsActivity.class).putExtra("user",user));
-    }
-
-    void showEventRequests(){
-        startActivity(new Intent(this,EventRequestsActivity.class).putExtra("user",user));
     }
 
     void logout(){ // Working

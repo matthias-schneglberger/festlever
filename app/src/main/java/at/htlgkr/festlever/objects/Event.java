@@ -15,7 +15,7 @@ import at.htlgkr.festlever.logic.PasswordToHash;
 
 public class Event implements Serializable {
     private String id = "";
-    private Bitmap image;
+    private String image;
     private String title;
     private double latitude;
     private double longitude;
@@ -25,7 +25,7 @@ public class Event implements Serializable {
 
     public Event() {}
 
-    public Event(Bitmap image, String title, double latitude, double longitude, String date, double entrance) {
+    public Event(String image, String title, double latitude, double longitude, String date, double entrance) {
         this.image = image;
         this.title = title;
         this.latitude = latitude;
@@ -56,11 +56,11 @@ public class Event implements Serializable {
         this.id = id;
     }
 
-    public Bitmap getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(Bitmap image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
@@ -104,12 +104,15 @@ public class Event implements Serializable {
         this.entrance = entrance;
     }
 
-
     public List<String> getAcceptUser() {
         return acceptUser;
     }
 
     public void setAcceptUser(List<String> acceptUser) {
         this.acceptUser = acceptUser;
+    }
+
+    public String getLocation(){
+        return "geo:"+latitude+","+longitude+"?z=15";
     }
 }
