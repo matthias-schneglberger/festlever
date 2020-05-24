@@ -21,18 +21,19 @@ public class Event implements Serializable {
     private double longitude;
     private String date;
     private double entrance;
+    private String description;
     private List<String> acceptUser = new ArrayList<>();
 
     public Event() {}
 
-    public Event(String image, String title, double latitude, double longitude, String date, double entrance) {
+    public Event(String image, String title, String description, double latitude, double longitude, String date, double entrance) {
         this.image = image;
         this.title = title;
         this.latitude = latitude;
         this.longitude = longitude;
         this.date = date;
         this.entrance = entrance;
-
+        this.description = description;
 
         generateID();
     }
@@ -106,6 +107,14 @@ public class Event implements Serializable {
 
     public List<String> getAcceptUser() {
         return acceptUser;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public void setAcceptUser(List<String> acceptUser) {

@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -46,6 +47,7 @@ public class CreateEventActivity extends AppCompatActivity {
     EditText editText_address;
     EditText editText_entrance;
     EditText editText_date;
+    TextInputEditText textInputEditText_description;
 
     Button uploadImageButton;
     Button createButton;
@@ -76,6 +78,7 @@ public class CreateEventActivity extends AppCompatActivity {
         editText_address = findViewById(R.id.activity_create_event_address);
         editText_entrance = findViewById(R.id.activity_create_event_entrance);
         editText_date = findViewById(R.id.activity_create_event_date);
+        textInputEditText_description = findViewById(R.id.activity_create_event_description);
 
         try{
             Intent intent = getIntent();
@@ -174,6 +177,7 @@ public class CreateEventActivity extends AppCompatActivity {
         tmpEvent.setDate(editText_date.getText().toString());
         tmpEvent.setEntrance(Double.valueOf(editText_entrance.getText().toString()));
         tmpEvent.setImage(storagePath);
+        tmpEvent.setDescription(textInputEditText_description.getText().toString());
 
         if(fireBaseCommunication.createEvent(tmpEvent, eventIsPublic)){
             onCreateSuccess();
