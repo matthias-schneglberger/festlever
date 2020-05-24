@@ -7,6 +7,7 @@
 
     android:background="@drawable/background_event">
 
+
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="0dp"
@@ -90,6 +91,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/login_register_background_image" />
+
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -212,12 +214,12 @@
         android:id="@+id/fragment_main_listview_item_editButton"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="3dp"
         android:background="#00FFFFFF"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_dialog_dialer" />
+        app:srcCompat="@android:drawable/ic_menu_preferences" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

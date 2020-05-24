@@ -14,6 +14,7 @@ import java.util.List;
 import at.htlgkr.festlever.logic.PasswordToHash;
 
 public class Event implements Serializable {
+    private String creater;
     private String id = "";
     private String image;
     private String title;
@@ -119,6 +120,14 @@ public class Event implements Serializable {
 
     public void setAcceptUser(List<String> acceptUser) {
         this.acceptUser = acceptUser;
+    }
+
+    public String getCreater() {
+        return creater;
+    }
+
+    public void setCreater(String creater) {
+        this.creater = creater;
     }
 
     public String getLocation(){

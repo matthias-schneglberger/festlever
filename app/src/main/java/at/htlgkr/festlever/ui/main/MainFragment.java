@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import at.htlgkr.festlever.R;
 import at.htlgkr.festlever.activities.CreateEventActivity;
@@ -72,9 +73,8 @@ public class MainFragment extends Fragment {
                 break;
 
             case 2:
-                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, fireBaseCommunication.getAllEvents(), true));
+                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, fireBaseCommunication.getAllEvents().stream().filter(a -> a.getCreater().equals(user.getUsername())).collect(Collectors.toList()), true));
                 break;
-
         }
 
         eventsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

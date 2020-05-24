@@ -173,11 +173,13 @@ public class CreateEventActivity extends AppCompatActivity {
         }
         tmpEvent.setLatitude(Double.valueOf(longlat.get(0)));
         tmpEvent.setLongitude(Double.valueOf(longlat.get(1)));
-        tmpEvent.generateID();
         tmpEvent.setDate(editText_date.getText().toString());
         tmpEvent.setEntrance(Double.valueOf(editText_entrance.getText().toString()));
         tmpEvent.setImage(storagePath);
         tmpEvent.setDescription(textInputEditText_description.getText().toString());
+        tmpEvent.setCreater(user.getUsername());
+
+        tmpEvent.generateID();
 
         if(fireBaseCommunication.createEvent(tmpEvent, eventIsPublic)){
             onCreateSuccess();

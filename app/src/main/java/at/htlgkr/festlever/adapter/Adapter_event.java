@@ -1,6 +1,7 @@
 package at.htlgkr.festlever.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.icu.util.LocaleData;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -35,6 +37,8 @@ import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import at.htlgkr.festlever.R;
+import at.htlgkr.festlever.activities.CreateEventActivity;
+import at.htlgkr.festlever.logic.ImagePuffer;
 import at.htlgkr.festlever.logic.locationiqtasks.LongLatToAddressAsyncTask;
 import at.htlgkr.festlever.objects.Event;
 
@@ -45,8 +49,10 @@ public class Adapter_event extends BaseAdapter {
     private int layoutId;
     private LayoutInflater inflater;
     private boolean editsEnabled;
+    private Context context;
 
     public Adapter_event(Context ctx, int layoutId, List<Event> events, boolean editsEnabled) {
+        this.context = ctx;
         this.events = events;
         this.layoutId = layoutId;
         this.editsEnabled = editsEnabled;
@@ -82,6 +88,9 @@ public class Adapter_event extends BaseAdapter {
         TextView month = listItem.findViewById(R.id.fragment_main_listview_item_month);
         ImageButton editButton = listItem.findViewById(R.id.fragment_main_listview_item_editButton);
 
+
+//        imageView.setVisibility(View.GONE);
+
         //My Event Buttons
         if(editsEnabled){
             editButton.setVisibility(View.VISIBLE);
@@ -91,19 +100,52 @@ public class Adapter_event extends BaseAdapter {
 
                 }
             });
+
+
+            editButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    PopupMenu menu = new PopupMenu(context, view);
+                    menu.inflate(R.menu.event_options_menue);
+                    menu.setOnMenuItemClickListener( (item) -> {
+                        if(item.getTitle().equals("Freunde einladen")){
+                            //Implement some MAGIC HERE
+                        }
+                        else if(item.getTitle().equals("Event bearbeiten")){
+                            context.startActivity(new Intent(context, CreateEventActivity.class).putExtra("event",event));
+                        }
+
+
+                        return true;
+                    });
+                    menu.show();
+                }
+            });
         }
 
         //Set Image
+
+        ImagePuffer imagePuffer = new ImagePuffer();
+
         if(event.getImage()!=null){
-            FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-            StorageReference storageReference = firebaseStorage.getReference();
-            storageReference.child(event.getImage()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                @Override
-                public void onSuccess(byte[] bytes) {
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0, bytes.length);
-                    imageView.setImageBitmap(bitmap);
-                }
-            });
+            if(imagePuffer.isStored(event.getImage())){
+                imageView.setImageBitmap(imagePuffer.getImage(event.getImage()));
+            }
+            else{
+                FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+                StorageReference storageReference = firebaseStorage.getReference();
+                storageReference.child(event.getImage()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0, bytes.length);
+                        imageView.setImageBitmap(bitmap);
+
+                        imagePuffer.storeImage(event.getImage(), bitmap);
+                    }
+                });
+            }
+
+
         }
 
         //Set Address
