@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.icu.util.LocaleData;
 import android.net.Uri;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,7 @@ import java.util.concurrent.ExecutionException;
 
 import at.htlgkr.festlever.R;
 import at.htlgkr.festlever.activities.CreateEventActivity;
+import at.htlgkr.festlever.logic.FireBaseCommunication;
 import at.htlgkr.festlever.logic.ImagePuffer;
 import at.htlgkr.festlever.logic.locationiqtasks.LongLatToAddressAsyncTask;
 import at.htlgkr.festlever.objects.Event;
@@ -50,6 +52,7 @@ public class Adapter_event extends BaseAdapter {
     private LayoutInflater inflater;
     private boolean editsEnabled;
     private Context context;
+    private FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
 
     public Adapter_event(Context ctx, int layoutId, List<Event> events, boolean editsEnabled) {
         this.context = ctx;
@@ -115,6 +118,10 @@ public class Adapter_event extends BaseAdapter {
                             context.startActivity(new Intent(context, CreateEventActivity.class).putExtra("event",event));
                         }
 
+                        else if(item.getTitle().equals("Event löschen")){
+                            fireBaseCommunication.deleteEvent(event.getId());
+                        }
+
 
                         return true;
                     });
@@ -134,15 +141,24 @@ public class Adapter_event extends BaseAdapter {
             else{
                 FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
                 StorageReference storageReference = firebaseStorage.getReference();
-                storageReference.child(event.getImage()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                    @Override
-                    public void onSuccess(byte[] bytes) {
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0, bytes.length);
-                        imageView.setImageBitmap(bitmap);
 
-                        imagePuffer.storeImage(event.getImage(), bitmap);
-                    }
-                });
+//                new Handler().post(new Runnable() {
+//                    @Override
+//                    public void run() {
+                        storageReference.child(event.getImage()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                            @Override
+                            public void onSuccess(byte[] bytes) {
+                                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0, bytes.length);
+                                imageView.setImageBitmap(bitmap);
+
+                                imagePuffer.storeImage(event.getImage(), bitmap);
+                            }
+                        });
+//                    }
+//                });
+
+
+
             }
 
 

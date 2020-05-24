@@ -6,4 +6,7 @@
 
     <item  android:id="@+id/event_options_menue_editEvent"
         android:title="Event bearbeiten"/>
+
+    <item  android:id="@+id/event_options_menue_deleteEvent"
+        android:title="Event löschen"/>
 </menu>

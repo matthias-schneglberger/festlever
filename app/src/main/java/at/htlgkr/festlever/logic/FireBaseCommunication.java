@@ -94,6 +94,13 @@ public class FireBaseCommunication {
         return true;
     }
 
+    public boolean deleteEvent(String eventID){
+        dbaseRef.child("events-oeffentlich").child(eventID).removeValue();
+        dbaseRef.child("events-privat").child(eventID).removeValue();
+
+        return true;
+    }
+
 
     public List<Event> getAllPublicEvents(){
         GetAllPublicEvents getAllPublicEvents = new GetAllPublicEvents();
