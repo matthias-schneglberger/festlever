@@ -1,6 +1,10 @@
 package at.htlgkr.festlever.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.icu.util.LocaleData;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,10 +13,29 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 import at.htlgkr.festlever.R;
+import at.htlgkr.festlever.logic.locationiqtasks.LongLatToAddressAsyncTask;
 import at.htlgkr.festlever.objects.Event;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
@@ -59,7 +82,7 @@ public class Adapter_event extends BaseAdapter {
         TextView month = listItem.findViewById(R.id.fragment_main_listview_item_month);
         ImageButton editButton = listItem.findViewById(R.id.fragment_main_listview_item_editButton);
 
-        //My Event
+        //My Event Buttons
         if(editsEnabled){
             editButton.setVisibility(View.VISIBLE);
             editButton.setOnClickListener(new View.OnClickListener() {
@@ -70,17 +93,51 @@ public class Adapter_event extends BaseAdapter {
             });
         }
 
-        //Set all items
+        //Set Image
         if(event.getImage()!=null){
-//            imageView.setImageBitmap(event.getImage());
+            FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+            StorageReference storageReference = firebaseStorage.getReference();
+            storageReference.child(event.getImage()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0, bytes.length);
+                    imageView.setImageBitmap(bitmap);
+                }
+            });
         }
+
+        //Set Address
+        LongLatToAddressAsyncTask longLatToAddressAsyncTask = new LongLatToAddressAsyncTask();
+        longLatToAddressAsyncTask.execute(event.getLatitude(),event.getLongitude());
+        try {
+            String address = longLatToAddressAsyncTask.get();
+            if(address!=null){
+                JSONObject jsonObject = new JSONObject(address);
+                eventAddress.setText(jsonObject.getString("road") + " " + jsonObject.getString("house_number") + ", " + jsonObject.getString("postcode"));
+            }
+        } catch (ExecutionException | InterruptedException | JSONException e) {
+            e.printStackTrace();
+        }
+
+        //Set Title
         eventName.setText(event.getTitle());
-        //Event get Address ----------------
-        //Event get timeUntil Event --------
-//        accepts.setText(event.getAcceptUser().size()+"");
-//        entrance.setText(event.getEntrance()+"");
-//        day.setText(event.getDate().substring(0,2));
-        //Event get Month ------------------
+
+        //Set Accepts
+        accepts.setText(event.getAcceptUser().size()+"");
+
+        //Set Entrance
+        entrance.setText(event.getEntrance()+" €");
+
+        //Set Day
+        day.setText(event.getDate().substring(0,2));
+
+        //Set Month
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        DateTimeFormatter month_date = DateTimeFormatter.ofPattern("MMM", Locale.GERMAN);
+        month.setText(month_date.format(LocalDate.parse(event.getDate(),dtf)));
+
+        //Set Time Until Event begins
+        timeUntilEvent.setText(ChronoUnit.DAYS.between(LocalDate.now(), LocalDate.parse(event.getDate(),dtf)) + " Tage");
 
         return listItem;
     }

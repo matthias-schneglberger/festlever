@@ -5,18 +5,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,16 +18,11 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -44,8 +32,7 @@ import java.util.concurrent.ExecutionException;
 
 import at.htlgkr.festlever.R;
 import at.htlgkr.festlever.logic.FireBaseCommunication;
-import at.htlgkr.festlever.logic.PathOfImage;
-import at.htlgkr.festlever.logic.locationiqtasks.LocationAsyncTask;
+import at.htlgkr.festlever.logic.locationiqtasks.AdressToLongLatAsyncTask;
 import at.htlgkr.festlever.objects.Event;
 import at.htlgkr.festlever.objects.User;
 
@@ -124,6 +111,7 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         });
 
+        uploadImageButton.setText("Bild hochladen ...");
         uploadImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -168,14 +156,12 @@ public class CreateEventActivity extends AppCompatActivity {
         progressDialog.show();
 
         tmpEvent.setTitle(editText_title.getText().toString());
-        LocationAsyncTask locationAsyncTask = new LocationAsyncTask();
-        locationAsyncTask.execute(editText_address.getText().toString());
+        AdressToLongLatAsyncTask adressToLongLatAsyncTask = new AdressToLongLatAsyncTask();
+        adressToLongLatAsyncTask.execute(editText_address.getText().toString());
         List<String> longlat = new ArrayList<>();
         try {
-            longlat = locationAsyncTask.get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+            longlat = adressToLongLatAsyncTask.get();
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
         if(longlat.isEmpty()){
@@ -221,6 +207,7 @@ public class CreateEventActivity extends AppCompatActivity {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 progressDialog.dismiss();
                 Toast.makeText(CreateEventActivity.this, "Bild hochgeladen", Toast.LENGTH_SHORT).show();
+                uploadImageButton.setText("Bild ändern");
             }
         })
         .addOnFailureListener(new OnFailureListener() {

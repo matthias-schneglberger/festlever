@@ -14,6 +14,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -32,9 +33,11 @@ import at.htlgkr.festlever.logic.firebasetasks.*;
 public class FireBaseCommunication {
     private final String TAG = "FireBaseCommunication";
     DatabaseReference dbaseRef;
+    FirebaseFirestore firebaseFirestore;
 
     public FireBaseCommunication(){
         dbaseRef = FirebaseDatabase.getInstance().getReference();
+        firebaseFirestore = FirebaseFirestore.getInstance();
     }
 
     public boolean registerUser(User user){ // Working
@@ -46,13 +49,12 @@ public class FireBaseCommunication {
             }
         }
         if(!exist){
-            OnFailureListener onFailureListener = new OnFailureListener() {
+            dbaseRef.child("benutzer").child(user.getUsername()).setValue(new GsonBuilder().create().toJson(user)).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.e(TAG, e.getMessage());
+                    Log.d(TAG, e.getMessage());
                 }
-            };
-            dbaseRef.child("benutzer").child(user.getUsername()).setValue(new GsonBuilder().create().toJson(user)).addOnFailureListener(onFailureListener);
+            });
         }
         return !exist;
     }

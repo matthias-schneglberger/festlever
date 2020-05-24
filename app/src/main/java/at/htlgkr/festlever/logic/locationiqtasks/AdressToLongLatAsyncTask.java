@@ -15,7 +15,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LocationAsyncTask extends AsyncTask<String, String, List<String>> {
+public class AdressToLongLatAsyncTask extends AsyncTask<String, String, List<String>> {
 
     @Override
     protected List<String> doInBackground(String... strings) {
