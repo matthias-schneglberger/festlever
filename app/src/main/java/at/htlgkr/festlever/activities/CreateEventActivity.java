@@ -40,6 +40,8 @@ import at.htlgkr.festlever.objects.User;
 public class CreateEventActivity extends AppCompatActivity {
     private final String TAG = "CreateEventActivity";
     private User user;
+    private Event event;
+    private boolean inChangeMode = true;
     private boolean eventIsPublic = true;
     private FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
 
@@ -80,12 +82,30 @@ public class CreateEventActivity extends AppCompatActivity {
         editText_date = findViewById(R.id.activity_create_event_date);
         textInputEditText_description = findViewById(R.id.activity_create_event_description);
 
+        //Get User
         try{
             Intent intent = getIntent();
             Bundle bundle = intent.getExtras();
             user = (User) bundle.get("user");
             Log.d(TAG, "onCreate: Current User logged in: " + user.getUsername());
         }catch (NullPointerException ignored){}
+
+        //Get Event
+        try{
+            Intent intent = getIntent();
+            Bundle bundle = intent.getExtras();
+            event = (Event) bundle.get("event");
+        }catch (NullPointerException ignored){}
+
+        //If Event is null, it creates, else it changes one
+        if(event==null){
+            inChangeMode = false;
+        }
+
+        if(inChangeMode){
+            fillItems(event);
+
+        }
 
         publicLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,6 +161,10 @@ public class CreateEventActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    void fillItems(Event event){
+
     }
 
     void createEvent(){ // Working

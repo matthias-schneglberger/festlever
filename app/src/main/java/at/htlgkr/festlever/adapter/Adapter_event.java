@@ -97,13 +97,6 @@ public class Adapter_event extends BaseAdapter {
         //My Event Buttons
         if(editsEnabled){
             editButton.setVisibility(View.VISIBLE);
-            editButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
-
 
             editButton.setOnClickListener(new View.OnClickListener() {
                 @Override
