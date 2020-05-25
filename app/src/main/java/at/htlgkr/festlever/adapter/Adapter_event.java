@@ -4,9 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.icu.util.LocaleData;
-import android.net.Uri;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +13,6 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -26,23 +20,21 @@ import com.google.firebase.storage.StorageReference;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import at.htlgkr.festlever.R;
-import at.htlgkr.festlever.activities.CreateEventActivity;
+import at.htlgkr.festlever.activities.EventCreateChangeActivity;
 import at.htlgkr.festlever.logic.FireBaseCommunication;
 import at.htlgkr.festlever.logic.ImagePuffer;
 import at.htlgkr.festlever.logic.locationiqtasks.LongLatToAddressAsyncTask;
 import at.htlgkr.festlever.objects.Event;
+import at.htlgkr.festlever.objects.User;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
@@ -52,14 +44,16 @@ public class Adapter_event extends BaseAdapter {
     private LayoutInflater inflater;
     private boolean editsEnabled;
     private Context context;
+    private User user;
     private FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
 
-    public Adapter_event(Context ctx, int layoutId, List<Event> events, boolean editsEnabled) {
+    public Adapter_event(Context ctx, int layoutId, List<Event> events, boolean editsEnabled, User user) {
         this.context = ctx;
         this.events = events;
         this.layoutId = layoutId;
         this.editsEnabled = editsEnabled;
         this.inflater = (LayoutInflater) ctx.getSystemService(LAYOUT_INFLATER_SERVICE);
+        this.user = user;
     }
 
     @Override
@@ -108,7 +102,7 @@ public class Adapter_event extends BaseAdapter {
                             //Implement some MAGIC HERE
                         }
                         else if(item.getTitle().equals("Event bearbeiten")){
-                            context.startActivity(new Intent(context, CreateEventActivity.class).putExtra("event",event));
+                            context.startActivity(new Intent(context, EventCreateChangeActivity.class).putExtra("event",event).putExtra("user",user));
                         }
 
                         else if(item.getTitle().equals("Event löschen")){

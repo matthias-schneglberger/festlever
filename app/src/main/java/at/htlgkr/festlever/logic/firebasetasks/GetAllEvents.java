@@ -19,8 +19,8 @@ import java.util.List;
 
 import at.htlgkr.festlever.objects.Event;
 
-public class GetAllPublicEvents extends AsyncTask<String, Integer, List<Event>> {
-    private final String TAG = "GetAllPublicEvents";
+public class GetAllEvents extends AsyncTask<String, Integer, List<Event>> {
+    private final String TAG = "GetAllEvents";
 
     @Override
     protected List<Event> doInBackground(String... strings) {
@@ -29,7 +29,7 @@ public class GetAllPublicEvents extends AsyncTask<String, Integer, List<Event>> 
 
         //GET from site
         try {
-            HttpURLConnection connection = (HttpURLConnection) new URL("https://festlever-ab8ab.firebaseio.com/events-oeffentlich.json").openConnection();
+            HttpURLConnection connection = (HttpURLConnection) new URL("https://festlever-ab8ab.firebaseio.com/events.json").openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Content-Type", "application/json");
             int responseCode = connection.getResponseCode();

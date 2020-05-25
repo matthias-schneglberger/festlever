@@ -14,6 +14,7 @@ import java.util.List;
 import at.htlgkr.festlever.logic.PasswordToHash;
 
 public class Event implements Serializable {
+    private boolean isPublic;
     private String creater;
     private String id = "";
     private String image;
@@ -27,7 +28,8 @@ public class Event implements Serializable {
 
     public Event() {}
 
-    public Event(String image, String title, String description, double latitude, double longitude, String date, double entrance) {
+    public Event(boolean isPublic, String image, String title, String description, double latitude, double longitude, String date, double entrance) {
+        this.isPublic = isPublic;
         this.image = image;
         this.title = title;
         this.latitude = latitude;
@@ -37,6 +39,14 @@ public class Event implements Serializable {
         this.description = description;
 
         generateID();
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
     }
 
     public void generateID(){

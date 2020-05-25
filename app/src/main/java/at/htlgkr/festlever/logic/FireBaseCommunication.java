@@ -77,72 +77,26 @@ public class FireBaseCommunication {
         return null;
     }
 
-    public boolean createEvent(Event event, boolean publicEvent){
-        if(publicEvent){
-            List<Event> events = getAllPublicEvents();
-            if(events.contains(event))
-                return false;
-            dbaseRef.child("events-oeffentlich").child(event.getId()).setValue(new GsonBuilder().create().toJson(event));
-        }
-        else{
-            List<Event> events = getAllPrivateEvents();
-            if(events.contains(event))
-                return false;
-            dbaseRef.child("events-privat").child(event.getId()).setValue(new GsonBuilder().create().toJson(event));
-        }
-
+    public boolean createEvent(Event event){
+        List<Event> events = getAllEvents();
+        if(events.contains(event))
+            return false;
+        dbaseRef.child("events").child(event.getId()).setValue(new GsonBuilder().create().toJson(event));
         return true;
     }
 
     public boolean deleteEvent(String eventID){
-        dbaseRef.child("events-oeffentlich").child(eventID).removeValue();
-        dbaseRef.child("events-privat").child(eventID).removeValue();
-
+        dbaseRef.child("events").child(eventID).removeValue();
         return true;
     }
 
-
-    public List<Event> getAllPublicEvents(){
-        GetAllPublicEvents getAllPublicEvents = new GetAllPublicEvents();
-        getAllPublicEvents.execute();
-
-        try {
-            return getAllPublicEvents.get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    public List<Event> getAllPrivateEvents(){
-        GetAllPrivateEvents getAllPrivateEvents = new GetAllPrivateEvents();
-        getAllPrivateEvents.execute();
-
-        try {
-            return getAllPrivateEvents.get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
     public List<Event> getAllEvents(){
-        List<Event> events = new ArrayList<>();
-
-        events.addAll(getAllPublicEvents());
-        events.addAll(getAllPrivateEvents());
-
-        return events;
+        try {
+            return new GetAllEvents().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
-
-
-
-
 
 }

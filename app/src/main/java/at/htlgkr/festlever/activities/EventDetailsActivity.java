@@ -25,7 +25,6 @@ public class EventDetailsActivity extends AppCompatActivity {
             Bundle bundle = intent.getExtras();
             user = (User) bundle.get("user");
             event = (Event) bundle.get("event");
-            Log.d(TAG, "onCreate: Current User logged in: " + user.getUsername());
         }catch (NullPointerException ignored){}
     }
 }

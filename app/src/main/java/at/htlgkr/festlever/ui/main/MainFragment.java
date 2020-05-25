@@ -1,6 +1,5 @@
 package at.htlgkr.festlever.ui.main;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,11 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import at.htlgkr.festlever.R;
-import at.htlgkr.festlever.activities.CreateEventActivity;
 import at.htlgkr.festlever.activities.EventDetailsActivity;
 import at.htlgkr.festlever.adapter.Adapter_event;
 import at.htlgkr.festlever.logic.FireBaseCommunication;
@@ -34,7 +31,6 @@ public class MainFragment extends Fragment {
 
     private int index;
     private User user;
-    private ArrayList<Event> eventsList;
     private View view;
     private FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
 
@@ -62,18 +58,17 @@ public class MainFragment extends Fragment {
 
         ListView eventsView = view.findViewById(R.id.fragment_main_event_listView);
 
-
         switch (index){
             case 0:
-                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, fireBaseCommunication.getAllPublicEvents(), false));
+                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, fireBaseCommunication.getAllEvents().stream().filter(a -> a.isPublic()).collect(Collectors.toList()), false,user));
                 break;
 
             case 1:
-                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, fireBaseCommunication.getAllPrivateEvents(), false));
+                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, fireBaseCommunication.getAllEvents().stream().filter(a -> !a.isPublic() && a.getAcceptUser().contains(user.getUsername())).collect(Collectors.toList()), false,user));
                 break;
 
             case 2:
-                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, fireBaseCommunication.getAllEvents().stream().filter(a -> a.getCreater().equals(user.getUsername())).collect(Collectors.toList()), true));
+                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, fireBaseCommunication.getAllEvents().stream().filter(a -> a.getCreater().equals(user.getUsername())).collect(Collectors.toList()), true,user));
                 break;
         }
 
@@ -81,14 +76,10 @@ public class MainFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Event event = (Event) parent.getItemAtPosition(position);
-                showDetailsOfEvent(event);
+                startActivity(new Intent(getActivity(), EventDetailsActivity.class).putExtra("user",user).putExtra("event",event));
             }
         });
 
         return view;
-    }
-
-    void showDetailsOfEvent(Event event){
-        startActivity(new Intent(getActivity(), EventDetailsActivity.class).putExtra("user",user).putExtra("event",event));
     }
 }

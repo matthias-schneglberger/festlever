@@ -33,7 +33,7 @@
             android:name=".activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.CreateEventActivity"
+            android:name=".activities.EventCreateChangeActivity"
             android:parentActivityName=".activities.MainActivity" />
         <activity
             android:name=".activities.FindFriendsActivity"

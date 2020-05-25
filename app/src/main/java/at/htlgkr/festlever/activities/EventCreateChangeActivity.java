@@ -24,6 +24,9 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -34,16 +37,20 @@ import java.util.concurrent.ExecutionException;
 import at.htlgkr.festlever.R;
 import at.htlgkr.festlever.logic.FireBaseCommunication;
 import at.htlgkr.festlever.logic.locationiqtasks.AdressToLongLatAsyncTask;
+import at.htlgkr.festlever.logic.locationiqtasks.LongLatToAddressAsyncTask;
 import at.htlgkr.festlever.objects.Event;
 import at.htlgkr.festlever.objects.User;
 
-public class CreateEventActivity extends AppCompatActivity {
+public class EventCreateChangeActivity extends AppCompatActivity {
     private final String TAG = "CreateEventActivity";
     private User user;
     private Event event;
     private boolean inChangeMode = true;
     private boolean eventIsPublic = true;
     private FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
+
+    ConstraintLayout publicLayout;
+    ConstraintLayout privateLayout;
 
     EditText editText_title;
     EditText editText_address;
@@ -70,8 +77,8 @@ public class CreateEventActivity extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
-        final ConstraintLayout publicLayout = findViewById(R.id.activity_create_event_publicLayout);
-        final ConstraintLayout privateLayout = findViewById(R.id.activity_create_event_privateLayout);
+        publicLayout = findViewById(R.id.activity_create_event_publicLayout);
+        privateLayout = findViewById(R.id.activity_create_event_privateLayout);
 
         createButton = findViewById(R.id.activity_create_event_buttonCreate);
         uploadImageButton = findViewById(R.id.activity_create_event_image);
@@ -97,43 +104,36 @@ public class CreateEventActivity extends AppCompatActivity {
             event = (Event) bundle.get("event");
         }catch (NullPointerException ignored){}
 
-        //If Event is null, it creates, else it changes one
-        if(event==null){
-            inChangeMode = false;
-        }
-
-        if(inChangeMode){
-            fillItems(event);
-
-        }
-
+        //Public-Switch
         publicLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                publicLayout.setBackgroundColor(getResources().getColor(R.color.addEventInputBackground));
-                privateLayout.setBackground(getDrawable(R.drawable.background_add_event_input_white));
-
-                eventIsPublic = true;
+                updateToPublic();
             }
         });
 
+        //Private-Switch
         privateLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                publicLayout.setBackground(getDrawable(R.drawable.background_add_event_input_white));
-                privateLayout.setBackgroundColor(getResources().getColor(R.color.addEventInputBackground));
-
-                eventIsPublic = false;
+                updateToPrivate();
             }
         });
 
+        //Create-Button
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createEvent();
+                if(inChangeMode){
+                    changeEvent();
+                }
+                else{
+                    createEvent();
+                }
             }
         });
 
+        //Upload-Image-Button
         uploadImageButton.setText("Bild hochladen ...");
         uploadImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,6 +145,7 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         });
 
+        //DatePickerDialog
         editText_date.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -161,10 +162,54 @@ public class CreateEventActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //If Event is null, it creates, else it changes one
+        if(event==null){
+            inChangeMode = false;
+        }
+
+        if(inChangeMode){
+            fillItems(event);
+            createButton.setText("Änderungen speichern");
+            uploadImageButton.setText("Bild ändern");
+        }
     }
 
-    void fillItems(Event event){
+    void fillItems(Event event){ // Working
+        if(event.isPublic()){
+            updateToPublic();
+        }
+        else{
+            updateToPrivate();
+        }
+        editText_title.setText(event.getTitle());
+        LongLatToAddressAsyncTask longLatToAddressAsyncTask = new LongLatToAddressAsyncTask();
+        longLatToAddressAsyncTask.execute(event.getLatitude(),event.getLongitude());
+        try {
+            String address = longLatToAddressAsyncTask.get();
+            if(address!=null){
+                JSONObject jsonObject = new JSONObject(address);
+                editText_address.setText(jsonObject.getString("road") + " " + jsonObject.getString("house_number") + ", " + jsonObject.getString("postcode"));
+            }
+        } catch (ExecutionException | JSONException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        editText_entrance.setText(event.getEntrance()+"");
+        editText_date.setText(event.getDate());
+        textInputEditText_description.setText(event.getDescription());
+        storagePath = event.getImage();
+    }
 
+    void updateToPublic(){ // Working
+        publicLayout.setBackgroundColor(getResources().getColor(R.color.addEventInputBackground));
+        privateLayout.setBackground(getDrawable(R.drawable.background_add_event_input_white));
+        eventIsPublic = true;
+    }
+
+    void updateToPrivate(){ // Working
+        publicLayout.setBackground(getDrawable(R.drawable.background_add_event_input_white));
+        privateLayout.setBackgroundColor(getResources().getColor(R.color.addEventInputBackground));
+        eventIsPublic = false;
     }
 
     void createEvent(){ // Working
@@ -176,7 +221,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
         Event tmpEvent = new Event();
 
-        final ProgressDialog progressDialog = new ProgressDialog(CreateEventActivity.this,
+        final ProgressDialog progressDialog = new ProgressDialog(EventCreateChangeActivity.this,
                 R.style.Theme_AppCompat_DayNight_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Erstellen...");
@@ -202,10 +247,56 @@ public class CreateEventActivity extends AppCompatActivity {
         tmpEvent.setImage(storagePath);
         tmpEvent.setDescription(textInputEditText_description.getText().toString());
         tmpEvent.setCreater(user.getUsername());
+        tmpEvent.setPublic(eventIsPublic);
 
         tmpEvent.generateID();
 
-        if(fireBaseCommunication.createEvent(tmpEvent, eventIsPublic)){
+        if(fireBaseCommunication.createEvent(tmpEvent)){
+            onCreateSuccess();
+        }
+        else{
+            onCreateFailed();
+        }
+        progressDialog.dismiss();
+    }
+
+    void changeEvent(){ // Working
+        Log.d(TAG, "changeEvent: ");
+        if(!validate()){
+            onCreateFailed();
+            return;
+        }
+
+        final ProgressDialog progressDialog = new ProgressDialog(EventCreateChangeActivity.this,
+                R.style.Theme_AppCompat_DayNight_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Änderungen speichern...");
+        progressDialog.show();
+
+        event.setTitle(editText_title.getText().toString());
+        AdressToLongLatAsyncTask adressToLongLatAsyncTask = new AdressToLongLatAsyncTask();
+        adressToLongLatAsyncTask.execute(editText_address.getText().toString());
+        List<String> longlat = new ArrayList<>();
+        try {
+            longlat = adressToLongLatAsyncTask.get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        if(longlat.isEmpty()){
+            onCreateFailed();
+            return;
+        }
+        event.setLatitude(Double.valueOf(longlat.get(0)));
+        event.setLongitude(Double.valueOf(longlat.get(1)));
+        event.setDate(editText_date.getText().toString());
+        event.setEntrance(Double.valueOf(editText_entrance.getText().toString()));
+        event.setImage(storagePath);
+        event.setDescription(textInputEditText_description.getText().toString());
+        event.setCreater(user.getUsername());
+        event.setPublic(eventIsPublic);
+
+
+        if(fireBaseCommunication.createEvent(event)){
             onCreateSuccess();
         }
         else{
@@ -236,7 +327,7 @@ public class CreateEventActivity extends AppCompatActivity {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 progressDialog.dismiss();
-                Toast.makeText(CreateEventActivity.this, "Bild hochgeladen", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EventCreateChangeActivity.this, "Bild hochgeladen", Toast.LENGTH_SHORT).show();
                 uploadImageButton.setText("Bild ändern");
             }
         })
@@ -244,7 +335,7 @@ public class CreateEventActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 progressDialog.dismiss();
-                Toast.makeText(CreateEventActivity.this, "Bild hochladen fehlgeschlagen", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EventCreateChangeActivity.this, "Bild hochladen fehlgeschlagen", Toast.LENGTH_SHORT).show();
             }
         })
         .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
