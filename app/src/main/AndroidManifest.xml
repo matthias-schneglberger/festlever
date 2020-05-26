@@ -44,6 +44,7 @@
         <activity
             android:name=".activities.EventRequestsActivity"
             android:parentActivityName=".activities.MainActivity" />
+
         <activity android:name=".activities.EventDetailsActivity"
             android:parentActivityName=".activities.MainActivity"/>
 
