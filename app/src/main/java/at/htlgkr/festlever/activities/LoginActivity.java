@@ -3,10 +3,12 @@ package at.htlgkr.festlever.activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -126,28 +128,34 @@ public class LoginActivity extends AppCompatActivity {
         final String check_password = passwordToHash.bytesToHex(messageDigest.digest(password.getText().toString().getBytes()));
 
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
-                R.style.Theme_AppCompat_DayNight_Dialog);
+                R.style.Theme_Design_BottomSheetDialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Einloggen...");
         progressDialog.show();
 
-        List<User> userList = fireBaseCommunication.getAllUsers();
-        User user = new User();
-        for(User u: userList){
-            if((check_username_email.equals(u.getUsername()) && check_password.equals(u.getPassword())) || (check_username_email.equals(u.getEmail()) && check_password.equals(u.getPassword()))){
-                user = u;
-            }
-        }
-        if(user.getUsername()!=null&&user.getEmail()!=null&&user.getPassword()!=null){
-            onLoginSuccess(user);
-            if(rememberMe.isChecked()){
-                writeToRememberMeFile(user,rememberMeFile);
-            }
-        }
-        else{
-            onLoginFailed();
-        }
-        progressDialog.dismiss();
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        List < User > userList = fireBaseCommunication.getAllUsers();
+                        User user = new User();
+                        for(User u: userList){
+                            if((check_username_email.equals(u.getUsername()) && check_password.equals(u.getPassword())) || (check_username_email.equals(u.getEmail()) && check_password.equals(u.getPassword()))){
+                                user = u;
+                            }
+                        }
+                        if(user.getUsername()!=null&&user.getEmail()!=null&&user.getPassword()!=null){
+                            onLoginSuccess(user);
+                            if(rememberMe.isChecked()){
+                                writeToRememberMeFile(user,rememberMeFile);
+                            }
+                        }
+                        else{
+                            onLoginFailed();
+                        }
+                        progressDialog.dismiss();
+                    }
+                },1000);
     }
 
     boolean validate() { // Working
@@ -187,7 +195,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     void onLoginFailed(){ // Working
-        Toast.makeText(getBaseContext(), "Login fehlgeschlagen", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Login fehlgeschlagen",Toast.LENGTH_SHORT).show();
         loginButton.setEnabled(true);
     }
 

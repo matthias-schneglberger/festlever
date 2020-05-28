@@ -316,7 +316,8 @@ public class EventCreateChangeActivity extends AppCompatActivity {
 
     void uploadImage(Uri filePath){ // Working
         final ProgressDialog progressDialog
-                = new ProgressDialog(this);
+                = new ProgressDialog(EventCreateChangeActivity.this
+                ,R.style.Theme_Design_BottomSheetDialog);
         progressDialog.setTitle("Hochladen...");
         progressDialog.show();
 

@@ -93,19 +93,24 @@ public class RegisterActivity extends AppCompatActivity {
         //Register-Logic
 
         final ProgressDialog progressDialog = new ProgressDialog(RegisterActivity.this,
-                R.style.Theme_AppCompat_DayNight_Dialog);
+                R.style.Theme_Design_BottomSheetDialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Account wird erstellt...");
         progressDialog.show();
 
-        User user = new User(check_username,check_password,check_email);
-        if(fireBaseCommunication.registerUser(user)){
-            onRegisterSuccess(user);
-        }
-        else{
-            onRegisterFailed();
-        }
-        progressDialog.dismiss();
+        new android.os.Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                User user = new User(check_username,check_password,check_email);
+                if(fireBaseCommunication.registerUser(user)){
+                    onRegisterSuccess(user);
+                }
+                else{
+                    onRegisterFailed();
+                }
+                progressDialog.dismiss();
+            }
+        },100);
     }
 
     boolean validate() { // Working
@@ -151,7 +156,8 @@ public class RegisterActivity extends AppCompatActivity {
     void onRegisterSuccess(User user){ // Working
         registerButton.setEnabled(true);
         setResult(RESULT_OK,null);
-        startActivity(new Intent(this, MainActivity.class).putExtra("user",user));
+        startActivity(new Intent(this, MainActivity.class));
+        MainActivity.user = user;
         finish();
     }
 
