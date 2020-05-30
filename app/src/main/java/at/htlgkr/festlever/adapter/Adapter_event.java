@@ -32,6 +32,7 @@ import at.htlgkr.festlever.R;
 import at.htlgkr.festlever.activities.EventCreateChangeActivity;
 import at.htlgkr.festlever.logic.FireBaseCommunication;
 import at.htlgkr.festlever.logic.ImagePuffer;
+import at.htlgkr.festlever.logic.LongLatAdressPuffer;
 import at.htlgkr.festlever.logic.locationiqtasks.LongLatToAddressAsyncTask;
 import at.htlgkr.festlever.objects.Event;
 import at.htlgkr.festlever.objects.User;
@@ -152,17 +153,28 @@ public class Adapter_event extends BaseAdapter {
         }
 
         //Set Address
-        LongLatToAddressAsyncTask longLatToAddressAsyncTask = new LongLatToAddressAsyncTask();
-        longLatToAddressAsyncTask.execute(event.getLatitude(),event.getLongitude());
-        try {
-            String address = longLatToAddressAsyncTask.get();
-            if(address!=null){
-                JSONObject jsonObject = new JSONObject(address);
-                eventAddress.setText(jsonObject.getString("road") + " " + jsonObject.getString("house_number") + ", " + jsonObject.getString("postcode"));
-            }
-        } catch (ExecutionException | InterruptedException | JSONException e) {
-            e.printStackTrace();
+        LongLatAdressPuffer longLatAdressPuffer = new LongLatAdressPuffer();
+
+        if(longLatAdressPuffer.isStored(event.getLongitude(), event.getLatitude())){
+            eventAddress.setText(longLatAdressPuffer.getAddress(event.getLongitude(), event.getLatitude()));
         }
+        else{
+            LongLatToAddressAsyncTask longLatToAddressAsyncTask = new LongLatToAddressAsyncTask();
+            longLatToAddressAsyncTask.execute(event.getLatitude(),event.getLongitude());
+            try {
+                String address = longLatToAddressAsyncTask.get();
+                if(address!=null){
+                    JSONObject jsonObject = new JSONObject(address);
+                    String addressString = jsonObject.getString("road") + " " + jsonObject.getString("house_number") + ", " + jsonObject.getString("postcode");
+                    eventAddress.setText(addressString);
+
+                    longLatAdressPuffer.storeAdress(event.getLongitude(), event.getLatitude(), addressString);
+                }
+            } catch (ExecutionException | InterruptedException | JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
 
         //Set Title
         eventName.setText(event.getTitle());
