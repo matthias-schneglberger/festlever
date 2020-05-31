@@ -62,6 +62,10 @@ public class FireBaseCommunication {
         return !exist;
     }
 
+    public void updateUser(User user){
+        dbaseRef.child("benutzer").child(user.getUsername()).setValue(new GsonBuilder().create().toJson(user));
+    }
+
     public List<User> getAllUsers(){ //Working
         GetAllUsers getAllUsers = new GetAllUsers();
         getAllUsers.execute();
