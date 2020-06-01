@@ -60,15 +60,15 @@ public class MainFragment extends Fragment {
 
         switch (index){
             case 0:
-                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, fireBaseCommunication.getAllEvents().stream().filter(a -> a.isPublic()).collect(Collectors.toList()), false,user));
+                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, fireBaseCommunication.getAllEvents().stream().filter(a -> a.isPublic()).collect(Collectors.toList()), fireBaseCommunication.getAllUsers(), false,user));
                 break;
 
             case 1:
-                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, fireBaseCommunication.getAllEvents().stream().filter(a -> !a.isPublic() && a.getAcceptUser().contains(user.getUsername())).collect(Collectors.toList()), false,user));
+                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, fireBaseCommunication.getAllEvents().stream().filter(a -> !a.isPublic() && a.getAcceptUser().contains(user.getUsername())).collect(Collectors.toList()), fireBaseCommunication.getAllUsers(), false,user));
                 break;
 
             case 2:
-                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, fireBaseCommunication.getAllEvents().stream().filter(a -> a.getCreater().equals(user.getUsername())).collect(Collectors.toList()), true,user));
+                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, fireBaseCommunication.getAllEvents().stream().filter(a -> a.getCreater().equals(user.getUsername())).collect(Collectors.toList()), fireBaseCommunication.getAllUsers(), true,user));
                 break;
         }
 

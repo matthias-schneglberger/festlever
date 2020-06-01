@@ -17,21 +17,22 @@ import java.util.List;
 
 import at.htlgkr.festlever.R;
 import at.htlgkr.festlever.logic.FireBaseCommunication;
+import at.htlgkr.festlever.objects.Event;
 import at.htlgkr.festlever.objects.User;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
-public class Adapter_findFriends extends BaseAdapter {
+public class Adapter_inviteToEvent extends BaseAdapter {
     private List<User> users = new ArrayList();
     private int layoutId;
     private LayoutInflater inflater;
-    private User origUser;
+    private Event event;
     private Context context;
 
-    public Adapter_findFriends(Context ctx, int layoutId, List<User> users, User origUser) {
+    public Adapter_inviteToEvent(Context ctx, int layoutId, List<User> users, Event event) {
         this.users = users;
         this.layoutId = layoutId;
-        this.origUser = origUser;
+        this.event = event;
         context = ctx;
         this.inflater = (LayoutInflater) ctx.getSystemService(LAYOUT_INFLATER_SERVICE);
     }
@@ -67,12 +68,12 @@ public class Adapter_findFriends extends BaseAdapter {
             }
         });
 
-        if(origUser.getFriends().contains(user.getUsername())){
-            requestButton.setText("Freunde");
+        if(user.getEventRequests().contains(event.getId())){
+            requestButton.setText("Gesendet");
             requestButton.setClickable(false);
         }
-        if(user.getFriendRequests().contains(origUser.getUsername())){
-            requestButton.setText("Gesendet");
+        if(user.getJoinedEvents().contains(event.getId())){
+            requestButton.setText("Nimmt teil");
             requestButton.setClickable(false);
         }
 
@@ -81,19 +82,17 @@ public class Adapter_findFriends extends BaseAdapter {
 
     private void sendRequest(User user){
         FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
-        List<String> friendRequests = user.getFriendRequests();
+        List<String> eventRequests = user.getEventRequests();
 
-        if(friendRequests.contains(origUser.getUsername())){
-            Snackbar.make(((Activity)context).findViewById(R.id.activity_find_friends_allUsers), "Bereits eine Anfrage an " + user.getUsername() + " versendet", BaseTransientBottomBar.LENGTH_SHORT).show();
+        if(eventRequests.contains(event.getId())){
+            Snackbar.make(((Activity)context).findViewById(R.id.activity_find_friends_allUsers), user.getUsername() + " wurde bereits eine gesendet", BaseTransientBottomBar.LENGTH_SHORT).show();
         }
         else{
-            friendRequests.add(origUser.getUsername());
-            user.setFriendRequests(friendRequests);
+            eventRequests.add(event.getId());
+            user.setEventRequests(eventRequests);
             fireBaseCommunication.updateUser(user);
 
-            Snackbar.make(((Activity)context).findViewById(R.id.activity_find_friends_allUsers), user.getUsername() + " wurde eine Anfrage gesendet", BaseTransientBottomBar.LENGTH_SHORT).show();
+            Snackbar.make(((Activity)context).findViewById(R.id.activity_find_friends_allUsers), user.getUsername() + " wurde eine Einladung gesendet", BaseTransientBottomBar.LENGTH_SHORT).show();
         }
-
-
     }
 }

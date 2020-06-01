@@ -66,6 +66,10 @@ public class FireBaseCommunication {
         dbaseRef.child("benutzer").child(user.getUsername()).setValue(new GsonBuilder().create().toJson(user));
     }
 
+    public void updateEvent(Event event){
+        dbaseRef.child("events").child(event.getId()).setValue(new GsonBuilder().create().toJson(event));
+    }
+
     public List<User> getAllUsers(){ //Working
         GetAllUsers getAllUsers = new GetAllUsers();
         getAllUsers.execute();

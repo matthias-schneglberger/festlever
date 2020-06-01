@@ -12,8 +12,9 @@ public class User implements Serializable {
     List<String> friends = new ArrayList<>();
     List<String> friendRequests = new ArrayList<>();
 
-    List<Event> provideEvents = new ArrayList<>();
-    List<Event> joinedEvents = new ArrayList<>();
+    List<String> provideEvents = new ArrayList<>();
+    List<String> joinedEvents = new ArrayList<>();
+    List<String> eventRequests = new ArrayList<>();
 
     public User() {}
 
@@ -23,7 +24,7 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public User(String username, String email, String password, List<String> friends, List<String> friendRequests, List<Event> provideEvents, List<Event> joinedEvents) {
+    public User(String username, String email, String password, List<String> friends, List<String> friendRequests, List<String> provideEvents, List<String> joinedEvents, List<String> eventRequests) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -31,6 +32,7 @@ public class User implements Serializable {
         this.friendRequests = friendRequests;
         this.provideEvents = provideEvents;
         this.joinedEvents = joinedEvents;
+        this.eventRequests = eventRequests;
     }
 
     public String getUsername() {
@@ -73,19 +75,27 @@ public class User implements Serializable {
         this.friendRequests = friendRequests;
     }
 
-    public List<Event> getProvideEvents() {
+    public List<String> getProvideEvents() {
         return provideEvents;
     }
 
-    public void setProvideEvents(List<Event> provideEvents) {
+    public void setProvideEvents(List<String> provideEvents) {
         this.provideEvents = provideEvents;
     }
 
-    public List<Event> getJoinedEvents() {
+    public List<String> getJoinedEvents() {
         return joinedEvents;
     }
 
-    public void setJoinedEvents(List<Event> joinedEvents) {
+    public void setJoinedEvents(List<String> joinedEvents) {
         this.joinedEvents = joinedEvents;
+    }
+
+    public List<String> getEventRequests() {
+        return eventRequests;
+    }
+
+    public void setEventRequests(List<String> eventRequests) {
+        this.eventRequests = eventRequests;
     }
 }

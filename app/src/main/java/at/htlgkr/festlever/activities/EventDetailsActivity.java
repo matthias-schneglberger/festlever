@@ -26,6 +26,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 import at.htlgkr.festlever.R;
 import at.htlgkr.festlever.logic.FireBaseCommunication;
@@ -132,6 +133,8 @@ public class EventDetailsActivity extends AppCompatActivity {
         //entrance
         entrance.setText(event.getEntrance()+" €");
 
+        //friends
+        friendsAccepted.setText(event.getAcceptUser().stream().filter(a -> user.getFriends().contains(a)).collect(Collectors.toList()).size() + " Freunde nehmen teil");
 
         //accept Button
         if(event.getAcceptUser().contains(user.getUsername())){
