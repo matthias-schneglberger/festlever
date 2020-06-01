@@ -29,9 +29,9 @@ Matthias Schneglberger
 | Firebase initialisieren & kennenlernen| 26.05|
 | Login & Registrieren + Design| 26.05|
 | MainPage - Design| 26.05|
-| Grundlegende Funktionen (Event erstellen+anzeigen)| 05.06|
-| Details eines Events| 05.06|
-| Settings + Profil Erinstellungen| 02.06|
+| Grundlegende Funktionen (Event erstellen+anzeigen)| 03.06|
+| Details eines Events| 03.06|
+| Settings + Profil Erinstellungen| 09.06|
 | "Meine Events"| 09.06|
 | Freundschaften| 09.06|
 | Was machen meine Freunde? (25 nehmen Teil)| 16.06|
