@@ -212,7 +212,7 @@ public class LoginActivity extends AppCompatActivity {
             List<User> userList = fireBaseCommunication.getAllUsers();
             for (User u: userList){
                 if(u.getUsername().equals(user.getUsername()) && u.getEmail().equals(user.getEmail()) && u.getPassword().equals(user.getPassword())){
-                    onLoginSuccess(user);
+                    onLoginSuccess(u);
                 }
             }
         } catch (IOException | NullPointerException ignored) { }

@@ -1,34 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout4"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 
     <TextView
         android:id="@+id/activity_friend_requests_user_listitem_username"
-        android:layout_marginLeft="10dp"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="10"
-        android:text="Benutzername" />
+        android:layout_marginStart="15dp"
+        android:text="Benutzername"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/activity_friend_requests_user_listitem_accept"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/activity_friend_requests_user_listitem_accept"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="#4DD82F"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="20dp"
+        android:background="@color/positiveColor"
+        android:text="Annehmen"
         android:textColor="#FFFFFF"
-        android:text="Annehmen" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/activity_friend_requests_user_listitem_reject"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/activity_friend_requests_user_listitem_reject"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#D60000"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="20dp"
+        android:background="@color/negativeColor"
+        android:text="Ablehnen"
         android:textColor="#FFFFFF"
-        android:layout_weight="1"
-        android:text="Ablehnen" />
-</LinearLayout>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/activity_friend_requests_user_listitem_feedbackBox"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="25dp"
+        android:gravity="center"
+        android:text="Angenommen"
+        android:textColor="#FFFFFF"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/activity_friend_requests_user_listitem_username"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

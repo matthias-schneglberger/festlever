@@ -59,22 +59,39 @@ public class Adapter_friendRequests extends BaseAdapter {
         View listItem = (view == null) ? inflater.inflate(this.layoutId, null) : view;
         ((TextView) listItem.findViewById(R.id.activity_friend_requests_user_listitem_username)).setText(user.getUsername());
 
-        //accept Button
 
+        //init Buttons
         acceptButton = listItem.findViewById(R.id.activity_friend_requests_user_listitem_accept);
+        rejectButton = listItem.findViewById(R.id.activity_friend_requests_user_listitem_reject);
+
+        //accept Button
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 sendAcceptRequest(user);
+
+                TextView feedbackView = listItem.findViewById(R.id.activity_friend_requests_user_listitem_feedbackBox);
+                acceptButton.setVisibility(View.INVISIBLE);
+                rejectButton.setVisibility(View.INVISIBLE);
+                feedbackView.setVisibility(View.VISIBLE);
+                feedbackView.setText("Angenommen");
+                feedbackView.setBackgroundResource(R.color.positiveColor);
             }
         });
 
         //reject Button
-        rejectButton = listItem.findViewById(R.id.activity_friend_requests_user_listitem_reject);
+
         rejectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 sendRejectRequest(user);
+
+                TextView feedbackView = listItem.findViewById(R.id.activity_friend_requests_user_listitem_feedbackBox);
+                acceptButton.setVisibility(View.INVISIBLE);
+                rejectButton.setVisibility(View.INVISIBLE);
+                feedbackView.setVisibility(View.VISIBLE);
+                feedbackView.setText("Abgelehnt");
+                feedbackView.setBackgroundResource(R.color.negativeColor);
             }
         });
 
@@ -98,9 +115,9 @@ public class Adapter_friendRequests extends BaseAdapter {
 
             MainActivity.user = origUser;
 
-            rejectButton.setVisibility(View.INVISIBLE);
-            acceptButton.setClickable(false);
-            acceptButton.setText("Angenommen");
+//            rejectButton.setVisibility(View.INVISIBLE);
+//            acceptButton.setClickable(false);
+//            acceptButton.setText("Angenommen");
             Snackbar.make(((Activity)context).findViewById(R.id.activity_friend_requests_listView), "Du und " + user.getUsername() + " seid jetzt befreundet", BaseTransientBottomBar.LENGTH_SHORT).show();
         }
         else{
@@ -120,9 +137,9 @@ public class Adapter_friendRequests extends BaseAdapter {
 
             MainActivity.user = origUser;
 
-            acceptButton.setVisibility(View.GONE);
-            rejectButton.setClickable(false);
-            rejectButton.setText("Abgelehnt");
+//            acceptButton.setVisibility(View.GONE);
+//            rejectButton.setClickable(false);
+//            rejectButton.setText("Abgelehnt");
             Snackbar.make(((Activity)context).findViewById(R.id.activity_friend_requests_listView), "Freundschaftsanfrage abgelehnt", BaseTransientBottomBar.LENGTH_SHORT).show();
         }
         else{

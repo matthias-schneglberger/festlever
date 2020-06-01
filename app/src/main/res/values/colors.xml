@@ -12,4 +12,10 @@
 
     <!--  Add Event  -->
     <color name="addEventInputBackground">#828282</color>
+
+    <!--  General Colors  -->
+    <color name="positiveColor">#4DD82F</color>
+    <color name="negativeColor">#D60000</color>
+
+
 </resources>
