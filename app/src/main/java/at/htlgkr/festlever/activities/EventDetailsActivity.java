@@ -75,8 +75,6 @@ public class EventDetailsActivity extends AppCompatActivity {
         accepts = findViewById(R.id.activity_event_details_accepts);
         entrance = findViewById(R.id.activity_event_details_entrance);
 
-
-
         if(imagePuffer.isStored(event.getImage())){
             image.setImageBitmap(imagePuffer.getImage(event.getImage()));
         }

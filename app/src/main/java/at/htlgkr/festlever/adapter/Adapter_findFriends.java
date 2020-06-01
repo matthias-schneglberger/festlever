@@ -70,6 +70,10 @@ public class Adapter_findFriends extends BaseAdapter {
             }
         });
 
+        if(origUser.getFriends().contains(user.getUsername())){
+            requestButton.setText("Freunde");
+            requestButton.setClickable(false);
+        }
 
         return listItem;
     }
