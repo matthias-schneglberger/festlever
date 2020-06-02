@@ -21,3 +21,24 @@ Was wird nächste Woche umgesetzt:
 - Settings + Profil Erinstellungen
 - "Meine Events"
 - Freundschaften
+
+## 03.06.2020
+
+Gut gelaufen ist:
++ Zeitmanagement
+ 
+Fertiggestellte Tasks:
++ "Meine Events"
++ Freundschaften
++ Was machen meine Freunde? (25 nehmen Teil)
+
+Probleme:
+- Laufzeitprobleme
+
+Wie liegen wir im Zeitplan:
+Voraus (Settings fehlen & Notifications -> sonst fertig)
+
+Was wird nächste Woche umgesetzt
+- Preferences
+- Notifications
+- ?Profil Activity?
