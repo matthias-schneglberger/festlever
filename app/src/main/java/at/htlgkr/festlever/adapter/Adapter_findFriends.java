@@ -1,5 +1,6 @@
 package at.htlgkr.festlever.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -51,6 +52,7 @@ public class Adapter_findFriends extends BaseAdapter {
         return 0;
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         User user = users.get(i);
@@ -69,10 +71,12 @@ public class Adapter_findFriends extends BaseAdapter {
 
         if(origUser.getFriends().contains(user.getUsername())){
             requestButton.setText("Freunde");
+            requestButton.setBackgroundColor(R.color.alreadyColor);
             requestButton.setClickable(false);
         }
         if(user.getFriendRequests().contains(origUser.getUsername())){
             requestButton.setText("Gesendet");
+            requestButton.setBackgroundColor(R.color.alreadyColor);
             requestButton.setClickable(false);
         }
 

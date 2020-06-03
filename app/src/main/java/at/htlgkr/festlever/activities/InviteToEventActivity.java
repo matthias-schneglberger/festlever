@@ -5,8 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,7 +23,7 @@ import at.htlgkr.festlever.objects.Event;
 import at.htlgkr.festlever.objects.User;
 
 public class InviteToEventActivity extends AppCompatActivity {
-    private final String TAG = "FindFriendsActivity";
+    private final String TAG = "InviteToEventActivity";
     private User user;
     private Event event;
     private FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
@@ -31,6 +35,7 @@ public class InviteToEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_friends);
 
+        ListView listView = findViewById(R.id.activity_find_friends_allUsers);
         try{
             Intent intent = getIntent();
             Bundle bundle = intent.getExtras();
@@ -51,22 +56,24 @@ public class InviteToEventActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                newSearchTerm(s);
+                newSearchTerm(s, listView);
                 return true;
             }
         });
 
         //init update
-        newSearchTerm("");
+        newSearchTerm("", listView);
+
+        //ListView OnClickListener
+
     }
 
-    public void newSearchTerm(String searchterm){
+    public void newSearchTerm(String searchterm, ListView listView){
         this.searchTerm = searchterm;
 
         List<User> tmpUsers = allusers.stream().filter(n -> n.getUsername().contains(searchterm)).collect(Collectors.toList());
         tmpUsers = tmpUsers.stream().filter(n -> !n.getUsername().equals(user.getUsername())).collect(Collectors.toList());
 
-        ListView listView = findViewById(R.id.activity_find_friends_allUsers);
         listView.setAdapter(new Adapter_inviteToEvent(this, R.layout.activity_find_friends_user_listitem, tmpUsers, event));
     }
 }

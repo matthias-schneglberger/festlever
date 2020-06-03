@@ -1,5 +1,6 @@
 package at.htlgkr.festlever.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -52,6 +53,7 @@ public class Adapter_inviteToEvent extends BaseAdapter {
         return 0;
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         User user = users.get(i);
@@ -70,10 +72,12 @@ public class Adapter_inviteToEvent extends BaseAdapter {
 
         if(user.getEventRequests().contains(event.getId())){
             requestButton.setText("Gesendet");
+            requestButton.setBackgroundColor(R.color.alreadyColor);
             requestButton.setClickable(false);
         }
         if(user.getJoinedEvents().contains(event.getId())){
             requestButton.setText("Nimmt teil");
+            requestButton.setBackgroundColor(R.color.alreadyColor);
             requestButton.setClickable(false);
         }
 

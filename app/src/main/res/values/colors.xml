@@ -16,6 +16,6 @@
     <!--  General Colors  -->
     <color name="positiveColor">#4DD82F</color>
     <color name="negativeColor">#D60000</color>
-
+    <color name="alreadyColor">#281E72</color>
 
 </resources>

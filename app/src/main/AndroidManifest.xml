@@ -49,6 +49,8 @@
         <activity
             android:name=".activities.InviteToEventActivity"
             android:parentActivityName=".activities.MainActivity" />
+        <activity android:name=".activities.ShowProfileActivity"
+            android:parentActivityName=".activities.MainActivity"/>
 
         <meta-data
             android:name="preloaded_fonts"

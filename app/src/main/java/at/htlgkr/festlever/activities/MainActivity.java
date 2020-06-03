@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.SearchView;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -26,6 +27,16 @@ import at.htlgkr.festlever.ui.main.MainFragment;
 import at.htlgkr.festlever.ui.main.SectionsPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
+
+//    public FragmentRefreshSearchViewListener getFragmentRefreshListener() {
+//        return fragmentRefreshSearchViewListener;
+//    }
+//
+//    public void setFragmentRefreshSearchViewListener(FragmentRefreshSearchViewListener fragmentRefreshSearchViewListener) {
+//        this.fragmentRefreshSearchViewListener = fragmentRefreshSearchViewListener;
+//    }
+//
+//    private FragmentRefreshSearchViewListener fragmentRefreshSearchViewListener;
 
     private final String TAG = "MainActivity";
     public static User user;
@@ -58,6 +69,22 @@ public class MainActivity extends AppCompatActivity {
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(),user);
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
+//        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//                getFragmentRefreshListener().onRefresh("");
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//
+//            }
+//        });
 
         //Get Fragments
         publicFragment = (MainFragment) sectionsPagerAdapter.getItem(0);
@@ -76,6 +103,23 @@ public class MainActivity extends AppCompatActivity {
                 createEvent();
             }
         });
+
+        //Search View
+        SearchView searchView = findViewById(R.id.activity_main_searchview);
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String s) {
+//                return true;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String s) {
+//                if(getFragmentRefreshListener()!=null){
+//                    getFragmentRefreshListener().onRefresh(s, viewPager.getCurrentItem());
+//                }
+//                return true;
+//            }
+//        });
     }
 
     void createEvent(){
@@ -124,4 +168,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, LoginActivity.class));
         finish();
     }
+
+//    public interface FragmentRefreshSearchViewListener{
+//        void onRefresh(String term, int index);
+//    }
 }
+
