@@ -87,8 +87,13 @@ public class MainFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                update();
-                swipeRefreshLayout.setRefreshing(false);
+                new Thread(new Runnable() {
+                    public void run(){
+                        update();
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }).start();
+
             }
         });
 
@@ -142,7 +147,12 @@ public class MainFragment extends Fragment {
 
     public void update(){
         eventList = fireBaseCommunication.getAllEvents();
-        setUpListView();
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setUpListView();
+            }
+        });
     }
 
 }
