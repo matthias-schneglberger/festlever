@@ -87,8 +87,7 @@ public class MainFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                eventList = fireBaseCommunication.getAllEvents();
-                setUpListView();
+                update();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -139,6 +138,11 @@ public class MainFragment extends Fragment {
                 eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, eventList.stream().filter(a -> a.getCreater().equals(user.getUsername())).collect(Collectors.toList()), userList, true,user));
                 break;
         }
+    }
+
+    public void update(){
+        eventList = fireBaseCommunication.getAllEvents();
+        setUpListView();
     }
 
 }
