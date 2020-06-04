@@ -10,6 +10,7 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +58,9 @@ public class MainFragment extends Fragment {
         //Get User and Index from Bundle
         index = getArguments().getInt(ARG_SECTION_NUMBER);
         user = (User) getArguments().getSerializable(ARG_SECTION_USER);
+
+
+
     }
 
     @Override
@@ -75,6 +79,17 @@ public class MainFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Event event = (Event) parent.getItemAtPosition(position);
                 startActivity(new Intent(getActivity(), EventDetailsActivity.class).putExtra("user",user).putExtra("event",event));
+            }
+        });
+
+        //SwipeRefreshLayout
+        SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.fragment_main_event_pullToRefresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                eventList = fireBaseCommunication.getAllEvents();
+                setUpListView();
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 
@@ -125,4 +140,5 @@ public class MainFragment extends Fragment {
                 break;
         }
     }
+
 }

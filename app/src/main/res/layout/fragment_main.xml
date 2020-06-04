@@ -8,19 +8,34 @@
     android:background="#f2f2f2"
     tools:context=".ui.main.MainFragment">
 
-    <ListView
-        android:id="@+id/fragment_main_event_listView"
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/fragment_main_event_pullToRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="25dp"
-        android:scrollbars="none"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="15sp"
-        android:paddingLeft="25dp"
-        android:paddingRight="16dp"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <ListView
+            android:id="@+id/fragment_main_event_listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="25dp"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="15sp"
+            android:paddingLeft="25dp"
+            android:paddingTop="25dp"
+            android:paddingRight="16dp"
+
+            android:scrollbars="none"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
