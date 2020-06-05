@@ -10,6 +10,13 @@
     <ListView
         android:id="@+id/activity_event_requests_listView"
         android:layout_width="match_parent"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="15sp"
+        android:paddingLeft="25dp"
+        android:paddingTop="25dp"
+        android:paddingRight="25dp"
+
+        android:scrollbars="none"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
