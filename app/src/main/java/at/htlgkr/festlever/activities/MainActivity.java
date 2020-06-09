@@ -28,6 +28,7 @@ import java.util.Map;
 import at.htlgkr.festlever.R;
 import at.htlgkr.festlever.objects.User;
 import at.htlgkr.festlever.preferences.MySettingsActivity;
+import at.htlgkr.festlever.services.NotificationService;
 import at.htlgkr.festlever.ui.main.MainFragment;
 import at.htlgkr.festlever.ui.main.SectionsPagerAdapter;
 
@@ -92,6 +93,9 @@ public class MainActivity extends AppCompatActivity {
 
         //Search View
         SearchView searchView = findViewById(R.id.activity_main_searchview);
+
+        //Setup Services
+        startServices();
     }
 
     void createEvent(){
@@ -152,6 +156,13 @@ public class MainActivity extends AppCompatActivity {
         else if (allEntries.get(key) instanceof Boolean)
             sValue = String.valueOf(sharedPrefs.getBoolean(key,false));
         Toast.makeText(this, key + " new Value: " + sValue, Toast.LENGTH_LONG).show();
+    }
+
+    public void startServices() {
+        Intent intent = new Intent(this, NotificationService.class);
+        // the service can use the data from the intent
+        intent.putExtra("username", user.getUsername());
+        startService(intent);
     }
 }
 

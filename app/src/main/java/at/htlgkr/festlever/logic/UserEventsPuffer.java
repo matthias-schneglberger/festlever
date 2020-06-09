@@ -24,17 +24,12 @@ public class UserEventsPuffer {
     }
 
     private FragmentRefresh fragmentRefresh;
-
     private FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
-
     static List<User> users = new ArrayList<>();
-
     static List<Event> events = new ArrayList<>();
-
     public List<User> getUsers(){
         return users;
     }
-
     public List<Event> getEvents(){
         return events;
     }

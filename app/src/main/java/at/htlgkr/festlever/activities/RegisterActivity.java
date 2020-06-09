@@ -131,14 +131,14 @@ public class RegisterActivity extends AppCompatActivity {
                 if (fireBaseCommunication.registerUser(user)) {
                     if (isGpsAllowed) {
                         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-                        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//                        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            @SuppressLint("MissingPermission") Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                             try {
-                                prefs.edit().putString("preference_region",new JSONObject(new LongLatToAddressAsyncTask().execute(location==null ? -1 : location.getLatitude(),location==null ? -1 : location.getLongitude()).get()).getString("country")).commit();
+                                prefs.edit().putString("preference_region",new JSONObject(new LongLatToAddressAsyncTask().execute(location==null ? -1 : location.getLatitude(),location==null ? -1 : location.getLongitude()).get()).getString("country")).apply();
                             } catch (ExecutionException | InterruptedException | JSONException e) {
                                 e.printStackTrace();
                             }
-                        }
+//                        }
                     }
                     onRegisterSuccess(user);
                 }

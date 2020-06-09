@@ -3,4 +3,7 @@
     <string name="tab_text_public">Öffentlich</string>
     <string name="tab_text_private">Privat</string>
     <string name="tab_text_myEvents">Meine Events</string>
+
+    <string name="service_notification_channelName">FestlEverNotification</string>
+    <string name="service_notification_description">FestlEverNotificationDesc</string>
 </resources>
