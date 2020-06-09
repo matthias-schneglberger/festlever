@@ -248,6 +248,11 @@ public class EventCreateChangeActivity extends AppCompatActivity {
         tmpEvent.setDescription(textInputEditText_description.getText().toString());
         tmpEvent.setCreater(user.getUsername());
         tmpEvent.setPublic(eventIsPublic);
+        try {
+            tmpEvent.setRegion(new JSONObject(new LongLatToAddressAsyncTask().execute(Double.valueOf(longlat.get(0)),Double.valueOf(longlat.get(1))).get()).getString("country"));
+        } catch (JSONException | ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
 
         tmpEvent.generateID();
 

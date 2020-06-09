@@ -15,16 +15,5 @@ public class MySettingsFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences, rootKey);
-//        Preference prefDistance = findPreference("check_box_preference_distance");
-//        prefDistance.setOnPreferenceChangeListener( ((preference, newValue) -> {
-//            Log.d(TAG, "onCreatePreferences: " + preference.getKey() + " --> "+ newValue.toString());
-//            if(preference.getKey().equals("check_box_preference_distance")){
-//                try{
-//                    Integer newDistance = Integer.valueOf(newValue.toString());
-//                    return true;
-//                }catch (Exception e){return false;}
-//            }
-//            return true;
-//        }));
     }
 }

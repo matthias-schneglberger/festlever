@@ -1,6 +1,7 @@
 package at.htlgkr.festlever.ui.main;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
@@ -42,6 +44,9 @@ public class MainFragment extends Fragment {
     private List<Event> eventList = new ArrayList<>();
     private List<User> userList = new ArrayList<>();
 
+    private SharedPreferences prefs;
+    private String region = "";
+
     static MainFragment newInstance(int index, User user) {
         MainFragment fragment = new MainFragment();
         Bundle bundle = new Bundle();
@@ -59,8 +64,8 @@ public class MainFragment extends Fragment {
         index = getArguments().getInt(ARG_SECTION_NUMBER);
         user = (User) getArguments().getSerializable(ARG_SECTION_USER);
 
-
-
+        prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        region = prefs.getString("preference_region","Austria");
     }
 
     @Override
@@ -97,50 +102,23 @@ public class MainFragment extends Fragment {
             }
         });
 
-//        ((MainActivity)getActivity()).setFragmentRefreshSearchViewListener(new MainActivity.FragmentRefreshSearchViewListener() {
-//            @Override
-//            public void onRefresh(String term, int tab) {
-//                if(!term.equals("")){
-//                    setUpListViewWithSearchView(term, tab);
-//                }
-//            }
-//        });
-
         return view;
     }
-
-//    void setUpListViewWithSearchView(String term,int tab){
-//        ListView eventsView = view.findViewById(R.id.fragment_main_event_listView);
-//
-//        switch (tab){
-//            case 0:
-//                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, eventList.stream().filter(a -> a.isPublic() && a.getTitle().contains(term)).collect(Collectors.toList()), userList, false,user));
-//                break;
-//
-//            case 1:
-//                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, eventList.stream().filter(a -> !a.isPublic() && a.getAcceptUser().contains(user.getUsername()) && a.getTitle().contains(term)).collect(Collectors.toList()), userList, false,user));
-//                break;
-//
-//            case 2:
-//                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, eventList.stream().filter(a -> a.getCreater().equals(user.getUsername()) && a.getTitle().contains(term)).collect(Collectors.toList()), userList, true,user));
-//                break;
-//        }
-//    }
 
     void setUpListView(){
         ListView eventsView = view.findViewById(R.id.fragment_main_event_listView);
 
         switch (index){
             case 0:
-                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, eventList.stream().filter(a -> a.isPublic()).collect(Collectors.toList()), userList, false,user));
+                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, eventList.stream().filter(a -> a.isPublic() && a.getRegion().equals(region)).collect(Collectors.toList()), userList, false,user));
                 break;
 
             case 1:
-                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, eventList.stream().filter(a -> !a.isPublic() && a.getAcceptUser().contains(user.getUsername())).collect(Collectors.toList()), userList, false,user));
+                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, eventList.stream().filter(a -> !a.isPublic() && a.getAcceptUser().contains(user.getUsername()) && a.getRegion().equals(region)).collect(Collectors.toList()), userList, false,user));
                 break;
 
             case 2:
-                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, eventList.stream().filter(a -> a.getCreater().equals(user.getUsername())).collect(Collectors.toList()), userList, true,user));
+                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, eventList.stream().filter(a -> a.getCreater().equals(user.getUsername()) && a.getRegion().equals(region)).collect(Collectors.toList()), userList, true,user));
                 break;
         }
     }

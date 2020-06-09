@@ -25,10 +25,11 @@ public class Event implements Serializable {
     private double entrance;
     private String description;
     private List<String> acceptUser = new ArrayList<>();
+    private String region;
 
     public Event() {}
 
-    public Event(boolean isPublic, String image, String title, String description, double latitude, double longitude, String date, double entrance) {
+    public Event(boolean isPublic, String image, String title, String description, double latitude, double longitude, String date, double entrance, String region) {
         this.isPublic = isPublic;
         this.image = image;
         this.title = title;
@@ -37,6 +38,7 @@ public class Event implements Serializable {
         this.date = date;
         this.entrance = entrance;
         this.description = description;
+        this.region = region;
 
         generateID();
     }
@@ -142,5 +144,13 @@ public class Event implements Serializable {
 
     public String getLocation(){
         return "geo:"+latitude+","+longitude+"?z=15";
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
     }
 }
