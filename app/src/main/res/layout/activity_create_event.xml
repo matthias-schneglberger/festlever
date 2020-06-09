@@ -49,7 +49,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/symbol_private" />
+                        app:srcCompat="@drawable/symbol_public" />
 
                     <TextView
                         android:id="@+id/textView4"
@@ -84,7 +84,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/symbol_public" />
+                        app:srcCompat="@drawable/symbol_private" />
 
                     <TextView
                         android:id="@+id/textView5"

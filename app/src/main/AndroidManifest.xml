@@ -51,7 +51,8 @@
             android:parentActivityName=".activities.MainActivity" />
         <activity android:name=".activities.ShowProfileActivity"
             android:parentActivityName=".activities.MainActivity"/>
-
+        <activity android:name=".preferences.MySettingsActivity"
+            android:parentActivityName=".activities.MainActivity"/>
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

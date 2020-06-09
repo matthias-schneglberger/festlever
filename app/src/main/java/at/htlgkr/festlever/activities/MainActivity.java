@@ -1,6 +1,7 @@
 package at.htlgkr.festlever.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -8,6 +9,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,14 +17,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 import at.htlgkr.festlever.R;
 import at.htlgkr.festlever.objects.User;
+import at.htlgkr.festlever.preferences.MySettingsActivity;
 import at.htlgkr.festlever.ui.main.MainFragment;
 import at.htlgkr.festlever.ui.main.SectionsPagerAdapter;
 
@@ -46,10 +51,18 @@ public class MainActivity extends AppCompatActivity {
 
     File rememberMeFile;
 
+    private final int RQ_PREFERENCES = 31;
+    private SharedPreferences prefs;
+    private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Preferences
+//        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+//        preferenceChangeListener = (sharedPrefs, key) -> preferenceChanged(sharedPrefs, key);
 
         //Set Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -137,8 +150,11 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         switch (id){
+            case R.id.myProfil:
+                startActivity(new Intent(this,ShowProfileActivity.class).putExtra("user",user));
+                break;
             case R.id.settings:
-
+                startActivityForResult(new Intent(this, MySettingsActivity.class),RQ_PREFERENCES);
                 break;
             case R.id.findFriends:
                 startActivity(new Intent(this,FindFriendsActivity.class).putExtra("user",user));
@@ -167,6 +183,16 @@ public class MainActivity extends AppCompatActivity {
         }
         startActivity(new Intent(this, LoginActivity.class));
         finish();
+    }
+
+    void preferenceChanged(SharedPreferences sharedPrefs, String key){
+        Map<String,?> allEntries = sharedPrefs.getAll();
+        String sValue = "";
+        if(allEntries.get(key) instanceof String)
+            sValue = sharedPrefs.getString(key,"");
+        else if (allEntries.get(key) instanceof Boolean)
+            sValue = String.valueOf(sharedPrefs.getBoolean(key,false));
+        Toast.makeText(this, key + " new Value: " + sValue, Toast.LENGTH_LONG).show();
     }
 
 //    public interface FragmentRefreshSearchViewListener{

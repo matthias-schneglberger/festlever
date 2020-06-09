@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="check_box_preference_requests"
+        android:summary="Benachrichtigungen zu Freundschafts- oder Eventanfragen erhalten?"
+        android:title="Benachrichtigungen Freunde/Events Anfragen"/>
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="check_box_preference_startEvents"
+        android:summary="Benachrichtigungen vor dem Start eines Events erhalten?"
+        android:title="Benachrichtigungen Events"/>
+
+    <EditTextPreference
+        android:defaultValue="50"
+        android:key="check_box_preference_distancegps"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="Einstellung der Reichweite, wo Events angezeigt werden sollen"
+        android:title="Reichweite" />
+</PreferenceScreen>
