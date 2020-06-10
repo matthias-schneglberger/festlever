@@ -45,7 +45,7 @@ public class MainFragment extends Fragment {
     private List<User> userList = new ArrayList<>();
     private List<Event> currentDisplayedEvents = new ArrayList<>();
 
-    Thread searchViewThread = new Thread(this::doInBackground);
+    Thread searchViewThread;
 
     private SharedPreferences prefs;
     private String region = "";
@@ -82,8 +82,9 @@ public class MainFragment extends Fragment {
 
         setUpListView();
 
-
+        searchViewThread = new Thread(this::doInBackground);
         searchViewThread.start();
+
 
         eventsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -114,6 +115,7 @@ public class MainFragment extends Fragment {
     @Override
     public void onDestroy() {
         searchViewThread.interrupt();
+        searchViewThread = null;
         super.onDestroy();
     }
 
@@ -161,13 +163,12 @@ public class MainFragment extends Fragment {
                 eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, searchedEvents, userList, false,user));
             }
         });
-
     }
 
     private void doInBackground(){
         String lastSearchTerm = MainActivity.searchTerm;
         while(true){
-            if(!MainActivity.searchTerm.equals(lastSearchTerm)){
+            if(!MainActivity.searchTerm.equalsIgnoreCase(lastSearchTerm)){
                 lastSearchTerm = MainActivity.searchTerm;
                 newSearchTerm(MainActivity.searchTerm);
             }

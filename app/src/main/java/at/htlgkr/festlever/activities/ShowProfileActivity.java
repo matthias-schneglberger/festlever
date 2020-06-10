@@ -26,8 +26,9 @@ public class ShowProfileActivity extends AppCompatActivity {
     private final String TAG = "ShowProfileActivity";
     private FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
     private User user;
-    private List<Event> allEvents;
+    private List<Event> allEventsProvided;
     private List<User> allUser;
+    private List<Event> allEvents;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,8 +42,10 @@ public class ShowProfileActivity extends AppCompatActivity {
             Log.d(TAG, "onCreate: Current User logged in: " + user.getUsername());
         }catch (NullPointerException ignored){}
 
-        allEvents = fireBaseCommunication.getAllEvents().stream().filter(a -> a.getCreater().equals(user.getUsername()) && a.isPublic()).collect(Collectors.toList());
+
+        allEventsProvided = fireBaseCommunication.getAllEvents().stream().filter(a -> a.getCreater().equals(user.getUsername()) && a.isPublic()).collect(Collectors.toList());
         allUser = fireBaseCommunication.getAllUsers();
+        allEvents = fireBaseCommunication.getAllEvents();
 
         TextView username = findViewById(R.id.activity_show_profile_username);
         TextView acceptedEventsView = findViewById(R.id.activity_show_profile_acceptedEvents);
