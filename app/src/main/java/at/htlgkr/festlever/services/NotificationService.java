@@ -49,7 +49,7 @@ public class NotificationService extends Service {
 
     @Override
     public void onCreate() {
-        worker = new Thread(this::doWork);
+        worker = new Thread(this::doInBackground);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         clearFiles();
         super.onCreate();
@@ -74,7 +74,7 @@ public class NotificationService extends Service {
         super.onDestroy();
     }
 
-    private void doWork(){
+    private void doInBackground(){ //Threaded
         CharSequence name = getString(R.string.service_notification_channelName);
         String description = getString(R.string.service_notification_description);
         int importance = NotificationManager.IMPORTANCE_DEFAULT;
@@ -133,7 +133,7 @@ public class NotificationService extends Service {
                                             this, CHANNEL_ID)
                                             .setSmallIcon(android.R.drawable.star_big_on)
                                             .setColor(Color.RED)
-                                            .setContentTitle("Neue Eventanfrage zu:" + eventReq)
+                                            .setContentTitle("Neue Eventanfrage")
                                             .setContentText("Du wurdest zu einem Event eingeladen!")
                                             .setWhen(System.currentTimeMillis())
                                             .setPriority(NotificationCompat.PRIORITY_HIGH).build();
@@ -149,6 +149,8 @@ public class NotificationService extends Service {
 
             }
 
+
+            //start Event Notify
             if(startEventNotify){
                 for(Event event : events){
                     if(event.getAcceptUser().contains(usernameOfCurrentUser)){
@@ -169,8 +171,6 @@ public class NotificationService extends Service {
                 }
             }
 
-
-
             //Whait 5 mins (in while --> no whait in android?? --> I'll google)
 //            try {
 //                wait(300000);
@@ -179,10 +179,7 @@ public class NotificationService extends Service {
 //            }
             long whaitUntil = System.currentTimeMillis() + 300000;
             while(System.currentTimeMillis() < whaitUntil){}
-
         }
-
-
     }
 
     public void addToEventFile(String eventId){

@@ -150,6 +150,7 @@ public class MainFragment extends Fragment {
         });
     }
 
+
     public void newSearchTerm(String searchTerm){
         if(getActivity() == null)
             return;
@@ -173,8 +174,8 @@ public class MainFragment extends Fragment {
         });
     }
 
-    private void doInBackground(){
-        String lastSearchTerm = MainActivity.searchTerm;
+    private void doInBackground(){ //Threaded
+        String lastSearchTerm = "";
         while(true){
             if(!MainActivity.searchTerm.equals(lastSearchTerm)){
                 lastSearchTerm = MainActivity.searchTerm;
