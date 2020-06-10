@@ -94,8 +94,7 @@ public class MainActivity extends AppCompatActivity {
         //Search View
         SearchView searchView = findViewById(R.id.activity_main_searchview);
 
-        //Setup Services
-        startServices();
+
     }
 
     void createEvent(){
@@ -158,11 +157,6 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, key + " new Value: " + sValue, Toast.LENGTH_LONG).show();
     }
 
-    public void startServices() {
-        Intent intent = new Intent(this, NotificationService.class);
-        // the service can use the data from the intent
-        intent.putExtra("username", user.getUsername());
-        startService(intent);
-    }
+
 }
 

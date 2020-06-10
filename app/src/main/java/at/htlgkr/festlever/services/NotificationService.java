@@ -9,10 +9,19 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -24,6 +33,10 @@ import at.htlgkr.festlever.objects.User;
 
 public class NotificationService extends Service {
     private static final String CHANNEL_ID = "festleverNotificationChannel";
+    private static final String EVENTID_FILE = "eventNotifications.txt";
+    private static final String USERNAME_FILE = "userNotifications.txt";
+    private static final String TAG = "NotificationService";
+
     private Thread worker;
     private SharedPreferences prefs;
     private String usernameOfCurrentUser;
@@ -38,6 +51,7 @@ public class NotificationService extends Service {
     public void onCreate() {
         worker = new Thread(this::doWork);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        clearFiles();
         super.onCreate();
     }
 
@@ -85,18 +99,24 @@ public class NotificationService extends Service {
                 //Friend Request
                 for(User u : users){
                     if(u.getUsername().equals(usernameOfCurrentUser)){
-                        if(!u.getFriendRequests().isEmpty() /* && is noch nicht sfjasdlf*/){
+                        if(!u.getFriendRequests().isEmpty()/* && is noch nicht sfjasdlf*/){
                             for(String friendReq : u.getFriendRequests()){
-                                Notification notification = new NotificationCompat.Builder(
-                                        this, CHANNEL_ID)
-                                        .setSmallIcon(android.R.drawable.star_big_on)
-                                        .setColor(Color.RED)
-                                        .setContentTitle("Neue Freundschaftsanfrage von:" + friendReq)
-                                        .setContentText(friendReq + " hat dir eine Freundschaftsanfrage gesendet!")
-                                        .setWhen(System.currentTimeMillis())
-                                        .setPriority(NotificationCompat.PRIORITY_HIGH).build();
 
-                                notificationManager.notify(4711, notification);
+                                if(!userIsInFile(friendReq)){
+                                    addToUserFile(friendReq);
+                                    Notification notification = new NotificationCompat.Builder(
+                                            this, CHANNEL_ID)
+                                            .setSmallIcon(android.R.drawable.star_big_on)
+                                            .setColor(Color.RED)
+                                            .setContentTitle("Neue Freundschaftsanfrage von:" + friendReq)
+                                            .setContentText(friendReq + " hat dir eine Freundschaftsanfrage gesendet!")
+                                            .setWhen(System.currentTimeMillis())
+                                            .setPriority(NotificationCompat.PRIORITY_HIGH).build();
+
+                                    notificationManager.notify(4711, notification);
+                                }
+
+
                             }
                         }
                     }
@@ -105,18 +125,23 @@ public class NotificationService extends Service {
                 //Event Request
                 for(User u : users){
                     if(u.getUsername().equals(usernameOfCurrentUser)){
-                        if(!u.getEventRequests().isEmpty() /* && is noch nicht sfjasdlf*/){
+                        if(!u.getEventRequests().isEmpty()/* && is noch nicht sfjasdlf*/){
                             for(String eventReq : u.getEventRequests()){
-                                Notification notification = new NotificationCompat.Builder(
-                                        this, CHANNEL_ID)
-                                        .setSmallIcon(android.R.drawable.star_big_on)
-                                        .setColor(Color.RED)
-                                        .setContentTitle("Neue Eventanfrage zu:" + eventReq)
-                                        .setContentText("Du wurdest zu einem Event eingeladen!")
-                                        .setWhen(System.currentTimeMillis())
-                                        .setPriority(NotificationCompat.PRIORITY_HIGH).build();
+                                if(!eventIsInFile(eventReq)){
+                                    addToEventFile(eventReq);
+                                    Notification notification = new NotificationCompat.Builder(
+                                            this, CHANNEL_ID)
+                                            .setSmallIcon(android.R.drawable.star_big_on)
+                                            .setColor(Color.RED)
+                                            .setContentTitle("Neue Eventanfrage zu:" + eventReq)
+                                            .setContentText("Du wurdest zu einem Event eingeladen!")
+                                            .setWhen(System.currentTimeMillis())
+                                            .setPriority(NotificationCompat.PRIORITY_HIGH).build();
 
-                                notificationManager.notify(4711, notification);
+                                    notificationManager.notify(4711, notification);
+                                }
+
+
                             }
                         }
                     }
@@ -125,12 +150,10 @@ public class NotificationService extends Service {
             }
 
             if(startEventNotify){
-
-
                 for(Event event : events){
                     if(event.getAcceptUser().contains(usernameOfCurrentUser)){
-                        if(LocalDate.parse(event.getDate(),DateTimeFormatter.ofPattern("dd.MM.yyyy")).isEqual(LocalDate.now())){
-
+                        if(LocalDate.parse(event.getDate(),DateTimeFormatter.ofPattern("dd.MM.yyyy")).isEqual(LocalDate.now()) && eventIsInFile(event.getId())){
+                            addToEventFile(event.getId());
                             Notification notification = new NotificationCompat.Builder(
                                     this, CHANNEL_ID)
                                     .setSmallIcon(android.R.drawable.star_big_on)
@@ -160,5 +183,90 @@ public class NotificationService extends Service {
         }
 
 
+    }
+
+    public void addToEventFile(String eventId){
+
+        try {
+            FileOutputStream fos = openFileOutput(EVENTID_FILE, MODE_PRIVATE | MODE_APPEND);
+            PrintWriter out = new PrintWriter(new OutputStreamWriter(fos));
+            out.println(eventId + "\n");
+            out.flush();
+            out.close();
+        } catch (FileNotFoundException exp) {
+            Log.d(TAG, exp.getStackTrace().toString());
+        }
+    }
+    public void addToUserFile(String username){
+        try {
+            FileOutputStream fos = openFileOutput(USERNAME_FILE, MODE_PRIVATE | MODE_APPEND);
+            PrintWriter out = new PrintWriter(new OutputStreamWriter(fos));
+            out.println(username + "\n");
+            out.flush();
+            out.close();
+        } catch (FileNotFoundException exp) {
+            Log.d(TAG, exp.getStackTrace().toString());
+        }
+    }
+
+    public boolean eventIsInFile(String eventId){
+        try {
+            FileInputStream fis = openFileInput(EVENTID_FILE);
+            BufferedReader in = new BufferedReader(new InputStreamReader(fis));
+            String line;
+            StringBuffer buffer = new StringBuffer();
+            while ((line = in.readLine()) != null ) {
+                buffer.append(line);
+            }
+            in.close();
+            return buffer.toString().contains(eventId);
+        } catch (IOException exp) {
+            Log.d(TAG, exp.getStackTrace().toString());
+        }
+        return false;
+    }
+    public boolean userIsInFile(String username){
+        try {
+            FileInputStream fis = openFileInput(USERNAME_FILE);
+            BufferedReader in = new BufferedReader(new InputStreamReader(fis));
+            String line;
+            StringBuffer buffer = new StringBuffer();
+            while ((line = in.readLine()) != null ) {
+                buffer.append(line);
+            }
+            in.close();
+            return buffer.toString().contains(username);
+        } catch (IOException exp) {
+            Log.d(TAG, exp.getStackTrace().toString());
+        }
+        return false;
+    }
+
+    public void clearEventFile(){
+        try {
+            FileOutputStream fos = openFileOutput(EVENTID_FILE, MODE_PRIVATE);
+            PrintWriter out = new PrintWriter(new OutputStreamWriter(fos));
+            out.println("");
+            out.flush();
+            out.close();
+        } catch (FileNotFoundException exp) {
+            Log.d(TAG, exp.getStackTrace().toString());
+        }
+    }
+    public void clearUserFile(){
+        try {
+            FileOutputStream fos = openFileOutput(USERNAME_FILE, MODE_PRIVATE);
+            PrintWriter out = new PrintWriter(new OutputStreamWriter(fos));
+            out.println("");
+            out.flush();
+            out.close();
+        } catch (FileNotFoundException exp) {
+            Log.d(TAG, exp.getStackTrace().toString());
+        }
+    }
+
+    public void clearFiles(){
+        clearEventFile();
+        clearUserFile();
     }
 }

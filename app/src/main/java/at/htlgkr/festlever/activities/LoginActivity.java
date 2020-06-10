@@ -39,6 +39,7 @@ import at.htlgkr.festlever.R;
 import at.htlgkr.festlever.logic.FireBaseCommunication;
 import at.htlgkr.festlever.logic.PasswordToHash;
 import at.htlgkr.festlever.objects.User;
+import at.htlgkr.festlever.services.NotificationService;
 
 public class LoginActivity extends AppCompatActivity {
     private FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
@@ -189,9 +190,20 @@ public class LoginActivity extends AppCompatActivity {
 
     void onLoginSuccess(User user){ // Working
         loginButton.setEnabled(true);
+
+        //Setup Services
+        startServices(user);
+
         startActivity(new Intent(this, MainActivity.class));
         MainActivity.user = user;
         finish();
+    }
+
+    public void startServices(User user) {
+        Intent intent = new Intent(this, NotificationService.class);
+        // the service can use the data from the intent
+        intent.putExtra("username", user.getUsername());
+        startService(intent);
     }
 
     void onLoginFailed(){ // Working
