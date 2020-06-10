@@ -157,10 +157,18 @@ public class MainFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                List<Event> searchedEvents = currentDisplayedEvents.stream().filter(n -> n.getTitle().contains(searchTerm)).collect(Collectors.toList());
+                List<Event> searchedEvents = currentDisplayedEvents.stream().filter(n -> n.getTitle().toLowerCase().contains(searchTerm.toLowerCase())).collect(Collectors.toList());
 
                 ListView eventsView = view.findViewById(R.id.fragment_main_event_listView);
-                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, searchedEvents, userList, false,user));
+
+
+                if(index == 2){
+                    eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, searchedEvents, userList, true,user));
+                }
+                else{
+                    eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, searchedEvents, userList, false,user));
+                }
+
             }
         });
     }
@@ -168,7 +176,7 @@ public class MainFragment extends Fragment {
     private void doInBackground(){
         String lastSearchTerm = MainActivity.searchTerm;
         while(true){
-            if(!MainActivity.searchTerm.equalsIgnoreCase(lastSearchTerm)){
+            if(!MainActivity.searchTerm.equals(lastSearchTerm)){
                 lastSearchTerm = MainActivity.searchTerm;
                 newSearchTerm(MainActivity.searchTerm);
             }
