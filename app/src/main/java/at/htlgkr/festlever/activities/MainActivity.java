@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final String TAG = "MainActivity";
     public static User user;
+    public static String searchTerm = "";
     private MainFragment publicFragment;
     private MainFragment privateFragment;
     private MainFragment myEventsFragment;
@@ -93,6 +94,18 @@ public class MainActivity extends AppCompatActivity {
 
         //Search View
         SearchView searchView = findViewById(R.id.activity_main_searchview);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                searchTerm = s;
+                return false;
+            }
+        });
 
 
     }

@@ -1,6 +1,8 @@
 package at.htlgkr.festlever.activities;
 
+import android.app.ActivityManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -200,10 +202,26 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void startServices(User user) {
-        Intent intent = new Intent(this, NotificationService.class);
-        // the service can use the data from the intent
-        intent.putExtra("username", user.getUsername());
-        startService(intent);
+        if(!isServiceRunning(NotificationService.class)){
+            Intent intent = new Intent(this, NotificationService.class);
+            // the service can use the data from the intent
+            intent.putExtra("username", user.getUsername());
+            startService(intent);
+        }
+        else{
+            stopService(new Intent(this, NotificationService.class));
+        }
+
+    }
+
+    private boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     void onLoginFailed(){ // Working

@@ -43,6 +43,9 @@ public class MainFragment extends Fragment {
 
     private List<Event> eventList = new ArrayList<>();
     private List<User> userList = new ArrayList<>();
+    private List<Event> currentDisplayedEvents = new ArrayList<>();
+
+    Thread searchViewThread = new Thread(this::doInBackground);
 
     private SharedPreferences prefs;
     private String region = "";
@@ -79,6 +82,9 @@ public class MainFragment extends Fragment {
 
         setUpListView();
 
+
+        searchViewThread.start();
+
         eventsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -105,22 +111,31 @@ public class MainFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onDestroy() {
+        searchViewThread.interrupt();
+        super.onDestroy();
+    }
+
     void setUpListView(){
         ListView eventsView = view.findViewById(R.id.fragment_main_event_listView);
+        boolean editEnabled = false;
 
         switch (index){
             case 0:
-                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, eventList.stream().filter(a -> a.isPublic() && a.getRegion().equals(region)).collect(Collectors.toList()), userList, false,user));
+                currentDisplayedEvents = eventList.stream().filter(a -> a.isPublic() && a.getRegion().equals(region)).collect(Collectors.toList());
                 break;
 
             case 1:
-                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, eventList.stream().filter(a -> !a.isPublic() && a.getAcceptUser().contains(user.getUsername()) && a.getRegion().equals(region)).collect(Collectors.toList()), userList, false,user));
+                currentDisplayedEvents = eventList.stream().filter(a -> !a.isPublic() && a.getAcceptUser().contains(user.getUsername()) && a.getRegion().equals(region)).collect(Collectors.toList());//, userList, false,user));
                 break;
-
             case 2:
-                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, eventList.stream().filter(a -> a.getCreater().equals(user.getUsername()) && a.getRegion().equals(region)).collect(Collectors.toList()), userList, true,user));
+                currentDisplayedEvents = eventList.stream().filter(a -> a.getCreater().equals(user.getUsername()) && a.getRegion().equals(region)).collect(Collectors.toList());
+                editEnabled = true;
                 break;
         }
+
+        eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, currentDisplayedEvents, userList, editEnabled,user));
     }
 
     public void update(){
@@ -131,6 +146,32 @@ public class MainFragment extends Fragment {
                 setUpListView();
             }
         });
+    }
+
+    public void newSearchTerm(String searchTerm){
+        if(getActivity() == null)
+            return;
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                List<Event> searchedEvents = currentDisplayedEvents.stream().filter(n -> n.getTitle().contains(searchTerm)).collect(Collectors.toList());
+
+                ListView eventsView = view.findViewById(R.id.fragment_main_event_listView);
+                eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, searchedEvents, userList, false,user));
+            }
+        });
+
+    }
+
+    private void doInBackground(){
+        String lastSearchTerm = MainActivity.searchTerm;
+        while(true){
+            if(!MainActivity.searchTerm.equals(lastSearchTerm)){
+                lastSearchTerm = MainActivity.searchTerm;
+                newSearchTerm(MainActivity.searchTerm);
+            }
+        }
     }
 
 }
