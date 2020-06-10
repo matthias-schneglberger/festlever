@@ -42,3 +42,24 @@ Was wird nächste Woche umgesetzt
 - Preferences
 - Notifications
 - ?Profil Activity?
+
+## 10.06.2020
+
+Gut gelaufen ist:
++ Zeitmanagement
+ 
+Fertiggestellte Tasks:
+- Preferences
+- Notifications
+- Basics - Profil Activity
+
+Probleme:
+- Laufzeitprobleme
+
+Wie liegen wir im Zeitplan:
+Sehr gut
+
+Was wird nächste Woche umgesetzt
+- SearchView
+- Update Probleme
+
