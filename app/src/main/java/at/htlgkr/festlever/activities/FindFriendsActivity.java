@@ -5,9 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -59,6 +62,18 @@ public class FindFriendsActivity extends AppCompatActivity {
         newSearchTerm("");
 
 
+        ListView listView = findViewById(R.id.activity_find_friends_allUsers);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                onItemClicked((User)adapterView.getItemAtPosition(i));
+            }
+        });
+
+    }
+
+    public void onItemClicked(User clickedUser){
+        startActivity(new Intent(this,ShowProfileActivity.class).putExtra("user",clickedUser));
     }
 
     public void newSearchTerm(String searchterm){
