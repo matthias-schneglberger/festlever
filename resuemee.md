@@ -52,6 +52,7 @@ Fertiggestellte Tasks:
 - Preferences
 - Notifications
 - Basics - Profil Activity
+- SearchView
 
 Probleme:
 - Laufzeitprobleme
@@ -60,6 +61,6 @@ Wie liegen wir im Zeitplan:
 Sehr gut
 
 Was wird nächste Woche umgesetzt
-- SearchView
+- Show Profile Tabs
 - Update Probleme
 
