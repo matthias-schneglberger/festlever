@@ -69,6 +69,8 @@ public class EventCreateChangeActivity extends AppCompatActivity {
 
     String storagePath;
 
+    Uri filePath;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -221,48 +223,55 @@ public class EventCreateChangeActivity extends AppCompatActivity {
 
         Event tmpEvent = new Event();
 
+        uploadImage(filePath);
+
         final ProgressDialog progressDialog = new ProgressDialog(EventCreateChangeActivity.this,
-                R.style.Theme_AppCompat_DayNight_Dialog);
+                R.style.Theme_Design_BottomSheetDialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Erstellen...");
         progressDialog.show();
 
-        tmpEvent.setTitle(editText_title.getText().toString());
-        AdressToLongLatAsyncTask adressToLongLatAsyncTask = new AdressToLongLatAsyncTask();
-        adressToLongLatAsyncTask.execute(editText_address.getText().toString());
-        List<String> longlat = new ArrayList<>();
-        try {
-            longlat = adressToLongLatAsyncTask.get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        if(longlat.isEmpty()){
-            onCreateFailed();
-            return;
-        }
-        tmpEvent.setLatitude(Double.valueOf(longlat.get(0)));
-        tmpEvent.setLongitude(Double.valueOf(longlat.get(1)));
-        tmpEvent.setDate(editText_date.getText().toString());
-        tmpEvent.setEntrance(Double.valueOf(editText_entrance.getText().toString()));
-        tmpEvent.setImage(storagePath);
-        tmpEvent.setDescription(textInputEditText_description.getText().toString());
-        tmpEvent.setCreater(user.getUsername());
-        tmpEvent.setPublic(eventIsPublic);
-        try {
-            tmpEvent.setRegion(new JSONObject(new LongLatToAddressAsyncTask().execute(Double.valueOf(longlat.get(0)),Double.valueOf(longlat.get(1))).get()).getString("country"));
-        } catch (JSONException | ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        new android.os.Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                tmpEvent.setTitle(editText_title.getText().toString());
+                AdressToLongLatAsyncTask adressToLongLatAsyncTask = new AdressToLongLatAsyncTask();
+                adressToLongLatAsyncTask.execute(editText_address.getText().toString());
+                List<String> longlat = new ArrayList<>();
+                try {
+                    longlat = adressToLongLatAsyncTask.get();
+                } catch (ExecutionException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if(longlat.isEmpty()){
+                    onCreateFailed();
+                    return;
+                }
+                tmpEvent.setLatitude(Double.valueOf(longlat.get(0)));
+                tmpEvent.setLongitude(Double.valueOf(longlat.get(1)));
+                tmpEvent.setDate(editText_date.getText().toString());
+                tmpEvent.setEntrance(Double.valueOf(editText_entrance.getText().toString()));
+                tmpEvent.setImage(storagePath);
+                tmpEvent.setDescription(textInputEditText_description.getText().toString());
+                tmpEvent.setCreater(user.getUsername());
+                tmpEvent.setPublic(eventIsPublic);
+                try {
+                    tmpEvent.setRegion(new JSONObject(new LongLatToAddressAsyncTask().execute(Double.valueOf(longlat.get(0)),Double.valueOf(longlat.get(1))).get()).getString("country"));
+                } catch (JSONException | ExecutionException | InterruptedException e) {
+                    e.printStackTrace();
+                }
 
-        tmpEvent.generateID();
+                tmpEvent.generateID();
 
-        if(fireBaseCommunication.createEvent(tmpEvent)){
-            onCreateSuccess();
-        }
-        else{
-            onCreateFailed();
-        }
-        progressDialog.dismiss();
+                if(fireBaseCommunication.createEvent(tmpEvent)){
+                    onCreateSuccess();
+                }
+                else{
+                    onCreateFailed();
+                }
+                progressDialog.dismiss();
+            }
+        },1000);
     }
 
     void changeEvent(){ // Working
@@ -272,83 +281,74 @@ public class EventCreateChangeActivity extends AppCompatActivity {
             return;
         }
 
+        uploadImage(filePath);
+
         final ProgressDialog progressDialog = new ProgressDialog(EventCreateChangeActivity.this,
-                R.style.Theme_AppCompat_DayNight_Dialog);
+                R.style.Theme_Design_BottomSheetDialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Änderungen speichern...");
         progressDialog.show();
 
-        event.setTitle(editText_title.getText().toString());
-        AdressToLongLatAsyncTask adressToLongLatAsyncTask = new AdressToLongLatAsyncTask();
-        adressToLongLatAsyncTask.execute(editText_address.getText().toString());
-        List<String> longlat = new ArrayList<>();
-        try {
-            longlat = adressToLongLatAsyncTask.get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        if(longlat.isEmpty()){
-            onCreateFailed();
-            return;
-        }
-        event.setLatitude(Double.valueOf(longlat.get(0)));
-        event.setLongitude(Double.valueOf(longlat.get(1)));
-        event.setDate(editText_date.getText().toString());
-        event.setEntrance(Double.valueOf(editText_entrance.getText().toString()));
-        event.setImage(storagePath);
-        event.setDescription(textInputEditText_description.getText().toString());
-        event.setCreater(user.getUsername());
-        event.setPublic(eventIsPublic);
+        new android.os.Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                event.setTitle(editText_title.getText().toString());
+                AdressToLongLatAsyncTask adressToLongLatAsyncTask = new AdressToLongLatAsyncTask();
+                adressToLongLatAsyncTask.execute(editText_address.getText().toString());
+                List<String> longlat = new ArrayList<>();
+                try {
+                    longlat = adressToLongLatAsyncTask.get();
+                } catch (ExecutionException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if(longlat.isEmpty()){
+                    onCreateFailed();
+                    return;
+                }
+                event.setLatitude(Double.valueOf(longlat.get(0)));
+                event.setLongitude(Double.valueOf(longlat.get(1)));
+                event.setDate(editText_date.getText().toString());
+                event.setEntrance(Double.valueOf(editText_entrance.getText().toString()));
+                event.setImage(storagePath);
+                event.setDescription(textInputEditText_description.getText().toString());
+                event.setCreater(user.getUsername());
+                event.setPublic(eventIsPublic);
 
 
-        if(fireBaseCommunication.createEvent(event)){
-            onCreateSuccess();
-        }
-        else{
-            onCreateFailed();
-        }
-        progressDialog.dismiss();
+                if(fireBaseCommunication.createEvent(event)){
+                    onCreateSuccess();
+                }
+                else{
+                    onCreateFailed();
+                }
+                progressDialog.dismiss();
+            }
+        },1000);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            Uri filePath = data.getData();
-            uploadImage(filePath);
+            filePath = data.getData();
+            uploadImageButton.setText("Bild ändern");
         }
     }
 
     void uploadImage(Uri filePath){ // Working
-        final ProgressDialog progressDialog
-                = new ProgressDialog(EventCreateChangeActivity.this
-                ,R.style.Theme_Design_BottomSheetDialog);
-        progressDialog.setTitle("Hochladen...");
-        progressDialog.show();
-
         storagePath = "images/"+ UUID.randomUUID().toString();
         StorageReference ref = storageReference.child(storagePath);
 
         ref.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                progressDialog.dismiss();
                 Toast.makeText(EventCreateChangeActivity.this, "Bild hochgeladen", Toast.LENGTH_SHORT).show();
-                uploadImageButton.setText("Bild ändern");
             }
         })
         .addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                progressDialog.dismiss();
                 Toast.makeText(EventCreateChangeActivity.this, "Bild hochladen fehlgeschlagen", Toast.LENGTH_SHORT).show();
-            }
-        })
-        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                progressDialog.setMessage("Hochladen " + (int)progress + "%");
             }
         });
     }
