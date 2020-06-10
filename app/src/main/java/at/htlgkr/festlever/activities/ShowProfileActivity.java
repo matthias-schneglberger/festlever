@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,6 +20,7 @@ import at.htlgkr.festlever.R;
 import at.htlgkr.festlever.adapter.Adapter_event;
 import at.htlgkr.festlever.logic.FireBaseCommunication;
 import at.htlgkr.festlever.objects.*;
+import at.htlgkr.festlever.ui.main.SectionsPagerAdapter;
 
 public class ShowProfileActivity extends AppCompatActivity {
     private final String TAG = "ShowProfileActivity";
@@ -42,17 +45,39 @@ public class ShowProfileActivity extends AppCompatActivity {
         allUser = fireBaseCommunication.getAllUsers();
 
         TextView username = findViewById(R.id.activity_show_profile_username);
+        TextView acceptedEventsView = findViewById(R.id.activity_show_profile_acceptedEvents);
+        TextView providedEventsView = findViewById(R.id.activity_show_profile_providedEvents);
+//        ListView listView = findViewById(R.id.activity_show_profile_listview);
         username.setText(user.getUsername());
+//        listView.setAdapter(new Adapter_event(getApplicationContext(),R.layout.fragment_main_listview_item,allEvents, allUser, false, user));
 
-        ListView listView = findViewById(R.id.activity_show_profile_listview);
-        listView.setAdapter(new Adapter_event(getApplicationContext(),R.layout.fragment_main_listview_item,allEvents, allUser, false, user));
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Event event = (Event) parent.getItemAtPosition(position);
-                startActivity(new Intent(getApplicationContext(), EventDetailsActivity.class).putExtra("user",user).putExtra("event",event));
+        int acceptedEvents = 0;
+        int providedEvents = 0;
+        for(Event e : allEvents){
+            if(e.getAcceptUser().contains(user.getUsername())){
+                acceptedEvents++;
             }
-        });
+            if(e.getCreater().equals(user.getUsername())){
+                providedEvents++;
+            }
+        }
+        acceptedEventsView.setText(String.valueOf(acceptedEvents));
+        providedEventsView.setText(String.valueOf(providedEvents));
+
+
+//        Toolbar toolbar = findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+
+//        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(),user);
+//        ViewPager viewPager = findViewById(R.id.activity_show_profile_view_pager);
+//        viewPager.setAdapter(sectionsPagerAdapter);
+
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Event event = (Event) parent.getItemAtPosition(position);
+//                startActivity(new Intent(getApplicationContext(), EventDetailsActivity.class).putExtra("user",user).putExtra("event",event));
+//            }
+//        });
     }
 }
