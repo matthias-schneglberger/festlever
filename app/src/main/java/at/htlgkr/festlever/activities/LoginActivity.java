@@ -4,13 +4,9 @@ import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -22,16 +18,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -231,7 +222,7 @@ public class LoginActivity extends AppCompatActivity {
 
     void changePassword(){
         Log.d(TAG, "changePassword");
-        //Change Password
+        startActivity(new Intent(this, ForgotPasswordActivity.class));
     }
 
     void checkIfUserIsInRememberFile(File file){ // Working
