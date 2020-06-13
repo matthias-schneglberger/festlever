@@ -14,6 +14,8 @@ import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,6 +51,8 @@ public class MainFragment extends Fragment {
 
     private SharedPreferences prefs;
     private String region = "";
+
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     static MainFragment newInstance(int index, User user) {
         MainFragment fragment = new MainFragment();
@@ -125,11 +129,10 @@ public class MainFragment extends Fragment {
 
         switch (index){
             case 0:
-                currentDisplayedEvents = eventList.stream().filter(a -> a.isPublic() && a.getRegion().equals(region)).collect(Collectors.toList());
+                currentDisplayedEvents = eventList.stream().filter(a -> a.isPublic() && a.getRegion().equals(region) && !LocalDate.parse(a.getDate(),dtf).isBefore(LocalDate.now())).collect(Collectors.toList());
                 break;
-
             case 1:
-                currentDisplayedEvents = eventList.stream().filter(a -> !a.isPublic() && a.getAcceptUser().contains(user.getUsername()) && a.getRegion().equals(region)).collect(Collectors.toList());//, userList, false,user));
+                currentDisplayedEvents = eventList.stream().filter(a -> !a.isPublic() && a.getAcceptUser().contains(user.getUsername()) && a.getRegion().equals(region) && !LocalDate.parse(a.getDate(),dtf).isBefore(LocalDate.now())).collect(Collectors.toList());
                 break;
             case 2:
                 currentDisplayedEvents = eventList.stream().filter(a -> a.getCreater().equals(user.getUsername()) && a.getRegion().equals(region)).collect(Collectors.toList());

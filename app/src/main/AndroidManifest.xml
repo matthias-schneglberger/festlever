@@ -55,8 +55,9 @@
             android:parentActivityName=".activities.MainActivity"/>
         <activity android:name=".preferences.MySettingsActivity"
             android:parentActivityName=".activities.MainActivity"/>
-
         <activity android:name=".activities.ForgotPasswordActivity"/>
+        <activity android:name=".activities.NewPasswordActivity"/>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
