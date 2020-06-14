@@ -53,7 +53,8 @@
             android:parentActivityName=".activities.MainActivity" />
 
         <activity android:name=".activities.ShowProfileActivity"
-            android:parentActivityName=".activities.MainActivity"/>
+            android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".preferences.MySettingsActivity"
             android:parentActivityName=".activities.MainActivity"/>

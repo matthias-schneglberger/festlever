@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.tabs.TabLayout;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +23,7 @@ import at.htlgkr.festlever.adapter.Adapter_event;
 import at.htlgkr.festlever.logic.FireBaseCommunication;
 import at.htlgkr.festlever.objects.*;
 import at.htlgkr.festlever.ui.main.SectionsPagerAdapter;
+import at.htlgkr.festlever.ui.main.ShowProfilePagerAdapter;
 
 public class ShowProfileActivity extends AppCompatActivity {
     private final String TAG = "ShowProfileActivity";
@@ -67,20 +70,13 @@ public class ShowProfileActivity extends AppCompatActivity {
         acceptedEventsView.setText(String.valueOf(acceptedEvents));
         providedEventsView.setText(String.valueOf(providedEvents));
 
+        //Fragment
+        ShowProfilePagerAdapter showProfilePagerAdapter = new ShowProfilePagerAdapter(this, getSupportFragmentManager(),user);
+        TabLayout tabs = findViewById(R.id.activity_show_profile_tabs);
+        ViewPager viewPager = findViewById(R.id.activity_show_profile_view_pager);
 
-//        Toolbar toolbar = findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
+        viewPager.setAdapter(showProfilePagerAdapter);
+        tabs.setupWithViewPager(viewPager);
 
-//        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(),user);
-//        ViewPager viewPager = findViewById(R.id.activity_show_profile_view_pager);
-//        viewPager.setAdapter(sectionsPagerAdapter);
-
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Event event = (Event) parent.getItemAtPosition(position);
-//                startActivity(new Intent(getApplicationContext(), EventDetailsActivity.class).putExtra("user",user).putExtra("event",event));
-//            }
-//        });
     }
 }

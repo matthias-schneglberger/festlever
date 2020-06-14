@@ -63,6 +63,8 @@ public class MainFragment extends Fragment {
         return fragment;
     }
 
+    public MainFragment() { }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

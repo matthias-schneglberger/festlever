@@ -9,7 +9,6 @@ import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
-import androidx.preference.PreferenceManager;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -28,7 +27,6 @@ import java.util.Map;
 import at.htlgkr.festlever.R;
 import at.htlgkr.festlever.objects.User;
 import at.htlgkr.festlever.preferences.MySettingsActivity;
-import at.htlgkr.festlever.services.NotificationService;
 import at.htlgkr.festlever.ui.main.MainFragment;
 import at.htlgkr.festlever.ui.main.SectionsPagerAdapter;
 
@@ -80,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         myEventsFragment = (MainFragment) sectionsPagerAdapter.getItem(2);
 
         //Set up Tabs
-        TabLayout tabs = findViewById(R.id.tabs);
+        TabLayout tabs = findViewById(R.id.activity_show_profile_tabs);
         tabs.setupWithViewPager(viewPager);
 
         //Fab Button

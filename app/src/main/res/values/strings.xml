@@ -4,6 +4,12 @@
     <string name="tab_text_private">Privat</string>
     <string name="tab_text_myEvents">Meine Events</string>
 
+    <string name="tab_text_show_profile_created_events">Erstellte Events</string>
+    <string name="tab_text_show_profile_participated_events">Teilgenommene Events</string>
+
     <string name="service_notification_channelName">FestlEverNotification</string>
     <string name="service_notification_description">FestlEverNotificationDesc</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

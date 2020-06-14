@@ -29,7 +29,7 @@
 
 
         <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs"
+            android:id="@+id/activity_show_profile_tabs"
             android:layout_width="match_parent"
             app:tabIndicatorColor="#fff"
             android:layout_height="wrap_content"
