@@ -36,6 +36,8 @@ import at.htlgkr.festlever.logic.firebasetasks.*;
 
 public class FireBaseCommunication {
     private final String TAG = "FireBaseCommunication";
+    private static List<User> usersPuffer;
+    private static List<Event> eventsPuffer;
     DatabaseReference dbaseRef;
     FirebaseFirestore firebaseFirestore;
 
@@ -71,17 +73,24 @@ public class FireBaseCommunication {
         dbaseRef.child("events").child(event.getId()).setValue(new GsonBuilder().create().toJson(event));
     }
 
-    public List<User> getAllUsers(){ //Working
+    public List<User> getAllUsers(){
+        if(usersPuffer == null){
+            return getAllUsers(true);
+        }
+        return usersPuffer;
+    }
+
+    public List<User> getAllUsers(boolean noPuffer){ //Working
         GetAllUsers getAllUsers = new GetAllUsers();
         getAllUsers.execute();
 
         try {
-            return getAllUsers.get();
+            usersPuffer = getAllUsers.get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
 
-        return null;
+        return usersPuffer;
     }
 
     public boolean createEvent(Event event){
@@ -98,12 +107,19 @@ public class FireBaseCommunication {
     }
 
     public List<Event> getAllEvents(){
+        if(eventsPuffer == null){
+            eventsPuffer = getAllEvents(true);
+        }
+        return eventsPuffer;
+    }
+
+    public List<Event> getAllEvents(boolean noPuffer){
         try {
-            return new GetAllEvents().execute().get();
+            eventsPuffer =  new GetAllEvents().execute().get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
-        return null;
+        return eventsPuffer;
     }
 
 }

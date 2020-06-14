@@ -146,7 +146,7 @@ public class MainFragment extends Fragment {
     }
 
     public void update(){
-        eventList = fireBaseCommunication.getAllEvents();
+        eventList = fireBaseCommunication.getAllEvents(true);
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
