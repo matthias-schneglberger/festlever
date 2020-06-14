@@ -57,12 +57,14 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         tries = 3;
         user = new User();
 
+        userList = fireBaseCommunication.getAllUsers();
+
         sendEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!emailInput.getText().toString().isEmpty() && userList.stream().filter(a -> a.getEmail().equals(emailInput)).collect(Collectors.toList()).size() == 1){
-                    sendEmailWithCode(emailInput.getText().toString());
+                if(!emailInput.getText().toString().isEmpty() && userList.stream().filter(a -> a.getEmail().equals(emailInput.getText().toString())).collect(Collectors.toList()).size() == 1){
                     code = generateRandomString();
+                    sendEmailWithCode(emailInput.getText().toString());
                     startTimer();
                     sendEmail.setClickable(false);
                 }
@@ -89,7 +91,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         if(codeInput.getText().toString().equals(code)){
             codeInput.setError(null);
             for(User u : userList){
-                if(u.getEmail().equals(emailInput)){
+                if(u.getEmail().equals(emailInput.getText().toString())){
                     startActivityForResult(new Intent(this, NewPasswordActivity.class).putExtra("user",u), REQUEST_PASSWORD_CHANGED);
                     countDownTimer.cancel();
                     break;
@@ -135,6 +137,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         try {
             GMailSender sender = new GMailSender("festlever.project@gmail.com","2lC4^%8yjeJNr%n9");
             sender.sendMail("Passwort zurücksetzen", "Verifizierungscode = " + code, "festlever.project@gmail.com",email);
+
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
         }

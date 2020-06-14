@@ -10,8 +10,12 @@ import android.widget.EditText;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import at.htlgkr.festlever.R;
 import at.htlgkr.festlever.logic.FireBaseCommunication;
+import at.htlgkr.festlever.logic.PasswordToHash;
 import at.htlgkr.festlever.objects.Event;
 import at.htlgkr.festlever.objects.User;
 
@@ -55,6 +59,13 @@ public class NewPasswordActivity extends AppCompatActivity {
 
     void changePassword(){
         if(validate()){
+            MessageDigest messageDigest = null;
+            try {
+                messageDigest = MessageDigest.getInstance("SHA-256");
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+            user.setPassword(new PasswordToHash().bytesToHex(messageDigest.digest(passwordInput.getText().toString().getBytes())));
             fireBaseCommunication.updateUser(user);
             setResult(RESULT_OK,null);
             startActivity(new Intent(this, MainActivity.class));
