@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private EditText codeInput;
     private Button acceptButton;
     private Button sendEmailAgain;
+    private ProgressBar progressBar;
 
     CountDownTimer countDownTimer;
 
@@ -131,6 +133,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         codeInput = findViewById(R.id.activity_forgot_password_code);
         acceptButton = findViewById(R.id.activity_forgot_password_accept);
         sendEmailAgain = findViewById(R.id.activity_forgot_password_sendEmailAgain);
+        progressBar = findViewById(R.id.activity_forgot_password_progressBar);
     }
 
     void sendEmailWithCode(String email){
@@ -176,6 +179,8 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         String timelefta = "" + (int) timeLeft / 60000 +  ":";
         if((int) timeLeft % 60000 / 1000 < 10) timelefta += "0";
         timelefta += (int) timeLeft % 60000 / 1000;
+
+        progressBar.setProgress((int) timeLeft / 1000);
 
         timer.setText(timelefta);
     }
