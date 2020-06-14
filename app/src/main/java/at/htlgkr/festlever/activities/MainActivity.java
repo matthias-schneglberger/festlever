@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         //Set up Fragments
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(),user);
         ViewPager viewPager = findViewById(R.id.view_pager);
+        viewPager.setOffscreenPageLimit(5);
         viewPager.setAdapter(sectionsPagerAdapter);
 
         //Get Fragments
