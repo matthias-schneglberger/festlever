@@ -51,12 +51,17 @@
         <activity
             android:name=".activities.InviteToEventActivity"
             android:parentActivityName=".activities.MainActivity" />
+
         <activity android:name=".activities.ShowProfileActivity"
             android:parentActivityName=".activities.MainActivity"/>
+
         <activity android:name=".preferences.MySettingsActivity"
             android:parentActivityName=".activities.MainActivity"/>
-        <activity android:name=".activities.ForgotPasswordActivity"/>
-        <activity android:name=".activities.NewPasswordActivity"/>
+
+        <activity android:name=".activities.ForgotPasswordActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".activities.NewPasswordActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <meta-data
             android:name="preloaded_fonts"
