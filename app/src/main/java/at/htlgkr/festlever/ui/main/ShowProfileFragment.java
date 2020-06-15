@@ -1,5 +1,6 @@
 package at.htlgkr.festlever.ui.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,6 +9,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.time.LocalDate;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import at.htlgkr.festlever.R;
+import at.htlgkr.festlever.activities.EventDetailsActivity;
 import at.htlgkr.festlever.adapter.Adapter_event;
 import at.htlgkr.festlever.logic.FireBaseCommunication;
 import at.htlgkr.festlever.logic.UserEventsPuffer;
@@ -83,6 +86,14 @@ public class ShowProfileFragment extends Fragment {
                     }
                 }).start();
 
+            }
+        });
+
+        eventsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Event event = (Event) parent.getItemAtPosition(position);
+                startActivity(new Intent(getActivity(), EventDetailsActivity.class).putExtra("user",user).putExtra("event",event));
             }
         });
 
