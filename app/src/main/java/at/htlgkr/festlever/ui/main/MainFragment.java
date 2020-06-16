@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -24,10 +25,13 @@ import at.htlgkr.festlever.R;
 import at.htlgkr.festlever.activities.EventDetailsActivity;
 import at.htlgkr.festlever.activities.MainActivity;
 import at.htlgkr.festlever.adapter.Adapter_event;
+import at.htlgkr.festlever.interfaces.IFragmentUpdateListView;
 import at.htlgkr.festlever.logic.FireBaseCommunication;
 import at.htlgkr.festlever.logic.UserEventsPuffer;
 import at.htlgkr.festlever.objects.Event;
 import at.htlgkr.festlever.objects.User;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -51,6 +55,8 @@ public class MainFragment extends Fragment {
 
     private SharedPreferences prefs;
     private String region = "";
+
+    private final int REQUEST_DETAILS = 1;
 
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
@@ -96,7 +102,7 @@ public class MainFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Event event = (Event) parent.getItemAtPosition(position);
-                startActivity(new Intent(getActivity(), EventDetailsActivity.class).putExtra("user",user).putExtra("event",event));
+                startActivityForResult(new Intent(getActivity(), EventDetailsActivity.class).putExtra("user",user).putExtra("event",event),REQUEST_DETAILS);
             }
         });
 
@@ -112,6 +118,13 @@ public class MainFragment extends Fragment {
                     }
                 }).start();
 
+            }
+        });
+
+        ((MainActivity)getActivity()).setIFragmentUpdateListView(new IFragmentUpdateListView() {
+            @Override
+            public void refreshListView() {
+                update();
             }
         });
 
@@ -189,4 +202,13 @@ public class MainFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_DETAILS){
+            if(resultCode == RESULT_OK){
+                update();
+            }
+        }
+    }
 }

@@ -8,6 +8,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +26,7 @@ import java.io.PrintWriter;
 import java.util.Map;
 
 import at.htlgkr.festlever.R;
+import at.htlgkr.festlever.interfaces.IFragmentUpdateListView;
 import at.htlgkr.festlever.objects.User;
 import at.htlgkr.festlever.preferences.MySettingsActivity;
 import at.htlgkr.festlever.ui.main.MainFragment;
@@ -43,6 +45,17 @@ public class MainActivity extends AppCompatActivity {
 
     private SharedPreferences prefs;
     private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener;
+
+    private IFragmentUpdateListView iFragmentUpdateListView;
+    private final int REQUEST_CREATE_CHANGE = 2;
+
+    public IFragmentUpdateListView getIFragmentUpdateListView() {
+        return iFragmentUpdateListView;
+    }
+
+    public void setIFragmentUpdateListView(IFragmentUpdateListView iFragmentUpdateListView) {
+        this.iFragmentUpdateListView = iFragmentUpdateListView;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void createEvent(){
-        startActivity(new Intent(this, EventCreateChangeActivity.class).putExtra("user",user));
+        startActivityForResult(new Intent(this, EventCreateChangeActivity.class).putExtra("user",user),REQUEST_CREATE_CHANGE);
     }
 
     @Override
@@ -169,6 +182,14 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, key + " new Value: " + sValue, Toast.LENGTH_LONG).show();
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CREATE_CHANGE){
+            if(resultCode == RESULT_OK){
+                getIFragmentUpdateListView().refreshListView();
+            }
+        }
+    }
 }
 

@@ -176,7 +176,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         }
 
         event.setAcceptUser(accepted);
-
+        setResult(RESULT_OK);
         fireBaseCommunication.createEvent(event);
     }
 }

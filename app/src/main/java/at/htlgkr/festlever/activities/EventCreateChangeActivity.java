@@ -393,6 +393,7 @@ public class EventCreateChangeActivity extends AppCompatActivity {
 
     void onCreateSuccess(){ // Working
         createButton.setEnabled(true);
+        setResult(RESULT_OK);
         finish();
     }
 
