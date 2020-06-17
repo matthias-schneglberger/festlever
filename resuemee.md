@@ -65,3 +65,27 @@ Was wird nächste Woche umgesetzt
 - Update Probleme
 - Region
 
+## 17.06.2020
+
+Gut gelaufen ist:
++ Zeitmanagement
++ Hänger Probleme behoben
+ 
+Fertiggestellte Tasks:
+- ShowProfile Activity (Layout verändern?)
+- Region
+- Update Probleme
+- Passwort vergessen
+
+Probleme:
+- Lösung für Update Probleme finden
+
+Wie liegen wir im Zeitplan:
+Sehr gut
+
+Was wird nächste Woche umgesetzt
+- Layout veränderungen
+- Update Probleme (Adapter -> Fragment ...)
+- Bug fixes
+- Code verbessern
+
