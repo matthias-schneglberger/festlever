@@ -79,6 +79,7 @@ Fertiggestellte Tasks:
 
 Probleme:
 - Lösung für Update Probleme finden
+- GMailSender
 
 Wie liegen wir im Zeitplan:
 Sehr gut
