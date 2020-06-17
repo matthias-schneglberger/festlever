@@ -25,6 +25,7 @@ import at.htlgkr.festlever.R;
 import at.htlgkr.festlever.activities.EventDetailsActivity;
 import at.htlgkr.festlever.activities.MainActivity;
 import at.htlgkr.festlever.adapter.Adapter_event;
+import at.htlgkr.festlever.interfaces.IFragmentUpdateAdapter;
 import at.htlgkr.festlever.interfaces.IFragmentUpdateListView;
 import at.htlgkr.festlever.logic.FireBaseCommunication;
 import at.htlgkr.festlever.logic.UserEventsPuffer;
@@ -36,7 +37,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements IFragmentUpdateAdapter{
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String ARG_SECTION_USER = "section_user";
@@ -121,7 +122,7 @@ public class MainFragment extends Fragment {
             }
         });
 
-        ((MainActivity)getActivity()).setIFragmentUpdateListView(new IFragmentUpdateListView() {
+        ((MainActivity)getActivity()).setIFragmentUpdateListView(index,new IFragmentUpdateListView() {
             @Override
             public void refreshListView() {
                 update();
@@ -155,7 +156,7 @@ public class MainFragment extends Fragment {
                 break;
         }
 
-        eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, currentDisplayedEvents, userList, editEnabled,user));
+        eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, currentDisplayedEvents, userList, editEnabled,user,MainFragment.this));
     }
 
     public void update(){
@@ -182,10 +183,10 @@ public class MainFragment extends Fragment {
 
 
                 if(index == 2){
-                    eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, searchedEvents, userList, true,user));
+                    eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, searchedEvents, userList, true,user,MainFragment.this));
                 }
                 else{
-                    eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, searchedEvents, userList, false,user));
+                    eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, searchedEvents, userList, false,user,MainFragment.this));
                 }
 
             }
@@ -210,5 +211,10 @@ public class MainFragment extends Fragment {
                 update();
             }
         }
+    }
+
+    @Override
+    public void updateFromAdapter() {
+        update();
     }
 }

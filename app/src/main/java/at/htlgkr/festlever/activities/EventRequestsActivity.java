@@ -19,9 +19,9 @@ import at.htlgkr.festlever.objects.User;
 
 public class EventRequestsActivity extends AppCompatActivity {
     private final String TAG = "EventRequestsActivity";
+
     private User user;
     private FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
-    private List<User> allusers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +32,6 @@ public class EventRequestsActivity extends AppCompatActivity {
             Intent intent = getIntent();
             Bundle bundle = intent.getExtras();
             user = (User) bundle.get("user");
-            Log.d(TAG, "onCreate: Current User logged in: " + user.getUsername());
         }catch (NullPointerException ignored){}
 
         ListView listView = findViewById(R.id.activity_event_requests_listView);

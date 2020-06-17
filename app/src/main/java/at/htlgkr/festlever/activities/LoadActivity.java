@@ -18,7 +18,10 @@ import at.htlgkr.festlever.R;
 import at.htlgkr.festlever.logic.FireBaseCommunication;
 import at.htlgkr.festlever.services.UpdateService;
 
+
 public class LoadActivity extends AppCompatActivity {
+    private final String TAG = "LoadActivity";
+
     FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
     ProgressBar progressBar;
     Context context;
@@ -36,9 +39,7 @@ public class LoadActivity extends AppCompatActivity {
     }
 
     public void doInBackground(){
-
-        // do smth here
-
+        //Update
         updateProgressBar(0);
 
         if(!isInternetAvailable()){
@@ -52,18 +53,19 @@ public class LoadActivity extends AppCompatActivity {
             return;
         }
 
+        //Update
         updateProgressBar(33);
 
         startService(new Intent(this, UpdateService.class));
 
         fireBaseCommunication.getAllUsers();
 
-
+        //Update
         updateProgressBar(66);
 
         fireBaseCommunication.getAllEvents();
 
-
+        //Update
         updateProgressBar(100);
 
 
@@ -81,17 +83,13 @@ public class LoadActivity extends AppCompatActivity {
     }
 
     public boolean isInternetAvailable() {
-        ConnectivityManager cm =
-                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
-
+        ConnectivityManager cm = (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
         try{
             NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
             return activeNetwork != null &&
                     activeNetwork.isConnectedOrConnecting();
-        }
-        catch (Exception e){
+        } catch (Exception e){
             return false;
         }
-
     }
 }

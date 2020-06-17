@@ -27,11 +27,14 @@ import at.htlgkr.festlever.ui.main.ShowProfilePagerAdapter;
 
 public class ShowProfileActivity extends AppCompatActivity {
     private final String TAG = "ShowProfileActivity";
+
     private FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
     private User user;
     private List<Event> allEventsProvided;
     private List<User> allUser;
     private List<Event> allEvents;
+
+    TextView username, acceptedEventsView, providedEventsView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,20 +45,15 @@ public class ShowProfileActivity extends AppCompatActivity {
             Intent intent = getIntent();
             Bundle bundle = intent.getExtras();
             user = (User) bundle.get("user");
-            Log.d(TAG, "onCreate: Current User logged in: " + user.getUsername());
         }catch (NullPointerException ignored){}
 
-
-        allEventsProvided = fireBaseCommunication.getAllEvents().stream().filter(a -> a.getCreater().equals(user.getUsername()) && a.isPublic()).collect(Collectors.toList());
         allUser = fireBaseCommunication.getAllUsers();
         allEvents = fireBaseCommunication.getAllEvents();
+        allEventsProvided = allEvents.stream().filter(a -> a.getCreater().equals(user.getUsername()) && a.isPublic()).collect(Collectors.toList());
 
-        TextView username = findViewById(R.id.activity_show_profile_username);
-        TextView acceptedEventsView = findViewById(R.id.activity_show_profile_acceptedEvents);
-        TextView providedEventsView = findViewById(R.id.activity_show_profile_providedEvents);
-//        ListView listView = findViewById(R.id.activity_show_profile_listview);
+        initializeViews();
+
         username.setText(user.getUsername());
-//        listView.setAdapter(new Adapter_event(getApplicationContext(),R.layout.fragment_main_listview_item,allEvents, allUser, false, user));
 
         int acceptedEvents = 0;
         int providedEvents = 0;
@@ -78,5 +76,11 @@ public class ShowProfileActivity extends AppCompatActivity {
         viewPager.setAdapter(showProfilePagerAdapter);
         tabs.setupWithViewPager(viewPager);
 
+    }
+
+    void initializeViews(){
+        username = findViewById(R.id.activity_show_profile_username);
+        acceptedEventsView = findViewById(R.id.activity_show_profile_acceptedEvents);
+        providedEventsView = findViewById(R.id.activity_show_profile_providedEvents);
     }
 }

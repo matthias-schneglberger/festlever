@@ -23,11 +23,15 @@ import at.htlgkr.festlever.objects.User;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 public class Adapter_findFriends extends BaseAdapter {
+    private final String TAG = "Adapter_findFriends";
+
     private List<User> users = new ArrayList();
     private int layoutId;
     private LayoutInflater inflater;
     private User origUser;
     private Context context;
+
+    Button requestButton;
 
     public Adapter_findFriends(Context ctx, int layoutId, List<User> users, User origUser) {
         this.users = users;
@@ -60,7 +64,6 @@ public class Adapter_findFriends extends BaseAdapter {
         ((TextView) listItem.findViewById(R.id.activity_find_friends_user_listitem_username)).setText(user.getUsername());
 
         //request Button
-        Button requestButton;
         requestButton = listItem.findViewById(R.id.activity_find_friends_user_listitem_friendsRequest);
         requestButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,6 +86,7 @@ public class Adapter_findFriends extends BaseAdapter {
         return listItem;
     }
 
+    @SuppressLint("ResourceAsColor")
     private void sendRequest(User user){
         FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
         List<String> friendRequests = user.getFriendRequests();
@@ -96,8 +100,7 @@ public class Adapter_findFriends extends BaseAdapter {
             fireBaseCommunication.updateUser(user);
 
             Snackbar.make(((Activity)context).findViewById(R.id.activity_find_friends_allUsers), user.getUsername() + " wurde eine Anfrage gesendet", BaseTransientBottomBar.LENGTH_SHORT).show();
+
         }
-
-
     }
 }

@@ -41,6 +41,8 @@ import at.htlgkr.festlever.objects.User;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 public class Adapter_eventRequests extends BaseAdapter {
+    private final String TAG = "Adapter_eventRequests";
+
     private List<Event> events = new ArrayList();
     private List<User> users = new ArrayList();
     private int layoutId;
@@ -128,22 +130,18 @@ public class Adapter_eventRequests extends BaseAdapter {
             eventAddress.setText(longLatAdressPuffer.getAddress(event.getLongitude(), event.getLatitude()));
         }
         else{
-            LongLatToAddressAsyncTask longLatToAddressAsyncTask = new LongLatToAddressAsyncTask();
-            longLatToAddressAsyncTask.execute(event.getLatitude(),event.getLongitude());
             try {
-                String address = longLatToAddressAsyncTask.get();
-                if(address!=null){
-                    JSONObject jsonObject = new JSONObject(address);
-                    String addressString = jsonObject.getString("road") + " " + jsonObject.getString("house_number") + ", " + jsonObject.getString("postcode");
-                    eventAddress.setText(addressString);
-
-                    longLatAdressPuffer.storeAdress(event.getLongitude(), event.getLatitude(), addressString);
+                String input = new LongLatToAddressAsyncTask().execute(event.getLatitude(), event.getLongitude()).get();
+                if(input!=null){
+                    JSONObject jsonObject = new JSONObject(input);
+                    String address = jsonObject.getString("road") + " " + jsonObject.getString("house_number") + ", " + jsonObject.getString("postcode");
+                    eventAddress.setText(address);
+                    longLatAdressPuffer.storeAdress(event.getLongitude(), event.getLatitude(), address);
                 }
             } catch (ExecutionException | InterruptedException | JSONException e) {
                 e.printStackTrace();
             }
         }
-
 
         //Set Title
         eventName.setText(event.getTitle());
@@ -165,7 +163,6 @@ public class Adapter_eventRequests extends BaseAdapter {
         //Set Time Until Event begins
         timeUntilEvent.setText(ChronoUnit.DAYS.between(LocalDate.now(), LocalDate.parse(event.getDate(),dtf)) + " Tage");
 
-
         //init Buttons
         acceptButton = listItem.findViewById(R.id.activity_event_requests_user_listitem_accept);
         rejectButton = listItem.findViewById(R.id.activity_event_requests_user_listitem_reject);
@@ -186,7 +183,6 @@ public class Adapter_eventRequests extends BaseAdapter {
         });
 
         //reject Button
-
         rejectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -233,7 +229,6 @@ public class Adapter_eventRequests extends BaseAdapter {
         List<String> eventRequests = user.getEventRequests();
 
         if (eventRequests.contains(event.getId())) {
-
             eventRequests.remove(event.getId());
             user.setEventRequests(eventRequests);
             fireBaseCommunication.updateUser(user);

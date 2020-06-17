@@ -24,6 +24,8 @@ import at.htlgkr.festlever.objects.User;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 public class Adapter_inviteToEvent extends BaseAdapter {
+    private final String TAG = "Adapter_inviteToEvent";
+
     private List<User> users = new ArrayList();
     private int layoutId;
     private LayoutInflater inflater;

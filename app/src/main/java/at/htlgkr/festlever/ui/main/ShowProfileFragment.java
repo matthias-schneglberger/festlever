@@ -19,13 +19,15 @@ import java.util.stream.Collectors;
 
 import at.htlgkr.festlever.R;
 import at.htlgkr.festlever.activities.EventDetailsActivity;
+import at.htlgkr.festlever.activities.ShowProfileActivity;
 import at.htlgkr.festlever.adapter.Adapter_event;
+import at.htlgkr.festlever.interfaces.IFragmentUpdateAdapter;
 import at.htlgkr.festlever.logic.FireBaseCommunication;
 import at.htlgkr.festlever.logic.UserEventsPuffer;
 import at.htlgkr.festlever.objects.Event;
 import at.htlgkr.festlever.objects.User;
 
-public class ShowProfileFragment extends Fragment {
+public class ShowProfileFragment extends Fragment implements IFragmentUpdateAdapter {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String ARG_SECTION_USER = "section_user";
@@ -109,7 +111,7 @@ public class ShowProfileFragment extends Fragment {
                 currentDisplayedEvents = eventList.stream().filter(a -> a.getAcceptUser().contains(user.getUsername())).collect(Collectors.toList());
                 break;
         }
-        eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, currentDisplayedEvents, userList, false,user));
+        eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, currentDisplayedEvents, userList, false,user, ShowProfileFragment.this));
     }
 
     public void update(){
@@ -120,5 +122,10 @@ public class ShowProfileFragment extends Fragment {
                 setUpListView();
             }
         });
+    }
+
+    @Override
+    public void updateFromAdapter() {
+
     }
 }

@@ -22,10 +22,10 @@ import at.htlgkr.festlever.objects.User;
 
 public class FindFriendsActivity extends AppCompatActivity {
     private final String TAG = "FindFriendsActivity";
+
     private User user;
     private FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
     private List<User> allusers;
-    private String searchTerm = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,6 @@ public class FindFriendsActivity extends AppCompatActivity {
         }catch (NullPointerException ignored){}
 
         allusers = fireBaseCommunication.getAllUsers();
-
 
         //Searchview
         SearchView searchView = findViewById(R.id.activity_find_friends_search);
@@ -57,10 +56,8 @@ public class FindFriendsActivity extends AppCompatActivity {
             }
         });
 
-
         //init update
         newSearchTerm("");
-
 
         ListView listView = findViewById(R.id.activity_find_friends_allUsers);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -69,7 +66,6 @@ public class FindFriendsActivity extends AppCompatActivity {
                 onItemClicked((User)adapterView.getItemAtPosition(i));
             }
         });
-
     }
 
     public void onItemClicked(User clickedUser){
@@ -77,13 +73,7 @@ public class FindFriendsActivity extends AppCompatActivity {
     }
 
     public void newSearchTerm(String searchterm){
-        this.searchTerm = searchterm;
-
-
-        List<User> tmpUsers = allusers.stream().filter(n -> n.getUsername().contains(searchterm)).collect(Collectors.toList());
-        tmpUsers = tmpUsers.stream().filter(n -> !n.getUsername().equals(user.getUsername())).collect(Collectors.toList());
-
-
+        List<User> tmpUsers = allusers.stream().filter(n -> n.getUsername().contains(searchterm)).filter(n -> !n.getUsername().equals(user.getUsername())).collect(Collectors.toList());
         ListView listView = findViewById(R.id.activity_find_friends_allUsers);
         listView.setAdapter(new Adapter_findFriends(this, R.layout.activity_find_friends_user_listitem, tmpUsers, user));
     }

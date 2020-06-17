@@ -21,13 +21,14 @@ import at.htlgkr.festlever.objects.User;
 
 public class NewPasswordActivity extends AppCompatActivity {
     private final String TAG = "NewPasswordActivity";
-    User user;
+
+    private User user;
 
     private EditText passwordInput;
     private EditText checkIfPasswordIsCorrect;
     private Button acceptButton;
 
-    FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
+    private FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,7 +41,6 @@ public class NewPasswordActivity extends AppCompatActivity {
             Intent intent = getIntent();
             Bundle bundle = intent.getExtras();
             user = (User) bundle.get("user");
-            Log.d(TAG, "onCreate: Current User logged in: " + user.getUsername());
         }catch (NullPointerException ignored){}
 
         acceptButton.setOnClickListener(new View.OnClickListener() {
@@ -74,7 +74,7 @@ public class NewPasswordActivity extends AppCompatActivity {
         }
     }
 
-    boolean validate() { // Working
+    boolean validate() {
         boolean valid = true;
 
         if (passwordInput.getText().toString().isEmpty()) {

@@ -38,7 +38,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     CountDownTimer countDownTimer;
 
-    private final String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789" + "abcdefghijklmnopqrstuvxyz";
+    private final String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvxyz";
 
     private String code;
     private long timeLeft = 300000;
@@ -46,8 +46,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     private User user;
     private List<User> userList;
-
-    private static final int REQUEST_PASSWORD_CHANGED = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,6 +67,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     sendEmailWithCode(emailInput.getText().toString());
                     startTimer();
                     sendEmail.setClickable(false);
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Fehler",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -94,8 +95,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             codeInput.setError(null);
             for(User u : userList){
                 if(u.getEmail().equals(emailInput.getText().toString())){
-                    startActivityForResult(new Intent(this, NewPasswordActivity.class).putExtra("user",u), REQUEST_PASSWORD_CHANGED);
+                    startActivity(new Intent(this, NewPasswordActivity.class).putExtra("user",u));
                     countDownTimer.cancel();
+                    finish();
                     break;
                 }
             }
@@ -116,16 +118,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_PASSWORD_CHANGED){
-            if(resultCode == RESULT_OK){
-                this.finish();
-            }
-        }
-    }
-
     void initializeViews(){
         emailInput = findViewById(R.id.activity_forgot_password_email);
         sendEmail = findViewById(R.id.activity_forgot_password_sendEmail);
@@ -140,7 +132,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         try {
             GMailSender sender = new GMailSender("festlever.project@gmail.com","2lC4^%8yjeJNr%n9");
             sender.sendMail("Passwort zurücksetzen", "Verifizierungscode = " + code, "festlever.project@gmail.com",email);
-
+            Toast.makeText(getApplicationContext(), "E-Mail wurde an " + email + " gesendet",Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
         }

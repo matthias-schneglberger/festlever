@@ -23,6 +23,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import at.htlgkr.festlever.R;
@@ -33,38 +35,34 @@ import at.htlgkr.festlever.ui.main.MainFragment;
 import at.htlgkr.festlever.ui.main.SectionsPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
-
     private final String TAG = "MainActivity";
+
     public static User user;
     public static String searchTerm = "";
-    private MainFragment publicFragment;
-    private MainFragment privateFragment;
-    private MainFragment myEventsFragment;
 
-    File rememberMeFile;
+    private List<IFragmentUpdateListView> iFragmentUpdateListViewList = new ArrayList<>();
 
-    private SharedPreferences prefs;
-    private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener;
+    public List<IFragmentUpdateListView> getIFragmentUpdateListView() {
+        return iFragmentUpdateListViewList;
+    }
 
-    private IFragmentUpdateListView iFragmentUpdateListView;
+    public void setIFragmentUpdateListView(int index, IFragmentUpdateListView iFragmentUpdateListView) {
+        if(iFragmentUpdateListViewList.size()==3){
+            iFragmentUpdateListViewList.set(index, iFragmentUpdateListView);
+        }
+        else{
+            iFragmentUpdateListViewList.add(index,iFragmentUpdateListView);
+        }
+    }
+
     private final int REQUEST_CREATE_CHANGE = 2;
 
-    public IFragmentUpdateListView getIFragmentUpdateListView() {
-        return iFragmentUpdateListView;
-    }
-
-    public void setIFragmentUpdateListView(IFragmentUpdateListView iFragmentUpdateListView) {
-        this.iFragmentUpdateListView = iFragmentUpdateListView;
-    }
+    File rememberMeFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //Preferences
-//        prefs = PreferenceManager.getDefaultSharedPreferences(this);
-//        preferenceChangeListener = (sharedPrefs, key) -> preferenceChanged(sharedPrefs, key);
 
         //Set Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -83,13 +81,9 @@ public class MainActivity extends AppCompatActivity {
         //Set up Fragments
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(),user);
         ViewPager viewPager = findViewById(R.id.view_pager);
-        viewPager.setOffscreenPageLimit(5);
+        viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(sectionsPagerAdapter);
 
-        //Get Fragments
-        publicFragment = (MainFragment) sectionsPagerAdapter.getItem(0);
-        privateFragment = (MainFragment) sectionsPagerAdapter.getItem(1);
-        myEventsFragment = (MainFragment) sectionsPagerAdapter.getItem(2);
 
         //Set up Tabs
         TabLayout tabs = findViewById(R.id.activity_show_profile_tabs);
@@ -115,10 +109,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String s) {
                 searchTerm = s;
-                return false;
+                return true;
             }
         });
-
 
     }
 
@@ -162,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    void logout(){ // Working
+    void logout(){
         try (PrintWriter writer = new PrintWriter(new FileWriter(rememberMeFile, false))){
             writer.write("");
         } catch (IOException e) {
@@ -172,22 +165,14 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
-    void preferenceChanged(SharedPreferences sharedPrefs, String key){
-        Map<String,?> allEntries = sharedPrefs.getAll();
-        String sValue = "";
-        if(allEntries.get(key) instanceof String)
-            sValue = sharedPrefs.getString(key,"");
-        else if (allEntries.get(key) instanceof Boolean)
-            sValue = String.valueOf(sharedPrefs.getBoolean(key,false));
-        Toast.makeText(this, key + " new Value: " + sValue, Toast.LENGTH_LONG).show();
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUEST_CREATE_CHANGE){
             if(resultCode == RESULT_OK){
-                getIFragmentUpdateListView().refreshListView();
+                getIFragmentUpdateListView().get(0).refreshListView();
+                getIFragmentUpdateListView().get(1).refreshListView();
+                getIFragmentUpdateListView().get(2).refreshListView();
             }
         }
     }

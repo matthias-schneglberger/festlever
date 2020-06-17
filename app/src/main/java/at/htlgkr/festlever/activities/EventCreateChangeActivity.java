@@ -36,6 +36,7 @@ import java.util.concurrent.ExecutionException;
 
 import at.htlgkr.festlever.R;
 import at.htlgkr.festlever.logic.FireBaseCommunication;
+import at.htlgkr.festlever.logic.LongLatAdressPuffer;
 import at.htlgkr.festlever.logic.locationiqtasks.AdressToLongLatAsyncTask;
 import at.htlgkr.festlever.logic.locationiqtasks.LongLatToAddressAsyncTask;
 import at.htlgkr.festlever.objects.Event;
@@ -43,66 +44,54 @@ import at.htlgkr.festlever.objects.User;
 
 public class EventCreateChangeActivity extends AppCompatActivity {
     private final String TAG = "CreateEventActivity";
+
     private User user;
     private Event event;
+
     private boolean inChangeMode = true;
     private boolean eventIsPublic = true;
+
     private FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
+    LongLatAdressPuffer longLatAdressPuffer = new LongLatAdressPuffer();
 
-    ConstraintLayout publicLayout;
-    ConstraintLayout privateLayout;
+    private ConstraintLayout publicLayout;
+    private ConstraintLayout privateLayout;
 
-    EditText editText_title;
-    EditText editText_address;
-    EditText editText_entrance;
-    EditText editText_date;
-    TextInputEditText textInputEditText_description;
+    private EditText editText_title;
+    private EditText editText_address;
+    private EditText editText_entrance;
+    private EditText editText_date;
+    private TextInputEditText textInputEditText_description;
 
-    Button uploadImageButton;
-    Button createButton;
+    private Button uploadImageButton;
+    private Button createButton;
 
-    // request code
     private final int PICK_IMAGE_REQUEST = 22;
 
-    FirebaseStorage storage;
-    StorageReference storageReference;
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
 
-    String storagePath;
+    private String storagePath;
 
-    Uri filePath;
+    private Uri filePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
 
+        //Initialize Firebase
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
-        publicLayout = findViewById(R.id.activity_create_event_publicLayout);
-        privateLayout = findViewById(R.id.activity_create_event_privateLayout);
+       //Initialize Views
+        initializeViews();
 
-        createButton = findViewById(R.id.activity_create_event_buttonCreate);
-        uploadImageButton = findViewById(R.id.activity_create_event_image);
-
-        editText_title = findViewById(R.id.activity_create_event_title);
-        editText_address = findViewById(R.id.activity_create_event_address);
-        editText_entrance = findViewById(R.id.activity_create_event_entrance);
-        editText_date = findViewById(R.id.activity_create_event_date);
-        textInputEditText_description = findViewById(R.id.activity_create_event_description);
-
-        //Get User
+        //Get User and Event
         try{
             Intent intent = getIntent();
             Bundle bundle = intent.getExtras();
             user = (User) bundle.get("user");
-            Log.d(TAG, "onCreate: Current User logged in: " + user.getUsername());
-        }catch (NullPointerException ignored){}
-
-        //Get Event
-        try{
-            Intent intent = getIntent();
-            Bundle bundle = intent.getExtras();
             event = (Event) bundle.get("event");
         }catch (NullPointerException ignored){}
 
@@ -136,14 +125,12 @@ public class EventCreateChangeActivity extends AppCompatActivity {
         });
 
         //Upload-Image-Button
-        uploadImageButton.setText("Bild hochladen ...");
         uploadImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/*");
                 startActivityForResult(Intent.createChooser(intent, "Wählen Sie Ihr Bild aus"),PICK_IMAGE_REQUEST);
-
             }
         });
 
@@ -177,45 +164,77 @@ public class EventCreateChangeActivity extends AppCompatActivity {
         }
     }
 
-    void fillItems(Event event){ // Working
+    void initializeViews(){
+        publicLayout = findViewById(R.id.activity_create_event_publicLayout);
+        privateLayout = findViewById(R.id.activity_create_event_privateLayout);
+
+        createButton = findViewById(R.id.activity_create_event_buttonCreate);
+        uploadImageButton = findViewById(R.id.activity_create_event_image);
+
+        editText_title = findViewById(R.id.activity_create_event_title);
+        editText_address = findViewById(R.id.activity_create_event_address);
+        editText_entrance = findViewById(R.id.activity_create_event_entrance);
+        editText_date = findViewById(R.id.activity_create_event_date);
+        textInputEditText_description = findViewById(R.id.activity_create_event_description);
+    }
+
+    void fillItems(Event event){
         if(event.isPublic()){
             updateToPublic();
         }
         else{
             updateToPrivate();
         }
+
+        //Set title
         editText_title.setText(event.getTitle());
-        LongLatToAddressAsyncTask longLatToAddressAsyncTask = new LongLatToAddressAsyncTask();
-        longLatToAddressAsyncTask.execute(event.getLatitude(),event.getLongitude());
-        try {
-            String address = longLatToAddressAsyncTask.get();
-            if(address!=null){
-                JSONObject jsonObject = new JSONObject(address);
-                editText_address.setText(jsonObject.getString("road") + " " + jsonObject.getString("house_number") + ", " + jsonObject.getString("postcode"));
-            }
-        } catch (ExecutionException | JSONException | InterruptedException e) {
-            e.printStackTrace();
+
+        //Set Address
+        if(longLatAdressPuffer.isStored(event.getLongitude(), event.getLatitude())){
+            editText_address.setText(longLatAdressPuffer.getAddress(event.getLongitude(), event.getLatitude()));
         }
+        else{
+            try {
+                String input = new LongLatToAddressAsyncTask().execute(event.getLatitude(), event.getLongitude()).get();
+                if(input!=null){
+                    JSONObject jsonObject = new JSONObject(input);
+                    String address = jsonObject.getString("road") + " " + jsonObject.getString("house_number") + ", " + jsonObject.getString("postcode");
+                    editText_address.setText(address);
+                    longLatAdressPuffer.storeAdress(event.getLongitude(), event.getLatitude(), address);
+                }
+            } catch (ExecutionException | JSONException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //Set entrance
         editText_entrance.setText(event.getEntrance()+"");
+
+        //Set date
         editText_date.setText(event.getDate());
+
+        //Set description
         textInputEditText_description.setText(event.getDescription());
+
+        //Set Image
         storagePath = event.getImage();
     }
 
-    void updateToPublic(){ // Working
+    void updateToPublic(){
         publicLayout.setBackgroundColor(getResources().getColor(R.color.addEventInputBackground));
         privateLayout.setBackground(getDrawable(R.drawable.background_add_event_input_white));
         eventIsPublic = true;
     }
 
-    void updateToPrivate(){ // Working
+    void updateToPrivate(){
         publicLayout.setBackground(getDrawable(R.drawable.background_add_event_input_white));
         privateLayout.setBackgroundColor(getResources().getColor(R.color.addEventInputBackground));
         eventIsPublic = false;
     }
 
-    void createEvent(){ // Working
+    void createEvent(){
         Log.d(TAG, "createEvent: ");
+
         if(!validate()){
             onCreateFailed();
             return;
@@ -225,8 +244,7 @@ public class EventCreateChangeActivity extends AppCompatActivity {
 
         uploadImage(filePath);
 
-        final ProgressDialog progressDialog = new ProgressDialog(EventCreateChangeActivity.this,
-                R.style.Theme_Design_BottomSheetDialog);
+        final ProgressDialog progressDialog = new ProgressDialog(EventCreateChangeActivity.this, R.style.Theme_Design_BottomSheetDialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Erstellen...");
         progressDialog.show();
@@ -243,17 +261,32 @@ public class EventCreateChangeActivity extends AppCompatActivity {
                 } catch (ExecutionException | InterruptedException e) {
                     e.printStackTrace();
                 }
+
                 if(longlat.isEmpty()){
                     onCreateFailed();
                     return;
                 }
+
+                //Set address
                 tmpEvent.setLatitude(Double.valueOf(longlat.get(0)));
                 tmpEvent.setLongitude(Double.valueOf(longlat.get(1)));
+
+                //Set date
                 tmpEvent.setDate(editText_date.getText().toString());
+
+                //Set entrance
                 tmpEvent.setEntrance(Double.valueOf(editText_entrance.getText().toString()));
+
+                //Set image
                 tmpEvent.setImage(storagePath);
+
+                //Set description
                 tmpEvent.setDescription(textInputEditText_description.getText().toString());
+
+                //Set creator
                 tmpEvent.setCreater(user.getUsername());
+
+                //Set if public
                 tmpEvent.setPublic(eventIsPublic);
                 try {
                     tmpEvent.setRegion(new JSONObject(new LongLatToAddressAsyncTask().execute(Double.valueOf(longlat.get(0)),Double.valueOf(longlat.get(1))).get()).getString("country"));
@@ -261,6 +294,7 @@ public class EventCreateChangeActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
+                //Generate id
                 tmpEvent.generateID();
 
                 if(fireBaseCommunication.createEvent(tmpEvent)){
@@ -274,7 +308,7 @@ public class EventCreateChangeActivity extends AppCompatActivity {
         },1000);
     }
 
-    void changeEvent(){ // Working
+    void changeEvent(){
         Log.d(TAG, "changeEvent: ");
         if(!validate()){
             onCreateFailed();
@@ -283,8 +317,7 @@ public class EventCreateChangeActivity extends AppCompatActivity {
 
         uploadImage(filePath);
 
-        final ProgressDialog progressDialog = new ProgressDialog(EventCreateChangeActivity.this,
-                R.style.Theme_Design_BottomSheetDialog);
+        final ProgressDialog progressDialog = new ProgressDialog(EventCreateChangeActivity.this, R.style.Theme_Design_BottomSheetDialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Änderungen speichern...");
         progressDialog.show();
@@ -292,7 +325,10 @@ public class EventCreateChangeActivity extends AppCompatActivity {
         new android.os.Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                //Set title
                 event.setTitle(editText_title.getText().toString());
+
+                //Set Address
                 AdressToLongLatAsyncTask adressToLongLatAsyncTask = new AdressToLongLatAsyncTask();
                 adressToLongLatAsyncTask.execute(editText_address.getText().toString());
                 List<String> longlat = new ArrayList<>();
@@ -305,13 +341,29 @@ public class EventCreateChangeActivity extends AppCompatActivity {
                     onCreateFailed();
                     return;
                 }
+
                 event.setLatitude(Double.valueOf(longlat.get(0)));
                 event.setLongitude(Double.valueOf(longlat.get(1)));
+
+                //Store address
+                longLatAdressPuffer.storeAdress(Double.valueOf(longlat.get(1)),Double.valueOf(longlat.get(0)), editText_address.getText().toString());
+
+                //Set address
                 event.setDate(editText_date.getText().toString());
+
+                //Set entrance
                 event.setEntrance(Double.valueOf(editText_entrance.getText().toString()));
+
+                //Set image
                 event.setImage(storagePath);
+
+                //Set description
                 event.setDescription(textInputEditText_description.getText().toString());
+
+                //Set creator
                 event.setCreater(user.getUsername());
+
+                //Set if public
                 event.setPublic(eventIsPublic);
 
 
@@ -335,7 +387,7 @@ public class EventCreateChangeActivity extends AppCompatActivity {
         }
     }
 
-    void uploadImage(Uri filePath){ // Working
+    void uploadImage(Uri filePath){
         storagePath = "images/"+ UUID.randomUUID().toString();
         StorageReference ref = storageReference.child(storagePath);
 
@@ -391,13 +443,13 @@ public class EventCreateChangeActivity extends AppCompatActivity {
         return valid;
     }
 
-    void onCreateSuccess(){ // Working
+    void onCreateSuccess(){
         createButton.setEnabled(true);
         setResult(RESULT_OK);
         finish();
     }
 
-    void onCreateFailed(){ // Working
+    void onCreateFailed(){
         Toast.makeText(getApplicationContext(), "Fehlgeschlagen", Toast.LENGTH_LONG).show();
         createButton.setEnabled(true);
     }

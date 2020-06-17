@@ -24,11 +24,11 @@ import at.htlgkr.festlever.objects.User;
 
 public class InviteToEventActivity extends AppCompatActivity {
     private final String TAG = "InviteToEventActivity";
+
     private User user;
     private Event event;
     private FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
     private List<User> allusers;
-    private String searchTerm = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +36,12 @@ public class InviteToEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_find_friends);
 
         ListView listView = findViewById(R.id.activity_find_friends_allUsers);
+
         try{
             Intent intent = getIntent();
             Bundle bundle = intent.getExtras();
             user = (User) bundle.get("user");
             event = (Event) bundle.get("event");
-            Log.d(TAG, "onCreate: Current User logged in: " + user.getUsername());
         }catch (NullPointerException ignored){}
 
         allusers = fireBaseCommunication.getAllUsers();
@@ -64,16 +64,20 @@ public class InviteToEventActivity extends AppCompatActivity {
         //init update
         newSearchTerm("", listView);
 
-        //ListView OnClickListener
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                onItemClicked((User)adapterView.getItemAtPosition(i));
+            }
+        });
+    }
 
+    public void onItemClicked(User clickedUser){
+        startActivity(new Intent(this,ShowProfileActivity.class).putExtra("user",clickedUser));
     }
 
     public void newSearchTerm(String searchterm, ListView listView){
-        this.searchTerm = searchterm;
-
-        List<User> tmpUsers = allusers.stream().filter(n -> n.getUsername().contains(searchterm)).collect(Collectors.toList());
-        tmpUsers = tmpUsers.stream().filter(n -> !n.getUsername().equals(user.getUsername())).collect(Collectors.toList());
-
+        List<User> tmpUsers = allusers.stream().filter(n -> n.getUsername().contains(searchterm)).filter(n -> !n.getUsername().equals(user.getUsername())).collect(Collectors.toList());
         listView.setAdapter(new Adapter_inviteToEvent(this, R.layout.activity_find_friends_user_listitem, tmpUsers, event));
     }
 }

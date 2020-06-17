@@ -32,6 +32,8 @@ import java.util.stream.Collectors;
 import at.htlgkr.festlever.R;
 import at.htlgkr.festlever.activities.EventCreateChangeActivity;
 import at.htlgkr.festlever.activities.InviteToEventActivity;
+import at.htlgkr.festlever.interfaces.IFragmentUpdateAdapter;
+import at.htlgkr.festlever.interfaces.IFragmentUpdateListView;
 import at.htlgkr.festlever.logic.FireBaseCommunication;
 import at.htlgkr.festlever.logic.ImagePuffer;
 import at.htlgkr.festlever.logic.LongLatAdressPuffer;
@@ -42,6 +44,8 @@ import at.htlgkr.festlever.objects.User;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 public class Adapter_event extends BaseAdapter {
+    private final String TAG = "Adapter_event";
+
     private List<Event> events = new ArrayList<>();
     private List<User> users = new ArrayList<>();
     private int layoutId;
@@ -51,7 +55,9 @@ public class Adapter_event extends BaseAdapter {
     private User user;
     private FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
 
-    public Adapter_event(Context ctx, int layoutId, List<Event> events, List<User> users, boolean editsEnabled, User user) {
+    private IFragmentUpdateAdapter iFragmentUpdateAdapter;
+
+    public Adapter_event(Context ctx, int layoutId, List<Event> events, List<User> users, boolean editsEnabled, User user, IFragmentUpdateAdapter iFragmentUpdateAdapter) {
         this.context = ctx;
         this.events = events;
         this.layoutId = layoutId;
@@ -59,6 +65,7 @@ public class Adapter_event extends BaseAdapter {
         this.inflater = (LayoutInflater) ctx.getSystemService(LAYOUT_INFLATER_SERVICE);
         this.user = user;
         this.users = users;
+        this.iFragmentUpdateAdapter = iFragmentUpdateAdapter;
     }
 
     @Override
@@ -91,8 +98,6 @@ public class Adapter_event extends BaseAdapter {
         ImageButton editButton = listItem.findViewById(R.id.fragment_main_listview_item_editButton);
         TextView numOfFriends = listItem.findViewById(R.id.fragment_main_listview_item_numOfFriends);
 
-//        imageView.setVisibility(View.GONE);
-
         //My Event Buttons
         if(editsEnabled){
             editButton.setVisibility(View.VISIBLE);
@@ -109,12 +114,10 @@ public class Adapter_event extends BaseAdapter {
                         else if(item.getTitle().equals("Event bearbeiten")){
                             context.startActivity(new Intent(context, EventCreateChangeActivity.class).putExtra("event",event).putExtra("user",user));
                         }
-
                         else if(item.getTitle().equals("Event löschen")){
                             fireBaseCommunication.deleteEvent(event.getId());
+                            iFragmentUpdateAdapter.updateFromAdapter();
                         }
-
-
                         return true;
                     });
                     menu.show();
@@ -123,7 +126,6 @@ public class Adapter_event extends BaseAdapter {
         }
 
         //Set Image
-
         ImagePuffer imagePuffer = new ImagePuffer();
 
         if(event.getImage()!=null){
@@ -134,26 +136,16 @@ public class Adapter_event extends BaseAdapter {
                 FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
                 StorageReference storageReference = firebaseStorage.getReference();
 
-//                new Handler().post(new Runnable() {
-//                    @Override
-//                    public void run() {
-                        storageReference.child(event.getImage()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                            @Override
-                            public void onSuccess(byte[] bytes) {
-                                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0, bytes.length);
-                                imageView.setImageBitmap(bitmap);
+                storageReference.child(event.getImage()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0, bytes.length);
+                        imageView.setImageBitmap(bitmap);
 
-                                imagePuffer.storeImage(event.getImage(), bitmap);
-                            }
-                        });
-//                    }
-//                });
-
-
-
+                        imagePuffer.storeImage(event.getImage(), bitmap);
+                    }
+                });
             }
-
-
         }
 
         //Set Address
@@ -163,22 +155,18 @@ public class Adapter_event extends BaseAdapter {
             eventAddress.setText(longLatAdressPuffer.getAddress(event.getLongitude(), event.getLatitude()));
         }
         else{
-            LongLatToAddressAsyncTask longLatToAddressAsyncTask = new LongLatToAddressAsyncTask();
-            longLatToAddressAsyncTask.execute(event.getLatitude(),event.getLongitude());
             try {
-                String address = longLatToAddressAsyncTask.get();
-                if(address!=null){
-                    JSONObject jsonObject = new JSONObject(address);
-                    String addressString = jsonObject.getString("road") + " " + jsonObject.getString("house_number") + ", " + jsonObject.getString("postcode");
-                    eventAddress.setText(addressString);
-
-                    longLatAdressPuffer.storeAdress(event.getLongitude(), event.getLatitude(), addressString);
+                String input = new LongLatToAddressAsyncTask().execute(event.getLatitude(), event.getLongitude()).get();
+                if(input!=null){
+                    JSONObject jsonObject = new JSONObject(input);
+                    String address = jsonObject.getString("road") + " " + jsonObject.getString("house_number") + ", " + jsonObject.getString("postcode");
+                    eventAddress.setText(address);
+                    longLatAdressPuffer.storeAdress(event.getLongitude(), event.getLatitude(), address);
                 }
             } catch (ExecutionException | InterruptedException | JSONException e) {
                 e.printStackTrace();
             }
         }
-
 
         //Set Title
         eventName.setText(event.getTitle());

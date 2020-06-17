@@ -35,11 +35,12 @@ import at.htlgkr.festlever.objects.User;
 import at.htlgkr.festlever.services.NotificationService;
 
 public class LoginActivity extends AppCompatActivity {
+    private final String TAG = "LoginActivity";
+
     private FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
     private PasswordToHash passwordToHash = new PasswordToHash();
+
     private MessageDigest messageDigest;
-    private final String TAG = "LoginActivity";
-    private static final int REQUEST_SIGNUP = 0;
 
     private EditText username_email;
     private EditText password;
@@ -48,12 +49,16 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private TextView passwordForgotten;
 
+    private static final int REQUEST_SIGNUP = 0;
+
     File rememberMeFile;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        //File initializing
         rememberMeFile = new File(getApplicationContext().getFilesDir().getPath().toString() + "/rememberMe.txt");
         if(!rememberMeFile.exists()){
             try {
@@ -63,15 +68,19 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
 
+        //MessageDigest initializing
         try {
             messageDigest = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
 
+        //Views initialize
         initializeViews();
 
+        //Check if user is in remember file
         checkIfUserIsInRememberFile(rememberMeFile);
+
         //Register-Button
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    void initializeViews(){ // Working
+    void initializeViews(){
         Log.d(TAG, "initializeViews");
         username_email = findViewById(R.id.activity_login_username_email);
         password = findViewById(R.id.activity_login_password);
@@ -108,7 +117,7 @@ public class LoginActivity extends AppCompatActivity {
         passwordForgotten = findViewById(R.id.activity_login_password_forgotten);
     }
 
-    void login(){ // Working
+    void login(){
         Log.d(TAG, "login");
 
         if(!validate()){
@@ -121,8 +130,7 @@ public class LoginActivity extends AppCompatActivity {
         final String check_username_email = username_email.getText().toString();
         final String check_password = passwordToHash.bytesToHex(messageDigest.digest(password.getText().toString().getBytes()));
 
-        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
-                R.style.Theme_Design_BottomSheetDialog);
+        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this, R.style.Theme_Design_BottomSheetDialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Einloggen...");
         progressDialog.show();
@@ -152,7 +160,7 @@ public class LoginActivity extends AppCompatActivity {
                 },1000);
     }
 
-    boolean validate() { // Working
+    boolean validate() {
         boolean valid = true;
 
         String check_username_email = username_email.getText().toString();
@@ -181,7 +189,7 @@ public class LoginActivity extends AppCompatActivity {
         return valid;
     }
 
-    void onLoginSuccess(User user){ // Working
+    void onLoginSuccess(User user){
         loginButton.setEnabled(true);
 
         //Setup Services
@@ -194,10 +202,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void startServices(User user) {
         if(!isServiceRunning(NotificationService.class)){
-            Intent intent = new Intent(this, NotificationService.class);
-            // the service can use the data from the intent
-            intent.putExtra("username", user.getUsername());
-            startService(intent);
+            startService(new Intent(this, NotificationService.class).putExtra("username", user.getUsername()));
         }
         else{
             stopService(new Intent(this, NotificationService.class));
@@ -215,7 +220,7 @@ public class LoginActivity extends AppCompatActivity {
         return false;
     }
 
-    void onLoginFailed(){ // Working
+    void onLoginFailed(){
         Toast.makeText(getApplicationContext(), "Login fehlgeschlagen",Toast.LENGTH_SHORT).show();
         loginButton.setEnabled(true);
     }
@@ -225,7 +230,7 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(new Intent(this, ForgotPasswordActivity.class));
     }
 
-    void checkIfUserIsInRememberFile(File file){ // Working
+    void checkIfUserIsInRememberFile(File file){
         try (BufferedReader reader = new BufferedReader(new FileReader(file))){
             String json = reader.readLine();
             Gson gson = new Gson();
@@ -239,7 +244,7 @@ public class LoginActivity extends AppCompatActivity {
         } catch (IOException | NullPointerException ignored) { }
     }
 
-    void writeToRememberMeFile(User user, File file){ // Working
+    void writeToRememberMeFile(User user, File file){
         Gson gson = new Gson();
         String json = gson.toJson(user);
 

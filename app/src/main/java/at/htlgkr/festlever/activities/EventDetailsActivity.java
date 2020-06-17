@@ -32,12 +32,14 @@ import java.util.stream.Collectors;
 import at.htlgkr.festlever.R;
 import at.htlgkr.festlever.logic.FireBaseCommunication;
 import at.htlgkr.festlever.logic.ImagePuffer;
+import at.htlgkr.festlever.logic.LongLatAdressPuffer;
 import at.htlgkr.festlever.logic.locationiqtasks.LongLatToAddressAsyncTask;
 import at.htlgkr.festlever.objects.Event;
 import at.htlgkr.festlever.objects.User;
 
 public class EventDetailsActivity extends AppCompatActivity {
     private final String TAG = "EventDetailsActivity";
+
     private User user;
     private Event event;
     private ImageView image;
@@ -63,19 +65,10 @@ public class EventDetailsActivity extends AppCompatActivity {
             user = (User) bundle.get("user");
             event = (Event) bundle.get("event");
         }catch (NullPointerException ignored){}
+
         ImagePuffer imagePuffer = new ImagePuffer();
 
-        image = findViewById(R.id.activity_event_details_imageView);
-        eventName = findViewById(R.id.activity_event_details_nameOfEvent);
-        eventAddress = findViewById(R.id.activity_event_details_eventAddress);
-        dayOfEvent = findViewById(R.id.activity_event_details_day);
-        monthOfEvent = findViewById(R.id.activity_event_details_month);
-        description = findViewById(R.id.activity_event_details_description);
-        acceptButton = findViewById(R.id.activity_event_details_acceptEvent);
-        friendsAccepted = findViewById(R.id.activity_event_details_friendAccepted);
-        timeUntilEvent = findViewById(R.id.activity_event_details_timeUntilEvent);
-        accepts = findViewById(R.id.activity_event_details_accepts);
-        entrance = findViewById(R.id.activity_event_details_entrance);
+        initializeViews();
 
         if(imagePuffer.isStored(event.getImage())){
             image.setImageBitmap(imagePuffer.getImage(event.getImage()));
@@ -111,18 +104,23 @@ public class EventDetailsActivity extends AppCompatActivity {
         //time until event
         timeUntilEvent.setText(ChronoUnit.DAYS.between(LocalDate.now(), LocalDate.parse(event.getDate(),dtf)) + " Tage");
 
-
         //address
-        LongLatToAddressAsyncTask longLatToAddressAsyncTask = new LongLatToAddressAsyncTask();
-        longLatToAddressAsyncTask.execute(event.getLatitude(),event.getLongitude());
-        try {
-            String address = longLatToAddressAsyncTask.get();
-            if(address!=null){
-                JSONObject jsonObject = new JSONObject(address);
-                eventAddress.setText(jsonObject.getString("road") + " " + jsonObject.getString("house_number") + ", " + jsonObject.getString("postcode"));
+        LongLatAdressPuffer longLatAdressPuffer = new LongLatAdressPuffer();
+        if(longLatAdressPuffer.isStored(event.getLongitude(), event.getLatitude())){
+            eventAddress.setText(longLatAdressPuffer.getAddress(event.getLongitude(), event.getLatitude()));
+        }
+        else{
+            try {
+                String input = new LongLatToAddressAsyncTask().execute(event.getLatitude(), event.getLongitude()).get();
+                if(input!=null){
+                    JSONObject jsonObject = new JSONObject(input);
+                    String address = jsonObject.getString("road") + " " + jsonObject.getString("house_number") + ", " + jsonObject.getString("postcode");
+                    eventAddress.setText(address);
+                    longLatAdressPuffer.storeAdress(event.getLongitude(), event.getLatitude(), address);
+                }
+            } catch (ExecutionException | InterruptedException | JSONException e) {
+                e.printStackTrace();
             }
-        } catch (ExecutionException | InterruptedException | JSONException e) {
-            e.printStackTrace();
         }
 
         eventAddress.setOnClickListener(new View.OnClickListener() {
@@ -153,12 +151,27 @@ public class EventDetailsActivity extends AppCompatActivity {
         if(event.getAcceptUser().contains(user.getUsername())){
             acceptButton.setText("Nicht mehr Teilnehmen");
         }
+
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 acceptButtonClicked();
             }
         });
+    }
+
+    void initializeViews(){
+        image = findViewById(R.id.activity_event_details_imageView);
+        eventName = findViewById(R.id.activity_event_details_nameOfEvent);
+        eventAddress = findViewById(R.id.activity_event_details_eventAddress);
+        dayOfEvent = findViewById(R.id.activity_event_details_day);
+        monthOfEvent = findViewById(R.id.activity_event_details_month);
+        description = findViewById(R.id.activity_event_details_description);
+        acceptButton = findViewById(R.id.activity_event_details_acceptEvent);
+        friendsAccepted = findViewById(R.id.activity_event_details_friendAccepted);
+        timeUntilEvent = findViewById(R.id.activity_event_details_timeUntilEvent);
+        accepts = findViewById(R.id.activity_event_details_accepts);
+        entrance = findViewById(R.id.activity_event_details_entrance);
     }
 
     public void acceptButtonClicked(){

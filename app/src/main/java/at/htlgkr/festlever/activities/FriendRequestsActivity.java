@@ -17,6 +17,7 @@ import at.htlgkr.festlever.objects.User;
 
 public class FriendRequestsActivity extends AppCompatActivity {
     private final String TAG = "FriendRequestsActivity";
+
     private User user;
     private FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
     private List<User> allusers;
@@ -30,13 +31,10 @@ public class FriendRequestsActivity extends AppCompatActivity {
             Intent intent = getIntent();
             Bundle bundle = intent.getExtras();
             user = (User) bundle.get("user");
-            Log.d(TAG, "onCreate: Current User logged in: " + user.getUsername());
         }catch (NullPointerException ignored){}
 
         ListView listView = findViewById(R.id.activity_friend_requests_listView);
         List<User> requests = fireBaseCommunication.getAllUsers().stream().filter(a -> user.getFriendRequests().contains(a.getUsername())).collect(Collectors.toList());
         listView.setAdapter(new Adapter_friendRequests(this, R.layout.activity_friend_requests_user_listitem,requests, user));
     }
-
-
 }

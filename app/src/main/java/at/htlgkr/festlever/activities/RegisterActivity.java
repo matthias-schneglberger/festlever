@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,12 +20,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
+
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.ExecutionException;
@@ -38,10 +42,12 @@ import at.htlgkr.festlever.logic.locationiqtasks.LongLatToAddressAsyncTask;
 import at.htlgkr.festlever.objects.User;
 
 public class RegisterActivity extends AppCompatActivity {
+    private final String TAG = "RegisterActivity";
+
     private FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
     private PasswordToHash passwordToHash = new PasswordToHash();
+
     private MessageDigest messageDigest;
-    private final String TAG = "RegisterActivity";
 
     private EditText email;
     private EditText username;
@@ -54,10 +60,22 @@ public class RegisterActivity extends AppCompatActivity {
 
     private SharedPreferences prefs;
 
+    File rememberMeFile;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        //File initializing
+        rememberMeFile = new File(getApplicationContext().getFilesDir().getPath().toString() + "/rememberMe.txt");
+        if(!rememberMeFile.exists()){
+            try {
+                rememberMeFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         //Preferences
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -82,6 +100,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        //MessageDigest initialize
         try {
             messageDigest = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
@@ -92,7 +111,7 @@ public class RegisterActivity extends AppCompatActivity {
         checkPermissionGPS();
     }
 
-    void initializeViews() { // Working
+    void initializeViews() {
         Log.d(TAG, "initializeViews");
         email = findViewById(R.id.activity_register_email);
         username = findViewById(R.id.activity_register_username);
@@ -101,7 +120,7 @@ public class RegisterActivity extends AppCompatActivity {
         loginText = findViewById(R.id.activity_register_to_login_text);
     }
 
-    void register() { // Working
+    void register() {
         Log.d(TAG, "register");
 
         if (!validate()) {
@@ -131,14 +150,12 @@ public class RegisterActivity extends AppCompatActivity {
                 if (fireBaseCommunication.registerUser(user)) {
                     if (isGpsAllowed) {
                         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-//                        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            @SuppressLint("MissingPermission") Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                            try {
-                                prefs.edit().putString("preference_region",new JSONObject(new LongLatToAddressAsyncTask().execute(location==null ? -1 : location.getLatitude(),location==null ? -1 : location.getLongitude()).get()).getString("country")).apply();
-                            } catch (ExecutionException | InterruptedException | JSONException e) {
-                                e.printStackTrace();
-                            }
-//                        }
+                        @SuppressLint("MissingPermission") Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        try {
+                            prefs.edit().putString("preference_region",new JSONObject(new LongLatToAddressAsyncTask().execute(location==null ? -1 : location.getLatitude(),location==null ? -1 : location.getLongitude()).get()).getString("country")).apply();
+                        } catch (ExecutionException | InterruptedException | JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                     onRegisterSuccess(user);
                 }
@@ -147,10 +164,10 @@ public class RegisterActivity extends AppCompatActivity {
                 }
                 progressDialog.dismiss();
             }
-        },100);
+        },1000);
     }
 
-    boolean validate() { // Working
+    boolean validate() {
         boolean valid = true;
 
         String check_email = email.getText().toString();
@@ -190,41 +207,46 @@ public class RegisterActivity extends AppCompatActivity {
         return valid;
     }
 
-    void onRegisterSuccess(User user){ // Working
+    void onRegisterSuccess(User user){
         registerButton.setEnabled(true);
         setResult(RESULT_OK,null);
         startActivity(new Intent(this, MainActivity.class));
         MainActivity.user = user;
+        writeToRememberMeFile(user,rememberMeFile);
         finish();
     }
 
-    void onRegisterFailed(){ // Working
-        Toast.makeText(getBaseContext(), "Registrieren fehlgeschlagen - Benutzername existiert bereits", Toast.LENGTH_LONG).show();
+    void onRegisterFailed(){
+        Toast.makeText(getBaseContext(), "Registrieren fehlgeschlagen - Benutzername existiert bereits", Toast.LENGTH_SHORT).show();
         registerButton.setEnabled(true);
     }
 
-    private void checkPermissionGPS() {
+    void writeToRememberMeFile(User user, File file){
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        try (PrintWriter writer = new PrintWriter(new FileWriter(file, false))){
+            writer.write(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void checkPermissionGPS() {
         Log.d(TAG, "checkPermissionGPS");
         String permission = Manifest.permission.ACCESS_FINE_LOCATION;
-        if (ActivityCompat.checkSelfPermission(this, permission)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{ permission },
-                    RQ_ACCESS_FINE_LOCATION );
+        if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{ permission }, RQ_ACCESS_FINE_LOCATION );
         } else {
             isGpsAllowed = true;
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode != RQ_ACCESS_FINE_LOCATION) return;
-        if (grantResults.length > 0 &&
-                grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-        } else {
+        if (!(grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED)) {
             isGpsAllowed = true;
         }
     }
