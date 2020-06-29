@@ -58,14 +58,19 @@ Matthias Schneglberger
 
 | Zeitplan in Stunden | Matthias | Fabian |
 | :---         |     :---:      |          ---: |
-| Design   | 3     | 2    |
-| Firebase Init     | 3       | 2      |
-| Design Login/Register     | 4       | 2      |
-| Implement Login/Register     | 1       | 5      |
-| Design MainPage     | -1       | -1      |
-| Events anlegen/anzeigen     | -1       | -1      |
-| Bugs entfernen     | -99       | -99      |
-| Gesamt     | -1       | -1      |-1|
+| Figma Design   | 4     | 2    |
+| Firebase     |    5    | 5      |
+| Login/Register     | 3       | 5      |
+| Passwort vergessen    | 4       | 4      |
+| MainPage     | 12       | 12      |
+| Events anlegen/bearbeiten/löschen     | 6       | 7      |
+| Freunde finden/anfragen     | 6       | 3      |
+| Event anfragen/einladen     | 2       | 6      |
+| Preferences     | 1       | 3      |
+| Notifications     | 3       | 1      |
+| Puffer & LoadActivity    | 5       | 3      |
+| Profil anzeigen    | 3       | 3      |
+| Gesamt     | 54       | 54      |108|
 
 
 
