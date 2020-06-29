@@ -74,9 +74,9 @@ public class FireBaseCommunication {
     }
 
     public List<User> getAllUsers(){
-        if(usersPuffer == null){
-            return getAllUsers(true);
-        }
+            if(usersPuffer == null){
+                return getAllUsers(true);
+            }
         return usersPuffer;
     }
 
