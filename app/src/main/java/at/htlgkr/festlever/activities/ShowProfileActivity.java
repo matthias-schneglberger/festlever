@@ -36,6 +36,7 @@ public class ShowProfileActivity extends AppCompatActivity {
 
     TextView username, acceptedEventsView, providedEventsView;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +54,14 @@ public class ShowProfileActivity extends AppCompatActivity {
 
         initializeViews();
 
-        username.setText(user.getUsername());
+        Toolbar toolbar = (Toolbar) findViewById(R.id.acitivty_show_profile_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(user.getUsername());
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+
+//        username.setText(user.getUsername());
 
         int acceptedEvents = 0;
         int providedEvents = 0;
@@ -65,8 +73,8 @@ public class ShowProfileActivity extends AppCompatActivity {
                 providedEvents++;
             }
         }
-        acceptedEventsView.setText(String.valueOf(acceptedEvents));
-        providedEventsView.setText(String.valueOf(providedEvents));
+//        acceptedEventsView.setText(String.valueOf(acceptedEvents));
+//        providedEventsView.setText(String.valueOf(providedEvents));
 
         //Fragment
         ShowProfilePagerAdapter showProfilePagerAdapter = new ShowProfilePagerAdapter(this, getSupportFragmentManager(),user);
@@ -79,8 +87,8 @@ public class ShowProfileActivity extends AppCompatActivity {
     }
 
     void initializeViews(){
-        username = findViewById(R.id.activity_show_profile_username);
-        acceptedEventsView = findViewById(R.id.activity_show_profile_acceptedEvents);
-        providedEventsView = findViewById(R.id.activity_show_profile_providedEvents);
+//        username = findViewById(R.id.activity_show_profile_username);
+//        acceptedEventsView = findViewById(R.id.activity_show_profile_acceptedEvents);
+//        providedEventsView = findViewById(R.id.activity_show_profile_providedEvents);
     }
 }
