@@ -1,7 +1,9 @@
 package at.htlgkr.festlever.activities;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,10 +11,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextClock;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -145,7 +151,30 @@ public class EventDetailsActivity extends AppCompatActivity {
         entrance.setText(event.getEntrance()+" €");
 
         //friends
-        friendsAccepted.setText(event.getAcceptUser().stream().filter(a -> user.getFriends().contains(a)).collect(Collectors.toList()).size() + " Freunde nehmen teil");
+        List<String> friendsList = event.getAcceptUser().stream().filter(a -> user.getFriends().contains(a)).collect(Collectors.toList());
+        friendsAccepted.setText(friendsList.size() + " Freunde nehmen teil");
+
+        friendsAccepted.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(EventDetailsActivity.this);
+                ListView listView = new ListView(EventDetailsActivity.this);
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(EventDetailsActivity.this, android.R.layout.simple_list_item_1, friendsList);
+                listView.setAdapter(arrayAdapter);
+                alertDialog.setTitle("Freunde");
+                alertDialog.setView(listView);
+                alertDialog.setNeutralButton("Schließen",null);
+                alertDialog.show();
+
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        String username = (String) parent.getItemAtPosition(position);
+                        startActivity(new Intent(EventDetailsActivity.this,ShowProfileActivity.class).putExtra("user",fireBaseCommunication.getAllUsers().stream().filter(a -> a.getUsername().equals(username)).findFirst().get()));
+                    }
+                });
+            }
+        });
 
         //accept Button
         if(event.getAcceptUser().contains(user.getUsername())){
@@ -181,11 +210,23 @@ public class EventDetailsActivity extends AppCompatActivity {
             accepted.add(user.getUsername());
             accepts.setText(String.valueOf(acceptNum+1));
             acceptButton.setText("Nicht mehr Teilnehmen");
+            Toast.makeText(getApplicationContext(), "Du nimmst jetzt an diesem Event teil",Toast.LENGTH_SHORT).show();
         }
         else{
-            acceptButton.setText("Teilnehmen");
-            accepted.remove(user.getUsername());
-            accepts.setText(String.valueOf(acceptNum-1));
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+            alertDialog.setTitle(event.getTitle());
+            alertDialog.setMessage("Bist du dir sicher, dass du an diesem Event nicht mehr teilnehmen willst?");
+            alertDialog.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    acceptButton.setText("Teilnehmen");
+                    accepted.remove(user.getUsername());
+                    accepts.setText(String.valueOf(acceptNum-1));
+                    Toast.makeText(EventDetailsActivity.this, "Du nimmst jetzt nicht mehr an diesem Event teil",Toast.LENGTH_SHORT).show();
+                }
+            });
+            alertDialog.setNegativeButton("Nein",null);
+            alertDialog.show();
         }
 
         event.setAcceptUser(accepted);

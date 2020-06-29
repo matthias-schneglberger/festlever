@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import at.htlgkr.festlever.R;
@@ -55,6 +56,7 @@ public class MainFragment extends Fragment implements IFragmentUpdateAdapter{
     Thread searchViewThread;
 
     private SharedPreferences prefs;
+    private SharedPreferences.OnSharedPreferenceChangeListener preferencesChangeListener;
     private String region = "";
 
     private final int REQUEST_DETAILS = 1;
@@ -82,6 +84,7 @@ public class MainFragment extends Fragment implements IFragmentUpdateAdapter{
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         region = prefs.getString("preference_region","Austria");
+        preferencesChangeListener = ( sharedPrefs, key ) -> preferenceChanged(sharedPrefs, key);
     }
 
     @Override
@@ -169,7 +172,6 @@ public class MainFragment extends Fragment implements IFragmentUpdateAdapter{
         });
     }
 
-
     public void newSearchTerm(String searchTerm){
         if(getActivity() == null)
             return;
@@ -211,6 +213,13 @@ public class MainFragment extends Fragment implements IFragmentUpdateAdapter{
                 update();
             }
         }
+    }
+
+    private void preferenceChanged(SharedPreferences sharedPrefs, String key) {
+        Map<String, ?> allEntries = sharedPrefs.getAll();
+        if (allEntries.get(key) instanceof String)
+            region = sharedPrefs.getString(key, "Austria");
+            setUpListView();
     }
 
     @Override

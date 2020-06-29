@@ -186,7 +186,13 @@ public class Adapter_event extends BaseAdapter {
         month.setText(month_date.format(LocalDate.parse(event.getDate(),dtf)));
 
         //Set Time Until Event begins
-        timeUntilEvent.setText(ChronoUnit.DAYS.between(LocalDate.now(), LocalDate.parse(event.getDate(),dtf)) + " Tage");
+        long daysBetween = ChronoUnit.DAYS.between(LocalDate.now(), LocalDate.parse(event.getDate(),dtf));
+        if(daysBetween < 0){
+            timeUntilEvent.setText("Abgelaufen");
+        }
+        else{
+            timeUntilEvent.setText(daysBetween + " Tage");
+        }
 
         //Set who is in
         numOfFriends.setText(event.getAcceptUser().stream().filter(a -> user.getFriends().contains(a)).collect(Collectors.toList()).size() + " Freunde nehmen teil");
