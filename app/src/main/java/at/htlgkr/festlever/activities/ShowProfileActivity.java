@@ -30,11 +30,6 @@ public class ShowProfileActivity extends AppCompatActivity {
 
     private FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
     private User user;
-    private List<Event> allEventsProvided;
-    private List<User> allUser;
-    private List<Event> allEvents;
-
-    TextView username, acceptedEventsView, providedEventsView;
 
 
     @Override
@@ -48,33 +43,13 @@ public class ShowProfileActivity extends AppCompatActivity {
             user = (User) bundle.get("user");
         }catch (NullPointerException ignored){}
 
-        allUser = fireBaseCommunication.getAllUsers();
-        allEvents = fireBaseCommunication.getAllEvents();
-        allEventsProvided = allEvents.stream().filter(a -> a.getCreater().equals(user.getUsername()) && a.isPublic()).collect(Collectors.toList());
 
-        initializeViews();
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.acitivty_show_profile_toolbar);
+        Toolbar toolbar = findViewById(R.id.acitivty_show_profile_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(user.getUsername());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-
-//        username.setText(user.getUsername());
-
-        int acceptedEvents = 0;
-        int providedEvents = 0;
-        for(Event e : allEvents){
-            if(e.getAcceptUser().contains(user.getUsername())){
-                acceptedEvents++;
-            }
-            if(e.getCreater().equals(user.getUsername())){
-                providedEvents++;
-            }
-        }
-//        acceptedEventsView.setText(String.valueOf(acceptedEvents));
-//        providedEventsView.setText(String.valueOf(providedEvents));
 
         //Fragment
         ShowProfilePagerAdapter showProfilePagerAdapter = new ShowProfilePagerAdapter(this, getSupportFragmentManager(),user);
@@ -86,9 +61,4 @@ public class ShowProfileActivity extends AppCompatActivity {
 
     }
 
-    void initializeViews(){
-//        username = findViewById(R.id.activity_show_profile_username);
-//        acceptedEventsView = findViewById(R.id.activity_show_profile_acceptedEvents);
-//        providedEventsView = findViewById(R.id.activity_show_profile_providedEvents);
-    }
 }
