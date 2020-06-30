@@ -25,9 +25,14 @@ import com.google.gson.GsonBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 
 import at.htlgkr.festlever.objects.Event;
@@ -110,7 +115,7 @@ public class FireBaseCommunication {
         if(eventsPuffer == null){
             eventsPuffer = getAllEvents(true);
         }
-        return eventsPuffer;
+        return sortEvents(eventsPuffer);
     }
 
     public List<Event> getAllEvents(boolean noPuffer){
@@ -119,7 +124,22 @@ public class FireBaseCommunication {
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
-        return eventsPuffer;
+        return sortEvents(eventsPuffer);
+    }
+
+    public List<Event> sortEvents(List<Event> events){
+        return events.stream().sorted(new Comparator<Event>() {
+            @Override
+            public int compare(Event event, Event t1) {
+
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+
+                LocalDate eventLD = LocalDate.parse(event.getDate(),dtf);
+                LocalDate event1LD = LocalDate.parse(t1.getDate(),dtf);
+
+                return eventLD.compareTo(event1LD);
+            }
+        }).collect(Collectors.toList());
     }
 
 }
