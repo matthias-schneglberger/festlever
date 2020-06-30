@@ -62,15 +62,15 @@ Matthias Schneglberger
 | Firebase     |    5    | 5      |
 | Login/Register     | 3       | 5      |
 | Passwort vergessen    | 4       | 4      |
-| MainPage     | 12       | 12      |
-| Events anlegen/bearbeiten/löschen     | 6       | 7      |
+| MainPage     | 9       | 9      |
+| Events anlegen/bearbeiten/löschen     | 5       | 6      |
 | Freunde finden/anfragen     | 6       | 3      |
 | Event anfragen/einladen     | 2       | 6      |
 | Preferences     | 1       | 3      |
 | Notifications     | 3       | 1      |
 | Puffer & LoadActivity    | 5       | 3      |
 | Profil anzeigen    | 3       | 3      |
-| Gesamt     | 54       | 54      |108|
+| Gesamt     | 50       | 50      |
 
 
 
