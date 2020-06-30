@@ -211,6 +211,10 @@ public class EventDetailsActivity extends AppCompatActivity {
             accepts.setText(String.valueOf(acceptNum+1));
             acceptButton.setText("Nicht mehr Teilnehmen");
             Toast.makeText(getApplicationContext(), "Du nimmst jetzt an diesem Event teil",Toast.LENGTH_SHORT).show();
+
+            event.setAcceptUser(accepted);
+            setResult(RESULT_OK);
+            fireBaseCommunication.createEvent(event);
         }
         else{
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
@@ -223,14 +227,16 @@ public class EventDetailsActivity extends AppCompatActivity {
                     accepted.remove(user.getUsername());
                     accepts.setText(String.valueOf(acceptNum-1));
                     Toast.makeText(EventDetailsActivity.this, "Du nimmst jetzt nicht mehr an diesem Event teil",Toast.LENGTH_SHORT).show();
+
+                    event.setAcceptUser(accepted);
+                    setResult(RESULT_OK);
+                    fireBaseCommunication.createEvent(event);
                 }
             });
             alertDialog.setNegativeButton("Nein",null);
             alertDialog.show();
         }
 
-        event.setAcceptUser(accepted);
-        setResult(RESULT_OK);
-        fireBaseCommunication.createEvent(event);
+
     }
 }
