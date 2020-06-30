@@ -388,6 +388,9 @@ public class EventCreateChangeActivity extends AppCompatActivity {
     }
 
     void uploadImage(Uri filePath){
+        if (filePath==null)
+            return;
+
         storagePath = "images/"+ UUID.randomUUID().toString();
         StorageReference ref = storageReference.child(storagePath);
 
