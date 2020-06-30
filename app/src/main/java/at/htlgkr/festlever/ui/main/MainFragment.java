@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -93,10 +94,17 @@ public class MainFragment extends Fragment implements IFragmentUpdateAdapter{
 
         ListView eventsView = view.findViewById(R.id.fragment_main_event_listView);
 
+
+//        View empty = getLayoutInflater().inflate(R.layout.empty_listview, null, false);
+//        addContentView(empty, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+
         eventList = fireBaseCommunication.getAllEvents();
         userList = fireBaseCommunication.getAllUsers();
 
         setUpListView();
+
+
 
         searchViewThread = new Thread(this::doInBackground);
         searchViewThread.start();
@@ -159,7 +167,13 @@ public class MainFragment extends Fragment implements IFragmentUpdateAdapter{
                 break;
         }
 
+        TextView emptyList = new TextView(getContext());
+        emptyList.setText("Keine Einträge gefunden!");
+//        ((ViewGroup)eventsView.getParent()).addView(emptyList);
+        eventsView.setEmptyView(emptyList);
+
         eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, currentDisplayedEvents, userList, editEnabled,user,MainFragment.this));
+
     }
 
     public void update(){

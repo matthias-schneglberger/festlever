@@ -68,7 +68,7 @@ public class Adapter_findFriends extends BaseAdapter {
         requestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendRequest(user);
+                sendRequest(user, view);
             }
         });
 
@@ -87,7 +87,7 @@ public class Adapter_findFriends extends BaseAdapter {
     }
 
     @SuppressLint("ResourceAsColor")
-    private void sendRequest(User user){
+    private void sendRequest(User user, View view){
         FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
         List<String> friendRequests = user.getFriendRequests();
 
@@ -95,6 +95,13 @@ public class Adapter_findFriends extends BaseAdapter {
             Snackbar.make(((Activity)context).findViewById(R.id.activity_find_friends_allUsers), "Bereits eine Anfrage an " + user.getUsername() + " versendet", BaseTransientBottomBar.LENGTH_SHORT).show();
         }
         else{
+
+
+            Button requestButton2 = view.findViewById(R.id.activity_find_friends_user_listitem_friendsRequest);
+            requestButton2.setText("Gesendet");
+            requestButton2.setBackgroundColor(R.color.alreadyColor);
+            requestButton2.setClickable(false);
+
             friendRequests.add(origUser.getUsername());
             user.setFriendRequests(friendRequests);
             fireBaseCommunication.updateUser(user);
