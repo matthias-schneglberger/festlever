@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import at.htlgkr.festlever.R;
+import at.htlgkr.festlever.activities.MainActivity;
 import at.htlgkr.festlever.logic.FireBaseCommunication;
 import at.htlgkr.festlever.objects.User;
 
@@ -72,12 +73,12 @@ public class Adapter_findFriends extends BaseAdapter {
             }
         });
 
-        if(origUser.getFriends().contains(user.getUsername())){
+        if(MainActivity.user.getFriends().contains(user.getUsername())){
             requestButton.setText("Freunde");
             requestButton.setBackgroundColor(R.color.alreadyColor);
             requestButton.setClickable(false);
         }
-        if(user.getFriendRequests().contains(origUser.getUsername())){
+        else if(user.getFriendRequests().contains(MainActivity.user.getUsername())){
             requestButton.setText("Gesendet");
             requestButton.setBackgroundColor(R.color.alreadyColor);
             requestButton.setClickable(false);

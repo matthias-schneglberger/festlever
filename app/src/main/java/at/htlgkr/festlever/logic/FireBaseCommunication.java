@@ -35,6 +35,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 
+import at.htlgkr.festlever.activities.MainActivity;
 import at.htlgkr.festlever.objects.Event;
 import at.htlgkr.festlever.objects.User;
 import at.htlgkr.festlever.logic.firebasetasks.*;
@@ -94,6 +95,15 @@ public class FireBaseCommunication {
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
+
+        if(MainActivity.user != null){
+            for(User user : usersPuffer){
+                if(user.getUsername().equals(MainActivity.user.getUsername())){
+                    MainActivity.user = user;
+                }
+            }
+        }
+
 
         return usersPuffer;
     }

@@ -35,7 +35,8 @@ public class EventRequestsActivity extends AppCompatActivity {
         }catch (NullPointerException ignored){}
 
         ListView listView = findViewById(R.id.activity_event_requests_listView);
-        List<Event> requests = fireBaseCommunication.getAllEvents().stream().filter(a -> user.getEventRequests().contains(a.getId())).collect(Collectors.toList());
+        listView.setEmptyView(findViewById(R.id.activity_event_requests_empty));
+        List<Event> requests = fireBaseCommunication.getAllEvents(true).stream().filter(a -> user.getEventRequests().contains(a.getId())).collect(Collectors.toList());
         listView.setAdapter(new Adapter_eventRequests(this, R.layout.activity_event_requests_user_listitem,requests,fireBaseCommunication.getAllUsers(), user));
     }
 }
