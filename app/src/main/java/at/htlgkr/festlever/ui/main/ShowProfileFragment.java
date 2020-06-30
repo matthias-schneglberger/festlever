@@ -115,7 +115,7 @@ public class ShowProfileFragment extends Fragment implements IFragmentUpdateAdap
     }
 
     public void update(){
-        eventList = fireBaseCommunication.getAllEvents();
+        eventList = fireBaseCommunication.getAllEvents(true);
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
