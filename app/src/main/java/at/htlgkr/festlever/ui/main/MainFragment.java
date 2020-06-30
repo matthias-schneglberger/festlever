@@ -167,10 +167,9 @@ public class MainFragment extends Fragment implements IFragmentUpdateAdapter{
                 break;
         }
 
-        TextView emptyList = new TextView(getContext());
-        emptyList.setText("Keine Einträge gefunden!");
+
 //        ((ViewGroup)eventsView.getParent()).addView(emptyList);
-        eventsView.setEmptyView(emptyList);
+        eventsView.setEmptyView(view.findViewById(R.id.fragment_main_event_listView_empty));
 
         eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, currentDisplayedEvents, userList, editEnabled,user,MainFragment.this));
 
