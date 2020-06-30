@@ -202,8 +202,7 @@ public class EventCreateChangeActivity extends AppCompatActivity {
                     editText_address.setText(address);
                     longLatAdressPuffer.storeAdress(event.getLongitude(), event.getLatitude(), address);
                 }
-            } catch (ExecutionException | JSONException | InterruptedException e) {
-                e.printStackTrace();
+            } catch (ExecutionException | JSONException | InterruptedException ignored) {
             }
         }
 
@@ -242,8 +241,6 @@ public class EventCreateChangeActivity extends AppCompatActivity {
 
         Event tmpEvent = new Event();
 
-        uploadImage(filePath);
-
         final ProgressDialog progressDialog = new ProgressDialog(EventCreateChangeActivity.this, R.style.Theme_Design_BottomSheetDialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Erstellen...");
@@ -258,14 +255,16 @@ public class EventCreateChangeActivity extends AppCompatActivity {
                 List<String> longlat = new ArrayList<>();
                 try {
                     longlat = adressToLongLatAsyncTask.get();
-                } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
+                } catch (ExecutionException | InterruptedException ignored) {
                 }
 
                 if(longlat.isEmpty()){
-                    onCreateFailed();
+                    Toast.makeText(getApplicationContext(), "Fehler bei der Adresse! Bitte überprüfen Sie Ihre Eingaben",Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
                     return;
                 }
+
+                uploadImage(filePath);
 
                 //Set address
                 tmpEvent.setLatitude(Double.valueOf(longlat.get(0)));
@@ -315,8 +314,6 @@ public class EventCreateChangeActivity extends AppCompatActivity {
             return;
         }
 
-        uploadImage(filePath);
-
         final ProgressDialog progressDialog = new ProgressDialog(EventCreateChangeActivity.this, R.style.Theme_Design_BottomSheetDialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Änderungen speichern...");
@@ -334,13 +331,16 @@ public class EventCreateChangeActivity extends AppCompatActivity {
                 List<String> longlat = new ArrayList<>();
                 try {
                     longlat = adressToLongLatAsyncTask.get();
-                } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
+                } catch (ExecutionException | InterruptedException ignored) {
                 }
+
                 if(longlat.isEmpty()){
-                    onCreateFailed();
+                    Toast.makeText(getApplicationContext(), "Fehler bei der Adresse! Bitte überprüfen Sie Ihre Eingaben",Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
                     return;
                 }
+
+                uploadImage(filePath);
 
                 event.setLatitude(Double.valueOf(longlat.get(0)));
                 event.setLongitude(Double.valueOf(longlat.get(1)));
@@ -388,6 +388,9 @@ public class EventCreateChangeActivity extends AppCompatActivity {
     }
 
     void uploadImage(Uri filePath){
+        if (filePath==null)
+            return;
+
         storagePath = "images/"+ UUID.randomUUID().toString();
         StorageReference ref = storageReference.child(storagePath);
 

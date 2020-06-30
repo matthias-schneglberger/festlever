@@ -111,11 +111,13 @@ public class ShowProfileFragment extends Fragment implements IFragmentUpdateAdap
                 currentDisplayedEvents = eventList.stream().filter(a -> a.getAcceptUser().contains(user.getUsername())).collect(Collectors.toList());
                 break;
         }
+        eventsView.setEmptyView(view.findViewById(R.id.fragment_show_profile_empty));
+
         eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, currentDisplayedEvents, userList, false,user, ShowProfileFragment.this));
     }
 
     public void update(){
-        eventList = fireBaseCommunication.getAllEvents();
+        eventList = fireBaseCommunication.getAllEvents(true);
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {

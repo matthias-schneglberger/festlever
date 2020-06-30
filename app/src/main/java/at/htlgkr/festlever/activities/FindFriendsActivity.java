@@ -39,7 +39,7 @@ public class FindFriendsActivity extends AppCompatActivity {
             Log.d(TAG, "onCreate: Current User logged in: " + user.getUsername());
         }catch (NullPointerException ignored){}
 
-        allusers = fireBaseCommunication.getAllUsers();
+        allusers = fireBaseCommunication.getAllUsers(true);
 
         //Searchview
         SearchView searchView = findViewById(R.id.activity_find_friends_search);

@@ -57,7 +57,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         tries = 3;
         user = new User();
 
-        userList = fireBaseCommunication.getAllUsers();
+        userList = fireBaseCommunication.getAllUsers(true);
 
         sendEmail.setOnClickListener(new View.OnClickListener() {
             @Override

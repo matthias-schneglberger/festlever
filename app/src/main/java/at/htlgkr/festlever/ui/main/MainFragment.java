@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +20,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import at.htlgkr.festlever.R;
@@ -55,6 +57,7 @@ public class MainFragment extends Fragment implements IFragmentUpdateAdapter{
     Thread searchViewThread;
 
     private SharedPreferences prefs;
+    private SharedPreferences.OnSharedPreferenceChangeListener preferencesChangeListener;
     private String region = "";
 
     private final int REQUEST_DETAILS = 1;
@@ -82,6 +85,7 @@ public class MainFragment extends Fragment implements IFragmentUpdateAdapter{
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         region = prefs.getString("preference_region","Austria");
+        preferencesChangeListener = ( sharedPrefs, key ) -> preferenceChanged(sharedPrefs, key);
     }
 
     @Override
@@ -90,10 +94,17 @@ public class MainFragment extends Fragment implements IFragmentUpdateAdapter{
 
         ListView eventsView = view.findViewById(R.id.fragment_main_event_listView);
 
+
+//        View empty = getLayoutInflater().inflate(R.layout.empty_listview, null, false);
+//        addContentView(empty, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+
         eventList = fireBaseCommunication.getAllEvents();
         userList = fireBaseCommunication.getAllUsers();
 
         setUpListView();
+
+
 
         searchViewThread = new Thread(this::doInBackground);
         searchViewThread.start();
@@ -156,7 +167,12 @@ public class MainFragment extends Fragment implements IFragmentUpdateAdapter{
                 break;
         }
 
+
+//        ((ViewGroup)eventsView.getParent()).addView(emptyList);
+        eventsView.setEmptyView(view.findViewById(R.id.fragment_main_event_listView_empty));
+
         eventsView.setAdapter(new Adapter_event(view.getContext(), R.layout.fragment_main_listview_item, currentDisplayedEvents, userList, editEnabled,user,MainFragment.this));
+
     }
 
     public void update(){
@@ -168,7 +184,6 @@ public class MainFragment extends Fragment implements IFragmentUpdateAdapter{
             }
         });
     }
-
 
     public void newSearchTerm(String searchTerm){
         if(getActivity() == null)
@@ -211,6 +226,13 @@ public class MainFragment extends Fragment implements IFragmentUpdateAdapter{
                 update();
             }
         }
+    }
+
+    private void preferenceChanged(SharedPreferences sharedPrefs, String key) {
+        Map<String, ?> allEntries = sharedPrefs.getAll();
+        if (allEntries.get(key) instanceof String)
+            region = sharedPrefs.getString(key, "Austria");
+            setUpListView();
     }
 
     @Override

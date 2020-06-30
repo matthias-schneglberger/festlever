@@ -75,5 +75,5 @@
             android:resource="@array/preloaded_fonts" /> <!-- Services -->
         <service android:name=".services.NotificationService" android:stopWithTask="false"/>
     </application>
-
+ 
 </manifest>

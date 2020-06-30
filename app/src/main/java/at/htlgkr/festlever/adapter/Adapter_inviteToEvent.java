@@ -68,7 +68,7 @@ public class Adapter_inviteToEvent extends BaseAdapter {
         requestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendRequest(user);
+                sendRequest(user, view);
             }
         });
 
@@ -86,7 +86,8 @@ public class Adapter_inviteToEvent extends BaseAdapter {
         return listItem;
     }
 
-    private void sendRequest(User user){
+    @SuppressLint("ResourceAsColor")
+    private void sendRequest(User user, View view){
         FireBaseCommunication fireBaseCommunication = new FireBaseCommunication();
         List<String> eventRequests = user.getEventRequests();
 
@@ -97,6 +98,11 @@ public class Adapter_inviteToEvent extends BaseAdapter {
             eventRequests.add(event.getId());
             user.setEventRequests(eventRequests);
             fireBaseCommunication.updateUser(user);
+
+            Button requestButton2 = view.findViewById(R.id.activity_find_friends_user_listitem_friendsRequest);
+            requestButton2.setText("Gesendet");
+            requestButton2.setBackgroundColor(R.color.alreadyColor);
+            requestButton2.setClickable(false);
 
             Snackbar.make(((Activity)context).findViewById(R.id.activity_find_friends_allUsers), user.getUsername() + " wurde eine Einladung gesendet", BaseTransientBottomBar.LENGTH_SHORT).show();
         }
