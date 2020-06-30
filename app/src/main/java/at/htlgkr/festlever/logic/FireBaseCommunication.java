@@ -54,7 +54,7 @@ public class FireBaseCommunication {
 
     public boolean registerUser(User user){ // Working
         boolean exist = false;
-        List<User> userList = getAllUsers();
+        List<User> userList = getAllUsers(true);
         for(User u: userList){
             if(u.getUsername().equals(user.getUsername())){
                 exist = true;
